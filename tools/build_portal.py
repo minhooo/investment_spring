@@ -80,14 +80,21 @@ def infer_theme_ids(meta, taxonomy):
     return hits
 
 
-def discovered_cases(taxonomy, known_codes):
-    """data/meta와 dist의 교집합을 찾아 수동 색인 없이 사례로 등록한다."""
+def discovered_cases(taxonomy, known_pairs):
+    """data/meta와 dist의 교집합을 찾아 수동 색인 없이 사례로 등록한다.
+
+    한 종목에 이슈가 둘 이상일 수 있으므로(207940 = 인적분할 + 유상증자)
+    제외 기준은 종목코드가 아니라 **(종목코드, 이슈유형)** 쌍이다.
+    코드로만 걸러내면 cases.csv에 행이 생기는 순간 같은 종목의 다른 이슈가 포털에서 사라진다.
+    """
     entries = []
+    seen_codes = set()
     known_issue_labels = {item["label"]: item["id"] for item in taxonomy["issues"]}
     for meta_path in sorted((DATA / "meta").glob("*.json")):
         meta = json.loads(meta_path.read_text(encoding="utf-8"))
         code, name = str(meta.get("code", "")), str(meta.get("name", ""))
-        if not code or not name or code in known_codes:
+        issue_type = str(meta.get("issue_type") or "기타 검증")
+        if not code or not name or (code, issue_type) in known_pairs:
             continue
         dashboard = dashboard_for_meta(meta_path, meta)
         if not dashboard:
@@ -103,8 +110,11 @@ def discovered_cases(taxonomy, known_codes):
                        if any(pattern["id"] == item for pattern in taxonomy["patterns"])]
         title = str(meta.get("portal_title") or meta.get("headline") or meta.get("question") or issue_label)
         summary = str(meta.get("portal_summary") or meta.get("question") or meta.get("thesis", ""))
+        # 같은 종목의 자동 등록이 둘 이상이면 뒤에 오는 것에 이슈 접미사를 붙여 id 충돌을 막는다.
+        slug = code if code not in seen_codes else f"{code}-{issue_id}"
+        seen_codes.add(code)
         entries.append({
-            "id": f"case-auto-{code}", "case_id": f"auto-{code}", "kind": "case",
+            "id": f"case-auto-{slug}", "case_id": f"auto-{slug}", "kind": "case",
             "name": name, "code": code, "title": title, "summary": summary,
             "issue_id": issue_id, "issue_label": issue_label,
             "issue_ids": [issue_id], "issue_labels": [issue_label], "theme_ids": theme_ids,
@@ -190,7 +200,7 @@ def build_index(taxonomy, navigation, cases):
             "source_case_path": case_path,
             "available": True,
         })
-    entries.extend(discovered_cases(taxonomy, {row["종목코드"] for row in cases}))
+    entries.extend(discovered_cases(taxonomy, {(row["종목코드"], row["이슈유형"]) for row in cases}))
     payload = {"taxonomy": taxonomy, "cases": entries, "macro": navigation["macro"], "shortcuts": navigation["shortcuts"]}
     template = (ROOT / "tools" / "portal_template.html").read_text(encoding="utf-8")
     safe_json = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")

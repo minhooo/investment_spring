@@ -1,0 +1,872 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="투자 사건의 주가·상대강도·수급과 사후 검증을 함께 읽는 사례 분석">
+<title>씨앤씨인터내셔널 유상증자 해부</title>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  color-scheme: light;
+  --bg:#faf9f6; --surface:#ffffff; --surface-2:#f4f2ee; --surface-3:#edeae3;
+  --line:#e4e1da; --line-strong:#cdc9bf;
+  --ink:#17160f; --ink-2:#5c5a50; --ink-3:#8b887c;
+  --accent:#4a3aa7; --accent-soft:#4a3aa71a;
+  --bm:#9a978c; --rs:#1baf7a; --rs-soft:#1baf7a1f;
+  --flow:#eda100; --flow-ma:#b87d00; --flow-soft:#eda1001f;
+  --frgn:#2a78d6; --inst:#eb6834; --indiv:#c2557f;
+  --up:#d33a3a; --down:#2a6fd6; --flat:#8b887c;
+  --warn-band:#d33a3a0f;
+  --shadow:0 1px 2px #17160f0a, 0 4px 14px #17160f0a;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#131419; --surface:#1a1c22; --surface-2:#212429; --surface-3:#282c33;
+    --line:#2d313a; --line-strong:#434956;
+    --ink:#f0efe9; --ink-2:#b3b1a7; --ink-3:#85837a;
+    --accent:#9085e9; --accent-soft:#9085e926;
+    --bm:#7c8290; --rs:#34c692; --rs-soft:#34c69226;
+    --flow:#c98500; --flow-ma:#eda100; --flow-soft:#eda10026;
+    --frgn:#3987e5; --inst:#d95926; --indiv:#e08bb0;
+    --up:#ef6a6a; --down:#5f9df2; --flat:#85837a;
+    --warn-band:#ef6a6a14;
+    --shadow:0 1px 2px #0006, 0 4px 16px #0005;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#131419; --surface:#1a1c22; --surface-2:#212429; --surface-3:#282c33;
+  --line:#2d313a; --line-strong:#434956;
+  --ink:#f0efe9; --ink-2:#b3b1a7; --ink-3:#85837a;
+  --accent:#9085e9; --accent-soft:#9085e926;
+  --bm:#7c8290; --rs:#34c692; --rs-soft:#34c69226;
+  --flow:#c98500; --flow-ma:#eda100; --flow-soft:#eda10026;
+  --frgn:#3987e5; --inst:#d95926; --indiv:#e08bb0;
+  --up:#ef6a6a; --down:#5f9df2; --flat:#85837a;
+  --warn-band:#ef6a6a14;
+  --shadow:0 1px 2px #0006, 0 4px 16px #0005;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,system-ui,"Malgun Gothic",sans-serif;
+  font-size:14px; line-height:1.6; -webkit-font-smoothing:antialiased;
+  word-break:keep-all; overflow-wrap:break-word;
+}
+.num{font-family:"Pretendard Variable",Pretendard,sans-serif; font-variant-numeric:tabular-nums}
+.wrap{max-width:1180px; margin:0 auto; padding:36px 22px 72px}
+
+/* ---------- header ---------- */
+.eyebrow{
+  font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ink-3); font-weight:600; margin-bottom:14px;
+}
+h1{
+  font-size:clamp(26px,3.4vw,38px); line-height:1.22; font-weight:700;
+  margin:0 0 6px; letter-spacing:-.02em; text-wrap:balance;
+}
+.sub{font-size:15px; color:var(--ink-2); max-width:64ch; margin:0 0 18px}
+.chips{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:30px}
+.chip{
+  font-size:11.5px; padding:4px 9px; border-radius:4px; font-weight:500;
+  background:var(--surface-2); color:var(--ink-2); border:1px solid var(--line);
+}
+.chip b{color:var(--ink); font-weight:600}
+.chip.key{background:var(--accent-soft); border-color:transparent; color:var(--accent)}
+
+/* ---------- kpi ---------- */
+.kpis{
+  display:grid; grid-template-columns:repeat(6,1fr);
+  gap:1px; background:var(--line); border:1px solid var(--line);
+  border-radius:8px; overflow:hidden; margin-bottom:14px;
+}
+.kpi{background:var(--surface); padding:15px 16px 14px}
+.kpi .k{font-size:11px; color:var(--ink-3); font-weight:500; letter-spacing:.01em}
+.kpi .v{font-size:25px; font-weight:600; letter-spacing:-.02em; margin-top:5px; line-height:1.1}
+.kpi .n{font-size:11.5px; color:var(--ink-3); margin-top:4px}
+.kpi.hero{background:var(--surface-3)}
+.kpi.hero .v{color:var(--accent)}
+.up{color:var(--up)} .down{color:var(--down)} .flat{color:var(--flat)}
+
+/* ---------- card ---------- */
+.card{
+  background:var(--surface); border:1px solid var(--line); border-radius:10px;
+  box-shadow:var(--shadow); margin-bottom:26px;
+}
+.card-hd{
+  display:flex; flex-wrap:wrap; gap:12px 18px; align-items:baseline;
+  justify-content:space-between; padding:16px 18px 12px;
+  border-bottom:1px solid var(--line);
+}
+.card-hd h2{font-size:15px; font-weight:600; margin:0; letter-spacing:-.01em}
+.card-hd .hint{font-size:12px; color:var(--ink-3)}
+.card-bd{padding:16px 18px 18px}
+
+/* ---------- controls ---------- */
+.ctrls{display:flex; flex-wrap:wrap; gap:14px; align-items:center}
+.seg{display:inline-flex; background:var(--surface-2); border:1px solid var(--line); border-radius:6px; padding:2px}
+.seg button{
+  font:inherit; font-size:12px; font-weight:500; padding:4px 11px; border:0;
+  background:transparent; color:var(--ink-2); border-radius:4px; cursor:pointer;
+  font-family:inherit; transition:background .12s,color .12s;
+}
+.seg button[aria-pressed="true"]{background:var(--surface); color:var(--ink); box-shadow:0 1px 2px #0000001a; font-weight:600}
+.seg button:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.seg-l{font-size:11px; color:var(--ink-3); font-weight:500; margin-right:-8px}
+.metric-toggle{display:flex; flex-wrap:wrap; gap:6px; margin:0; padding:0; border:0}
+.metric-toggle label{
+  display:inline-flex; align-items:center; gap:6px; min-height:28px; padding:4px 8px;
+  border:1px solid var(--line); border-radius:5px; background:var(--surface); color:var(--ink-2);
+  font-size:12px; font-weight:500; cursor:pointer; user-select:none;
+}
+.metric-toggle input{appearance:none; width:14px; height:14px; margin:0; border:1px solid var(--line-strong);
+  border-radius:3px; background:var(--surface); display:grid; place-content:center; cursor:pointer}
+.metric-toggle input::before{content:''; width:7px; height:4px; border:solid #fff; border-width:0 0 2px 2px;
+  transform:rotate(-45deg) translate(1px,-1px) scale(0); transform-origin:center; transition:transform .12s}
+.metric-toggle input:checked{background:var(--accent); border-color:var(--accent)}
+.metric-toggle input:checked::before{transform:rotate(-45deg) translate(1px,-1px) scale(1)}
+.metric-toggle input:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.metric-toggle input:disabled{cursor:not-allowed; opacity:.45}
+.metric-toggle label:has(input:disabled){cursor:not-allowed; opacity:.55}
+
+/* ---------- chart ---------- */
+.legend{display:flex; flex-wrap:wrap; gap:16px; padding:2px 18px 12px; font-size:12px; color:var(--ink-2)}
+.legend span{display:inline-flex; align-items:center; gap:7px}
+.swatch{width:16px; height:2.5px; border-radius:2px; display:inline-block}
+.chart-scroll{overflow-x:auto; position:relative; padding:0 4px 4px}
+svg.chart{display:block; width:100%; min-width:780px; height:auto}
+.tip{
+  position:absolute; pointer-events:none; opacity:0; transition:opacity .1s;
+  background:var(--surface); border:1px solid var(--line-strong); border-radius:7px;
+  box-shadow:var(--shadow); padding:9px 11px; font-size:12px; min-width:172px; z-index:5;
+}
+.tip .d{font-size:11px; color:var(--ink-3); margin-bottom:6px; font-weight:500}
+.tip .r{display:flex; justify-content:space-between; gap:16px; line-height:1.7}
+.tip .r em{font-style:normal; color:var(--ink-2)}
+.tip .r b{font-weight:600}
+
+/* ---------- tables ---------- */
+.tbl-scroll{overflow-x:auto}
+table{border-collapse:collapse; width:100%; font-size:13px}
+th,td{padding:8px 10px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top}
+th{
+  font-size:10.5px; font-weight:600; color:var(--ink-3); letter-spacing:.06em;
+  text-transform:uppercase; white-space:nowrap; border-bottom:1px solid var(--line-strong);
+  position:sticky; top:0; background:var(--surface);
+}
+td.n,th.n{text-align:right; white-space:nowrap}
+tbody tr{cursor:pointer; transition:background .1s}
+tbody tr:hover{background:var(--surface-2)}
+tbody tr[aria-selected="true"]{background:var(--accent-soft)}
+tbody tr:last-child td{border-bottom:0}
+.ev-n{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:19px; height:19px; border-radius:50%; font-size:10.5px; font-weight:600;
+  color:#fff; flex:none;
+}
+.ev-t{font-weight:500; line-height:1.45}
+.ev-d{font-size:12px; color:var(--ink-2); margin-top:3px; line-height:1.5; max-width:56ch}
+.tag{
+  font-size:10px; padding:2px 6px; border-radius:3px; font-weight:600;
+  border:1px solid var(--line-strong); color:var(--ink-2); white-space:nowrap;
+}
+.tag.T0{background:var(--warn-band)}
+.phase{font-size:11px; color:var(--ink-3); font-weight:600; letter-spacing:.04em}
+
+/* ---------- flow ---------- */
+.flowsum{display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+  background:var(--line); border:1px solid var(--line); border-radius:8px; overflow:hidden}
+.fbox{background:var(--surface-2); padding:12px 14px}
+.fbox.hero{background:var(--flow-soft)}
+.fbox .k{font-size:11px; color:var(--ink-3); font-weight:500}
+.fbox .v{font-size:20px; font-weight:600; margin-top:4px; letter-spacing:-.01em}
+.fbox.hero .v{color:var(--flow-ma)}
+.fbox .n{font-size:11px; color:var(--ink-3); margin-top:3px}
+@media (max-width:720px){ .flowsum{grid-template-columns:repeat(2,1fr)} }
+
+/* ---------- proceeds ---------- */
+.split{display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:14px}
+.pcard{border:1px solid var(--line); border-radius:8px; padding:14px 15px; background:var(--surface-2)}
+.pcard .top{display:flex; align-items:center; gap:8px; margin-bottom:8px}
+.pcode{
+  width:26px; height:26px; border-radius:5px; display:grid; place-items:center;
+  font-weight:700; font-size:13px; color:#fff; flex:none;
+}
+.pcard h3{font-size:14px; margin:0; font-weight:600; flex:1}
+.pamt{font-size:13px; font-weight:600}
+.bar{height:5px; border-radius:3px; background:var(--surface-3); overflow:hidden; margin:9px 0 10px}
+.bar i{display:block; height:100%; border-radius:3px}
+.pcard p{margin:0 0 8px; font-size:12.5px; color:var(--ink-2); line-height:1.55}
+.pfate{font-size:12px; padding-top:8px; border-top:1px dashed var(--line-strong); color:var(--ink-2)}
+.pfate b{color:var(--ink)}
+
+/* ---------- rules ---------- */
+.rule{display:flex; gap:14px; padding:14px 0; border-bottom:1px solid var(--line)}
+.rule:last-child{border-bottom:0; padding-bottom:0}
+.rule .rn{
+  font-family:"Pretendard Variable",Pretendard,sans-serif; font-size:12px; font-weight:600;
+  color:var(--accent); background:var(--accent-soft); border-radius:5px;
+  width:28px; height:24px; display:grid; place-items:center; flex:none; margin-top:1px;
+}
+.rule h3{font-size:14px; margin:0 0 4px; font-weight:600}
+.rule p{margin:0; font-size:13px; color:var(--ink-2); line-height:1.62; max-width:78ch}
+
+/* ---------- notes ---------- */
+.notes{background:var(--surface-2); border:1px solid var(--line); border-radius:8px; padding:16px 18px}
+.notes h2{font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); margin:0 0 10px}
+.notes ul{margin:0; padding-left:17px}
+.notes li{font-size:12.5px; color:var(--ink-2); margin-bottom:6px; line-height:1.55}
+.notes li:last-child{margin-bottom:0}
+.foot{margin-top:26px; font-size:11.5px; color:var(--ink-3); line-height:1.7; border-top:1px solid var(--line); padding-top:16px}
+.spring-case-bar{border-bottom:1px solid var(--line);background:var(--surface);margin-bottom:0}.spring-case-bar-in{max-width:1180px;margin:0 auto;padding:12px 22px;display:flex;align-items:center;gap:26px;flex-wrap:wrap}.spring-case-brand{font-size:17px;font-weight:700;color:var(--accent);text-decoration:none;white-space:nowrap}.spring-case-nav{display:flex;gap:4px;flex-wrap:wrap}.spring-case-nav a{font-size:13px;color:var(--ink-2);padding:7px 9px;border-radius:6px;text-decoration:none}.spring-case-nav a:hover,.spring-case-nav a[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:600}.spring-case-back{margin-left:auto;color:var(--accent);font-size:13px;text-decoration:none;font-weight:600}.case-context{border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:0 0 22px;background:var(--surface)}.case-context .crumb{font-size:12px;color:var(--ink-3);margin-bottom:3px}.case-context strong{font-size:13px}.related{margin-top:25px;border-top:1px solid var(--line);padding-top:18px}.related h2{font-size:16px;margin:0 0 10px}.related a{display:block;color:var(--accent);font-weight:600;text-decoration:none;padding:8px 0;border-top:1px solid var(--line)}.related p{font-size:12px;color:var(--ink-2);margin:2px 0 0}
+@media (max-width:1020px){ .kpis{grid-template-columns:repeat(3,1fr)} }
+@media (max-width:600px){ .kpis{grid-template-columns:repeat(2,1fr)} }
+@media (max-width:640px){
+  .wrap{padding:26px 14px 56px}
+  .card-bd,.card-hd{padding-left:13px; padding-right:13px}
+  .ev-d{display:none}
+}
+@media (max-width:640px){.spring-case-bar-in{padding:12px 14px;gap:10px}.spring-case-nav{order:3;width:100%}.spring-case-back{margin-left:auto}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="spring-case-bar">
+  <div class="spring-case-bar-in">
+    <a class="spring-case-brand" href="index.html#home">투자 샘터</a>
+    <nav class="spring-case-nav" aria-label="주요 메뉴">
+      <a href="index.html#home">홈</a><a href="index.html#cases" aria-current="page">사례 탐색</a><a href="macro.html">거시 인과지도</a><a href="index-radar.html">지수 레이더</a>
+    </nav>
+    <a class="spring-case-back" id="caseBack" href="index.html#cases">← 탐색으로 돌아가기</a>
+  </div>
+</header>
+<div class="wrap">
+  <div class="case-context" id="caseContext"></div>
+  <div class="eyebrow" id="eyebrow"></div>
+  <h1 id="headline"></h1>
+  <p class="sub" id="thesis"></p>
+  <div class="chips" id="chips"></div>
+
+  <div class="kpis" id="kpis"></div>
+  <p style="font-size:12px;color:var(--ink-3);margin:0 0 26px">
+    <span id="ddayLbl"></span> · 주가는 수정주가(권리락·증자 반영)
+  </p>
+
+  <div class="card">
+    <div class="card-hd">
+      <h2>지수 대비 상대 성과와 이벤트</h2>
+      <div class="ctrls">
+        <span class="seg-l">기준점</span>
+        <div class="seg" id="segBase">
+          <button data-v="dday" aria-pressed="true">기준일=100</button>
+          <button data-v="start" aria-pressed="false">기간시작=100</button>
+        </div>
+        <span class="seg-l">구간</span>
+        <div class="seg" id="segRange">
+          <button data-v="dday" aria-pressed="true">기준일 이후</button>
+          <button data-v="all" aria-pressed="false">전체</button>
+        </div>
+        <fieldset class="metric-toggle" id="metricControls" aria-label="차트 표시 항목">
+          <label><input type="checkbox" data-panel="rs" checked>상대강도</label>
+          <label><input type="checkbox" data-panel="turn" checked>일별 회전율</label>
+          <label><input type="checkbox" data-panel="flow" checked>누적 순매수</label>
+        </fieldset>
+      </div>
+    </div>
+    <div class="legend" id="legend"></div>
+    <div class="chart-scroll" id="chartWrap">
+      <svg class="chart" id="chart" viewBox="0 0 1120 588" role="img"
+           aria-label="정규화 주가, 상대강도 RS, 일별 거래대금 추이"></svg>
+      <div class="tip" id="tip"></div>
+    </div>
+  </div>
+
+  <div class="card" id="phaseCard" hidden>
+    <div class="card-hd">
+      <h2>국면별 성과 &#9733;</h2>
+      <span class="hint">이슈의 각 국면에서 지수 대비 얼마를 벌고 잃었는가</span>
+    </div>
+    <div class="tbl-scroll">
+      <table id="phTbl"><thead><tr>
+        <th>국면</th><th>기간</th><th class="n">거래일</th><th class="n">종목</th>
+        <th class="n" id="phBmTh">지수</th><th class="n">초과수익</th><th class="n">종료 RS</th>
+        <th class="n">평균 회전율</th><th class="n">평균 거래대금</th><th class="n">직전 대비</th>
+        <th class="n">외국인 순매수</th><th class="n">기관 순매수</th><th class="n">개인 순매수</th>
+      </tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">
+      <h2>구간별 수익률</h2>
+      <span class="hint">초과수익 = 종목 − 지수 · RS는 D-day를 100으로 둔 상대강도</span>
+    </div>
+    <div class="tbl-scroll">
+      <table id="perTbl"><thead><tr>
+        <th>구간</th><th>날짜</th><th class="n">종가</th><th class="n">종목</th>
+        <th class="n" id="perBmTh">지수</th><th class="n">초과수익</th><th class="n">RS</th>
+      </tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">
+      <h2>이벤트 타임라인</h2>
+      <span class="hint">행을 누르면 차트에서 해당 시점이 표시됩니다 · 초과 = 당일 종목 등락 − 지수 등락</span>
+    </div>
+    <div class="tbl-scroll">
+      <table id="evTbl"><thead><tr>
+        <th class="n">#</th><th>날짜</th><th>단계</th><th>이벤트</th>
+        <th class="n">종가</th><th class="n">당일</th><th class="n">지수</th>
+        <th class="n">초과</th><th class="n">거래대금</th><th class="n">평균대비</th>
+      </tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">
+      <h2>자금 유입 — 돈이 몰린 날과 주가 &#9733;</h2>
+      <span class="hint">이 아카이브의 중심 가설: 종목에 돈이 몰려야 주가가 움직인다</span>
+    </div>
+    <div class="card-bd">
+      <div class="flowsum" id="flowSum"></div>
+    </div>
+    <div class="tbl-scroll">
+      <table id="flowTbl"><thead><tr>
+        <th class="n">#</th><th>날짜</th><th class="n">거래대금</th>
+        <th class="n">60일 평균 대비</th><th class="n">당일 등락</th><th>같은 날 기록된 이벤트</th>
+      </tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+
+  <div class="card" id="orgnCard" hidden>
+    <div class="card-hd">
+      <h2>기관 세부 — "기관"은 누구인가</h2>
+      <span class="hint">기관계 하나로 묶으면 연기금과 증권사 자기매매가 같은 칸에 들어간다</span>
+    </div>
+    <div class="tbl-scroll">
+      <table id="orgnTbl"><thead></thead><tbody></tbody></table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd"><h2 id="proceedsTitle">자금용도 분해</h2>
+      <span class="hint" id="proceedsHint">혼합형 유상증자는 항목별로 쪼개 각각 평가한다</span></div>
+    <div class="card-bd"><div class="split" id="proceeds"></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd"><h2>이식 가능한 규칙</h2>
+      <span class="hint">다음 종목의 같은 이슈에 적용할 문장</span></div>
+    <div class="card-bd" id="rules"></div>
+  </div>
+
+  <div class="notes">
+    <h2>한계와 확인 필요 사항</h2>
+    <ul id="caveats"></ul>
+  </div>
+  <section class="related" id="relatedCases" hidden>
+    <h2>함께 볼 사례</h2>
+    <div id="relatedList"></div>
+  </section>
+  <div class="foot" id="foot"></div>
+</div>
+
+<script>
+const D = {"meta":{"code":"352480","name":"씨앤씨인터내셔널","market":"KOSDAQ","sector":"색조화장품 ODM","issue_type":"유상증자","dday":"2025-05-22","announce_date":"2025-05-23 (DART 접수 20250523000001, 장 시작 전 · 이사회 결의 2025-05-22)","dday_note":"이사회 결의 2025-05-22 장 마감 후, 공시 접수는 05-23 장 시작 전. 기준일은 충격을 반영하지 않은 마지막 거래일인 2025-05-22(종가 47,700원)","type_code":"G(타법인취득·대상미정 69.0% + C 시설자금 31.0%) · 제3자배정(단순자금·PE) · L(희석률 26.53%)","method":"제3자배정 1인 (PEF) · 할인율 0% · 신주 전량 1년 보호예수 · 증권신고서 제출 면제","amount_initial":"1,450억 (신주 3,615,960주 × 40,100원)","amount_final":"1,450억 (변동 없음 · 2025-10-17 전량 납입)","score":"-17 · 부정 → 필수 감점 2건(반복증자·증분이익 미제시) → 회피","benchmark_label":"KOSDAQ","headline":"최대주주는 7만원에 팔고, 주주는 4만100원에 희석됐다","thesis":"경영권 양수도와 제3자배정 유상증자가 같은 날 한 공시에 묶였다. 사모펀드는 구주 2,002,788주를 주당 70,000원(1,402억)에 사고, 신주 3,615,960주를 주당 40,100원(1,450억)에 인수해 41.22%를 확보했다. 두 가격의 차이가 74.6%다. 그 프리미엄은 매도한 최대주주 3인에게 현금으로 갔고, 기존 소액주주는 26.53%의 희석만 부담했다. 회사에 들어온 1,450억 중 시설자금 450억은 청주공장(이후 790억으로 확대)으로 갔지만, 타법인 취득 1,000억은 거래상대방·발행회사·사업내용·취득가 산정근거가 전부 '미정'이라고 적힌 채 1년 4개월간 집행되지 않았다. 회사는 그 돈으로 인수를 하지 않고 CB 300억을 상환하고 자사주 50억을 샀다. 주가는 D+250 기준 지수 대비 -102.5%p. 다만 인과 분해를 하면 희석 기여는 -26.5%이고 이익 감소가 -58.1%로 두 배 이상 크다 — 유상증자가 주가를 무너뜨린 것은 아니지만, 주주에게 손해를 끼치지 않았다는 뜻도 아니다. 인수인 자신도 2,852억을 넣고 현재 평가 1,225억(-57.0%)이다. 이 케이스에서 확정 이익을 실현한 유일한 주체는 매각한 최대주주 3인이다.","theme_ids":[],"pattern_ids":["혼합용도","사이클역행증자","반복증자","대주주불참","개인받이","회전랠리","공시신뢰훼손"],"use_of_proceeds":[{"item":"타법인 증권 취득자금","amount":"1,000억","share":69,"nature":"DART 【타법인 증권 취득자금의 경우】 표의 거래상대방·증권발행회사·사업내용·취득가격 산정근거가 전부 '미정'. 언론 보도로는 해외 영업기지 구축 또는 스킨케어 ODM 인수 후보가 거론됐으나 공시에는 없다. E(관련 다각화)인지 F(비관련)인지 D-day에 판정 불가","code":"판정불가","code_label":"타법인취득 · 대상 미정","verdict":"부정","fate":"D-day 이후 2026-09-07까지 타법인 취득 공시 0건. 1년 4개월 미집행. 그 사이 CB 300억 현금상환·자사주 50억 취득"},{"item":"시설자금 — 청주공장 신규 생산시설 구축","amount":"450억","share":31,"nature":"기존 본업(색조 ODM) 캐파 확대. 투자기간 '25~'27. 가동률·수주잔고·캐파 예약 등 수요 근거는 제시되지 않았다 — 제3자배정 1년 보호예수로 증권신고서가 면제돼 검증 문서 자체가 없다","code":"C","code_label":"본업 캐파 증설","verdict":"조건부 중립","fate":"2026-02-05 신규시설투자 790억으로 확대 결정(당초의 1.76배). 착공 2026-02-23, 준공 2027-09-22 예정. 다만 공시상 재원은 '내부보유자금 및 차입금'으로 기재돼 유증자금과의 연결 고리가 확인되지 않는다"}],"rules":[{"n":1,"title":"경영권 양수도와 제3자배정 유증이 같은 날 묶여 있으면 신주 발행가와 구주 매각가의 비율부터 계산하라","body":"신주 40,100원 vs 구주 70,000원 = 74.6% 차이. 회사에 들어온 1,450억은 인수인이 41.22%를 확보하기 위한 총비용 2,852억의 절반이었고, 그 절반만큼 기존 주주가 희석됐다. 구주 대금 1,402억은 매도한 3인에게 갔다. 두 가격이 비슷하면(프리미엄 20% 이하) 이 규칙은 작동하지 않으며, 인수인이 사업 파트너면 신주 대금이 시너지로 되돌아올 수 있다 — 여기서는 재무적 투자자였다."},{"n":2,"title":"D-day에 구주 매각가가 공개되지 않았다면 그 빈칸 자체가 정보다","body":"2025-05-23 공시에는 매도 주식 수(2,002,788주)만 있고 단가가 없었다. 단가는 3개월 뒤 본계약 공시(2025-08-29)에서 70,000원으로 나왔다. 그 3개월 동안 주주는 자기가 얼마에 희석되는지만 알고 최대주주가 얼마에 파는지는 모르는 상태로 거래했다. 공시에 '양해각서(MOU)' 문구가 있으면 단가가 아직 없다는 신호다."},{"n":3,"title":"자금용도 칸이 '미정'이면 중립이 아니라 최저점으로 채점하라","body":"타법인 취득 1,000억(69.0%)의 네 칸이 전부 '미정'이었고 1년 4개월 뒤에도 집행되지 않았다. 그동안 EPS는 26.53% 희석된 채로 계산됐다. EPS 유지에 필요한 세후 수익률 r*는 8.46%인데 예금 금리로는 채울 수 없다. 다만 공개매수·경쟁입찰 중이라 대상을 못 밝히는 경우 회사는 통상 '협의 중'·'실사 진행 중'으로 단계를 밝힌다 — 아무 단계도 밝히지 않는 '미정'과 구분한다."},{"n":4,"title":"증권신고서가 면제된 건은 '검증 문서가 존재하지 않는다'를 수요 가시성에 직접 반영하라","body":"주주배정 케이스(HLB제약·삼성바이오로직스)에서는 가동률·병목 공정·원가율 격차·증분 이익 추정까지 증권신고서에서 읽을 수 있었다. 제3자배정 + 1년 전량 보호예수는 증권신고서 제출을 면제받는다. '근거가 약하다'가 아니라 '근거를 담을 문서가 제도적으로 없다'이고 결과는 같다 — -2. 주요사항보고서 16번이 '아니오', 17번 사유가 '사모발행' 또는 '1년간 전량 보호예수'인지로 판별한다."},{"n":5,"title":"신주 전량이 보호예수인 유증에서 T0 하락은 물량이 아니라 가격 정보의 충격이다","body":"신주 3,615,960주가 전량 1년 보호예수라 상장 유통물량은 33.97%에서 22.5%로 오히려 줄었는데도 T0에 -23.0%(초과 -32.6%p)가 났고, 신주상장일(2025-10-31) 전후에는 아무 일도 없었다. 시장이 반응한 것은 '40,100원이 이 회사의 값'이라는 정보였다. 오버행 해소를 기다리는 전략은 여기서 작동하지 않는다. 다만 보호예수 해제일(2026-10-17)은 별개의 이벤트이며 미도래다."},{"n":6,"title":"유동시총 대비 회전율이 사전 구간의 1/5 이하로 마르면 초과수익 회복 경로는 실적 외에 남지 않는다","body":"회전율 6.12%(사전) → 5.52%(T0) → 2.85%(T1) → 1.28%(T2) → 0.92%(T3). 유통물량이 줄어 분모가 작아졌는데도 회전율이 함께 말랐다. 분모가 아니라 분자(관심)가 사라진 것이다. 그 구간에 자사주 신탁 50억을 두 차례 걸었지만 RS는 27.2까지 내려갔다. 회전율 급감은 하락의 원인이 아니라 반등의 연료가 없다는 신호로 읽는다."},{"n":7,"title":"나쁜 항목보다 나쁜 것은 판정 불가 항목이다","body":"이수페타시스의 F(비관련 M&A 55%)는 제거될 수 있는 항목이었고 실제로 제거되자 하루에 +28.01%가 나왔다(#악재분해·#철회반등). 씨앤씨의 '미정 1,000억'은 제거될 수도 확정될 수도 없어서 옵션가치가 생기지 않았다. G형 분해표는 항목에 코드를 붙일 수 있을 때만 작동한다."}],"caveats":["희석률 26.53%는 아카이브 정의(신주 ÷ 증자 후 주식수)다. 공시상 증자비율 36.11%는 신주 ÷ 증자 전 주식수이므로 혼동하지 않는다","유통비율 22.5%(키움 ka10001, 2026-09-07)는 신주 보호예수가 반영된 현재 스냅샷이다. 납입 전 구간의 실제 유통주식수는 3,401,941주(10,013,941 − 최대주주등 6,612,000)로 유통비율 33.97%였다. 케이스 본문의 국면별 회전율은 이 시점별 유동주식수를 적용해 따로 계산했고, 대시보드의 회전율은 빌더 규격상 현재 유통비율 22.5% 상수를 쓰므로 납입 전 구간이 과대평가된다","수급 데이터(키움 ka10059)는 2025-04-01부터 존재한다. 사전 구간(2025-03-11~05-22)의 앞 15거래일은 결측이며, 본문의 사전 구간 순매수는 2025-04-01~05-22만 합산한 값이다","2025-03-12(+26.2%, 거래량 15.6배)와 2025-05-12(+19.5%, 6.0배)의 원인은 회사 공시로 확인되지 않는다. 매각 추진 보도인지 업종 재료인지 미확인 상태다","시가총액 2,971억 소형주이고 외인소진율이 0.53%다. 개인·외국인·기관 순매수 절대금액이 수십~수백억 수준이라 주체별 수급 신호의 신뢰도는 대형주 케이스보다 낮다","사이클 백분위 0.25는 연결 5년 이력(2020~2024) 기준이다. 2021년 IPO라 6년 창을 채우지 못했고, 프레임워크가 정한 최소 5년의 경계선이다","청주공장 790억의 재원은 2026-02-05 공시에 '내부보유자금 및 차입금'으로 기재됐다. 유증 시설자금 450억이 여기에 쓰였는지는 반기보고서 「자금의 사용내역」 원문으로 확인해야 하며 미확인이다","인수인 평가손익 -57.0%는 2026-09-07 종가 21,800원 × 5,618,748주 기준 단순 계산이며, 인수금융 1,500억의 이자와 배당 수취는 반영하지 않았다"],"phases":[{"label":"사전 — 매각 기대 선반영","start":"2025-03-11","end":"2025-05-22","note":"초과 +45.7%p. 3주체 순매수 합계 +2.2억(거래대금의 0.12%) — #회전랠리"},{"label":"T0 매각·희석 충격","start":"2025-05-23","end":"2025-06-23","note":"초과 -32.6%p. 개인 +156억(거래대금의 15.6%) 순매수, 기관 -113억 — #개인받이. 공시 당일(05-23)까지 포함하면 개인 +210억·기관 -162억"},{"label":"T1 본계약·납입 대기","start":"2025-06-24","end":"2025-10-17","note":"초과 +6.6%p. 08-29 구주 단가 70,000원 공개, 납입 2개월 연기, 배정대상자 3회 변경"},{"label":"T2 PE 체제 출범","start":"2025-10-20","end":"2026-02-12","note":"초과 -37.5%p. 신주상장·CB 90억 상환. 회전율 1.28%로 급감"},{"label":"T3 실적 쇼크·자금 미집행","start":"2026-02-13","end":"2026-09-07","note":"초과 -10.2%p. 2025 순이익 -56.1%, 2Q26 순손실. 일평균 거래대금 7억(평균의 0.13배)"}],"band":{"start":"2025-05-23","end":"2025-06-23","label":"T0 매각·희석 충격 구간 (D+1 → D+20)"},"share_steps":[{"from":"1900-01-01","listed":10013941,"note":"증자 전 보통주 (DART 확정)"},{"from":"2025-10-31","listed":13629901,"note":"신주 3,615,960주 상장 (전량 1년 보호예수, 해제 2026-10-17)"}]},"dates":["2023-01-02","2023-01-03","2023-01-04","2023-01-05","2023-01-06","2023-01-09","2023-01-10","2023-01-11","2023-01-12","2023-01-13","2023-01-16","2023-01-17","2023-01-18","2023-01-19","2023-01-20","2023-01-25","2023-01-26","2023-01-27","2023-01-30","2023-01-31","2023-02-01","2023-02-02","2023-02-03","2023-02-06","2023-02-07","2023-02-08","2023-02-09","2023-02-10","2023-02-13","2023-02-14","2023-02-15","2023-02-16","2023-02-17","2023-02-20","2023-02-21","2023-02-22","2023-02-23","2023-02-24","2023-02-27","2023-02-28","2023-03-02","2023-03-03","2023-03-06","2023-03-07","2023-03-08","2023-03-09","2023-03-10","2023-03-13","2023-03-14","2023-03-15","2023-03-16","2023-03-17","2023-03-20","2023-03-21","2023-03-22","2023-03-23","2023-03-24","2023-03-27","2023-03-28","2023-03-29","2023-03-30","2023-03-31","2023-04-03","2023-04-04","2023-04-05","2023-04-06","2023-04-07","2023-04-10","2023-04-11","2023-04-12","2023-04-13","2023-04-14","2023-04-17","2023-04-18","2023-04-19","2023-04-20","2023-04-21","2023-04-24","2023-04-25","2023-04-26","2023-04-27","2023-04-28","2023-05-02","2023-05-03","2023-05-04","2023-05-08","2023-05-09","2023-05-10","2023-05-11","2023-05-12","2023-05-15","2023-05-16","2023-05-17","2023-05-18","2023-05-19","2023-05-22","2023-05-23","2023-05-24","2023-05-25","2023-05-26","2023-05-30","2023-05-31","2023-06-01","2023-06-02","2023-06-05","2023-06-07","2023-06-08","2023-06-09","2023-06-12","2023-06-13","2023-06-14","2023-06-15","2023-06-16","2023-06-19","2023-06-20","2023-06-21","2023-06-22","2023-06-23","2023-06-26","2023-06-27","2023-06-28","2023-06-29","2023-06-30","2023-07-03","2023-07-04","2023-07-05","2023-07-06","2023-07-07","2023-07-10","2023-07-11","2023-07-12","2023-07-13","2023-07-14","2023-07-17","2023-07-18","2023-07-19","2023-07-20","2023-07-21","2023-07-24","2023-07-25","2023-07-26","2023-07-27","2023-07-28","2023-07-31","2023-08-01","2023-08-02","2023-08-03","2023-08-04","2023-08-07","2023-08-08","2023-08-09","2023-08-10","2023-08-11","2023-08-14","2023-08-16","2023-08-17","2023-08-18","2023-08-21","2023-08-22","2023-08-23","2023-08-24","2023-08-25","2023-08-28","2023-08-29","2023-08-30","2023-08-31","2023-09-01","2023-09-04","2023-09-05","2023-09-06","2023-09-07","2023-09-08","2023-09-11","2023-09-12","2023-09-13","2023-09-14","2023-09-15","2023-09-18","2023-09-19","2023-09-20","2023-09-21","2023-09-22","2023-09-25","2023-09-26","2023-09-27","2023-10-04","2023-10-05","2023-10-06","2023-10-10","2023-10-11","2023-10-12","2023-10-13","2023-10-16","2023-10-17","2023-10-18","2023-10-19","2023-10-20","2023-10-23","2023-10-24","2023-10-25","2023-10-26","2023-10-27","2023-10-30","2023-10-31","2023-11-01","2023-11-02","2023-11-03","2023-11-06","2023-11-07","2023-11-08","2023-11-09","2023-11-10","2023-11-13","2023-11-14","2023-11-15","2023-11-16","2023-11-17","2023-11-20","2023-11-21","2023-11-22","2023-11-23","2023-11-24","2023-11-27","2023-11-28","2023-11-29","2023-11-30","2023-12-01","2023-12-04","2023-12-05","2023-12-06","2023-12-07","2023-12-08","2023-12-11","2023-12-12","2023-12-13","2023-12-14","2023-12-15","2023-12-18","2023-12-19","2023-12-20","2023-12-21","2023-12-22","2023-12-26","2023-12-27","2023-12-28","2024-01-02","2024-01-03","2024-01-04","2024-01-05","2024-01-08","2024-01-09","2024-01-10","2024-01-11","2024-01-12","2024-01-15","2024-01-16","2024-01-17","2024-01-18","2024-01-19","2024-01-22","2024-01-23","2024-01-24","2024-01-25","2024-01-26","2024-01-29","2024-01-30","2024-01-31","2024-02-01","2024-02-02","2024-02-05","2024-02-06","2024-02-07","2024-02-08","2024-02-13","2024-02-14","2024-02-15","2024-02-16","2024-02-19","2024-02-20","2024-02-21","2024-02-22","2024-02-23","2024-02-26","2024-02-27","2024-02-28","2024-02-29","2024-03-04","2024-03-05","2024-03-06","2024-03-07","2024-03-08","2024-03-11","2024-03-12","2024-03-13","2024-03-14","2024-03-15","2024-03-18","2024-03-19","2024-03-20","2024-03-21","2024-03-22","2024-03-25","2024-03-26","2024-03-27","2024-03-28","2024-03-29","2024-04-01","2024-04-02","2024-04-03","2024-04-04","2024-04-05","2024-04-08","2024-04-09","2024-04-11","2024-04-12","2024-04-15","2024-04-16","2024-04-17","2024-04-18","2024-04-19","2024-04-22","2024-04-23","2024-04-24","2024-04-25","2024-04-26","2024-04-29","2024-04-30","2024-05-02","2024-05-03","2024-05-07","2024-05-08","2024-05-09","2024-05-10","2024-05-13","2024-05-14","2024-05-16","2024-05-17","2024-05-20","2024-05-21","2024-05-22","2024-05-23","2024-05-24","2024-05-27","2024-05-28","2024-05-29","2024-05-30","2024-05-31","2024-06-03","2024-06-04","2024-06-05","2024-06-07","2024-06-10","2024-06-11","2024-06-12","2024-06-13","2024-06-14","2024-06-17","2024-06-18","2024-06-19","2024-06-20","2024-06-21","2024-06-24","2024-06-25","2024-06-26","2024-06-27","2024-06-28","2024-07-01","2024-07-02","2024-07-03","2024-07-04","2024-07-05","2024-07-08","2024-07-09","2024-07-10","2024-07-11","2024-07-12","2024-07-15","2024-07-16","2024-07-17","2024-07-18","2024-07-19","2024-07-22","2024-07-23","2024-07-24","2024-07-25","2024-07-26","2024-07-29","2024-07-30","2024-07-31","2024-08-01","2024-08-02","2024-08-05","2024-08-06","2024-08-07","2024-08-08","2024-08-09","2024-08-12","2024-08-13","2024-08-14","2024-08-16","2024-08-19","2024-08-20","2024-08-21","2024-08-22","2024-08-23","2024-08-26","2024-08-27","2024-08-28","2024-08-29","2024-08-30","2024-09-02","2024-09-03","2024-09-04","2024-09-05","2024-09-06","2024-09-09","2024-09-10","2024-09-11","2024-09-12","2024-09-13","2024-09-19","2024-09-20","2024-09-23","2024-09-24","2024-09-25","2024-09-26","2024-09-27","2024-09-30","2024-10-02","2024-10-04","2024-10-07","2024-10-08","2024-10-10","2024-10-11","2024-10-14","2024-10-15","2024-10-16","2024-10-17","2024-10-18","2024-10-21","2024-10-22","2024-10-23","2024-10-24","2024-10-25","2024-10-28","2024-10-29","2024-10-30","2024-10-31","2024-11-01","2024-11-04","2024-11-05","2024-11-06","2024-11-07","2024-11-08","2024-11-11","2024-11-12","2024-11-13","2024-11-14","2024-11-15","2024-11-18","2024-11-19","2024-11-20","2024-11-21","2024-11-22","2024-11-25","2024-11-26","2024-11-27","2024-11-28","2024-11-29","2024-12-02","2024-12-03","2024-12-04","2024-12-05","2024-12-06","2024-12-09","2024-12-10","2024-12-11","2024-12-12","2024-12-13","2024-12-16","2024-12-17","2024-12-18","2024-12-19","2024-12-20","2024-12-23","2024-12-24","2024-12-26","2024-12-27","2024-12-30","2025-01-02","2025-01-03","2025-01-06","2025-01-07","2025-01-08","2025-01-09","2025-01-10","2025-01-13","2025-01-14","2025-01-15","2025-01-16","2025-01-17","2025-01-20","2025-01-21","2025-01-22","2025-01-23","2025-01-24","2025-01-31","2025-02-03","2025-02-04","2025-02-05","2025-02-06","2025-02-07","2025-02-10","2025-02-11","2025-02-12","2025-02-13","2025-02-14","2025-02-17","2025-02-18","2025-02-19","2025-02-20","2025-02-21","2025-02-24","2025-02-25","2025-02-26","2025-02-27","2025-02-28","2025-03-04","2025-03-05","2025-03-06","2025-03-07","2025-03-10","2025-03-11","2025-03-12","2025-03-13","2025-03-14","2025-03-17","2025-03-18","2025-03-19","2025-03-20","2025-03-21","2025-03-24","2025-03-25","2025-03-26","2025-03-27","2025-03-28","2025-03-31","2025-04-01","2025-04-02","2025-04-03","2025-04-04","2025-04-07","2025-04-08","2025-04-09","2025-04-10","2025-04-11","2025-04-14","2025-04-15","2025-04-16","2025-04-17","2025-04-18","2025-04-21","2025-04-22","2025-04-23","2025-04-24","2025-04-25","2025-04-28","2025-04-29","2025-04-30","2025-05-02","2025-05-07","2025-05-08","2025-05-09","2025-05-12","2025-05-13","2025-05-14","2025-05-15","2025-05-16","2025-05-19","2025-05-20","2025-05-21","2025-05-22","2025-05-23","2025-05-26","2025-05-27","2025-05-28","2025-05-29","2025-05-30","2025-06-02","2025-06-04","2025-06-05","2025-06-09","2025-06-10","2025-06-11","2025-06-12","2025-06-13","2025-06-16","2025-06-17","2025-06-18","2025-06-19","2025-06-20","2025-06-23","2025-06-24","2025-06-25","2025-06-26","2025-06-27","2025-06-30","2025-07-01","2025-07-02","2025-07-03","2025-07-04","2025-07-07","2025-07-08","2025-07-09","2025-07-10","2025-07-11","2025-07-14","2025-07-15","2025-07-16","2025-07-17","2025-07-18","2025-07-21","2025-07-22","2025-07-23","2025-07-24","2025-07-25","2025-07-28","2025-07-29","2025-07-30","2025-07-31","2025-08-01","2025-08-04","2025-08-05","2025-08-06","2025-08-07","2025-08-08","2025-08-11","2025-08-12","2025-08-13","2025-08-14","2025-08-18","2025-08-19","2025-08-20","2025-08-21","2025-08-22","2025-08-25","2025-08-26","2025-08-27","2025-08-28","2025-08-29","2025-09-01","2025-09-02","2025-09-03","2025-09-04","2025-09-05","2025-09-08","2025-09-09","2025-09-10","2025-09-11","2025-09-12","2025-09-15","2025-09-16","2025-09-17","2025-09-18","2025-09-19","2025-09-22","2025-09-23","2025-09-24","2025-09-25","2025-09-26","2025-09-29","2025-09-30","2025-10-01","2025-10-02","2025-10-10","2025-10-13","2025-10-14","2025-10-15","2025-10-16","2025-10-17","2025-10-20","2025-10-21","2025-10-22","2025-10-23","2025-10-24","2025-10-27","2025-10-28","2025-10-29","2025-10-30","2025-10-31","2025-11-03","2025-11-04","2025-11-05","2025-11-06","2025-11-07","2025-11-10","2025-11-11","2025-11-12","2025-11-13","2025-11-14","2025-11-17","2025-11-18","2025-11-19","2025-11-20","2025-11-21","2025-11-24","2025-11-25","2025-11-26","2025-11-27","2025-11-28","2025-12-01","2025-12-02","2025-12-03","2025-12-04","2025-12-05","2025-12-08","2025-12-09","2025-12-10","2025-12-11","2025-12-12","2025-12-15","2025-12-16","2025-12-17","2025-12-18","2025-12-19","2025-12-22","2025-12-23","2025-12-24","2025-12-26","2025-12-29","2025-12-30","2026-01-02","2026-01-05","2026-01-06","2026-01-07","2026-01-08","2026-01-09","2026-01-12","2026-01-13","2026-01-14","2026-01-15","2026-01-16","2026-01-19","2026-01-20","2026-01-21","2026-01-22","2026-01-23","2026-01-26","2026-01-27","2026-01-28","2026-01-29","2026-01-30","2026-02-02","2026-02-03","2026-02-04","2026-02-05","2026-02-06","2026-02-09","2026-02-10","2026-02-11","2026-02-12","2026-02-13","2026-02-19","2026-02-20","2026-02-23","2026-02-24","2026-02-25","2026-02-26","2026-02-27","2026-03-03","2026-03-04","2026-03-05","2026-03-06","2026-03-09","2026-03-10","2026-03-11","2026-03-12","2026-03-13","2026-03-16","2026-03-17","2026-03-18","2026-03-19","2026-03-20","2026-03-23","2026-03-24","2026-03-25","2026-03-26","2026-03-27","2026-03-30","2026-03-31","2026-04-01","2026-04-02","2026-04-03","2026-04-06","2026-04-07","2026-04-08","2026-04-09","2026-04-10","2026-04-13","2026-04-14","2026-04-15","2026-04-16","2026-04-17","2026-04-20","2026-04-21","2026-04-22","2026-04-23","2026-04-24","2026-04-27","2026-04-28","2026-04-29","2026-04-30","2026-05-04","2026-05-06","2026-05-07","2026-05-08","2026-05-11","2026-05-12","2026-05-13","2026-05-14","2026-05-15","2026-05-18","2026-05-19","2026-05-20","2026-05-21","2026-05-22","2026-05-26","2026-05-27","2026-05-28","2026-05-29","2026-06-01","2026-06-02","2026-06-04","2026-06-05","2026-06-08","2026-06-09","2026-06-10","2026-06-11","2026-06-12","2026-06-15","2026-06-16","2026-06-17","2026-06-18","2026-06-19","2026-06-22","2026-06-23","2026-06-24","2026-06-25","2026-06-26","2026-06-29","2026-06-30","2026-07-01","2026-07-02","2026-07-03","2026-07-06","2026-07-07","2026-07-08","2026-07-09","2026-07-10","2026-07-13","2026-07-14","2026-07-15","2026-07-16","2026-07-20","2026-07-21","2026-07-22","2026-07-23","2026-07-24","2026-07-27","2026-07-28","2026-07-29","2026-07-30","2026-07-31","2026-08-03","2026-08-04","2026-08-05","2026-08-06","2026-08-07","2026-08-10","2026-08-11","2026-08-12","2026-08-13","2026-08-14","2026-08-18","2026-08-19","2026-08-20","2026-08-21","2026-08-24","2026-08-25","2026-08-26","2026-08-27","2026-08-28","2026-08-31","2026-09-01","2026-09-02","2026-09-03","2026-09-04","2026-09-07"],"close":[29950.0,28400.0,27500.0,27450.0,27300.0,28550.0,28900.0,29800.0,28400.0,27900.0,29350.0,28950.0,29350.0,31800.0,31200.0,30250.0,30100.0,30250.0,29550.0,29100.0,28500.0,29750.0,29550.0,29600.0,30800.0,30550.0,30800.0,32750.0,31700.0,31150.0,30400.0,29150.0,28550.0,28800.0,29300.0,28500.0,28750.0,30200.0,30750.0,30350.0,32050.0,32300.0,32850.0,32600.0,32000.0,34350.0,34200.0,33500.0,31950.0,33150.0,33550.0,35400.0,35600.0,36950.0,36600.0,36000.0,36250.0,38700.0,38050.0,39400.0,39150.0,37900.0,38250.0,39500.0,39700.0,39300.0,38200.0,37950.0,38400.0,38350.0,38350.0,37300.0,38000.0,40000.0,39900.0,36950.0,37900.0,36800.0,36400.0,36800.0,41200.0,39750.0,40600.0,40650.0,39900.0,37900.0,38450.0,39500.0,39600.0,39150.0,39900.0,42700.0,44650.0,43950.0,43600.0,42800.0,44200.0,45500.0,45500.0,46650.0,46250.0,45350.0,44600.0,46950.0,45950.0,45250.0,45050.0,46450.0,45700.0,46650.0,45100.0,46000.0,49000.0,47850.0,46600.0,47800.0,49000.0,49300.0,48700.0,50700.0,50800.0,52700.0,52200.0,50100.0,50800.0,50700.0,49000.0,48700.0,46100.0,44950.0,45250.0,46500.0,45050.0,44800.0,47000.0,43950.0,43000.0,42700.0,42750.0,42600.0,40300.0,42800.0,43000.0,43500.0,43200.0,43850.0,44500.0,48100.0,57200.0,56900.0,54700.0,59100.0,65400.0,65400.0,70700.0,70900.0,70100.0,66900.0,66300.0,67900.0,67000.0,73000.0,71400.0,71400.0,70200.0,71200.0,67700.0,66900.0,67000.0,65400.0,64400.0,63500.0,63900.0,63900.0,63600.0,67200.0,68400.0,69200.0,66100.0,62600.0,60600.0,59900.0,59100.0,57900.0,57800.0,54000.0,53500.0,55000.0,52500.0,56200.0,54800.0,51900.0,54300.0,58400.0,56600.0,57200.0,57900.0,58200.0,56600.0,59800.0,57800.0,57400.0,58700.0,58300.0,58800.0,56300.0,56000.0,56000.0,58200.0,58700.0,57600.0,50000.0,47100.0,47100.0,47100.0,51500.0,54700.0,56900.0,60400.0,57700.0,59200.0,60600.0,59000.0,57700.0,59400.0,61000.0,61000.0,59500.0,61400.0,60000.0,58500.0,57800.0,59200.0,58800.0,60100.0,62300.0,61200.0,65200.0,66100.0,64200.0,63900.0,63600.0,62700.0,61900.0,62400.0,62700.0,63500.0,66300.0,67600.0,67500.0,68700.0,71600.0,69800.0,69800.0,67600.0,67600.0,67700.0,72200.0,74000.0,74600.0,70900.0,73000.0,72800.0,71600.0,70700.0,70100.0,68500.0,65000.0,63100.0,63300.0,66800.0,68700.0,68200.0,67300.0,72700.0,70000.0,68700.0,67500.0,68000.0,71200.0,68200.0,68800.0,69300.0,67000.0,68000.0,66900.0,65700.0,70700.0,75000.0,73500.0,73500.0,76400.0,73100.0,70800.0,69800.0,67800.0,69500.0,71000.0,70800.0,70400.0,73100.0,76900.0,76100.0,75300.0,74000.0,73900.0,80100.0,80900.0,81300.0,84300.0,79600.0,76800.0,76700.0,77800.0,80800.0,79600.0,78100.0,80200.0,83500.0,83700.0,82300.0,81400.0,81400.0,81600.0,81000.0,83300.0,84700.0,81000.0,79600.0,78900.0,77900.0,84200.0,84900.0,83300.0,82100.0,80700.0,79000.0,82500.0,91100.0,87900.0,87200.0,88200.0,84800.0,86600.0,89800.0,90500.0,91400.0,91500.0,90600.0,88700.0,88200.0,94500.0,93000.0,102600.0,101200.0,102400.0,104200.0,118400.0,116500.0,117000.0,117000.0,114100.0,111100.0,117200.0,128300.0,135400.0,122700.0,129000.0,125400.0,123300.0,122200.0,126800.0,122000.0,124500.0,121400.0,117600.0,114800.0,109100.0,115500.0,116400.0,115100.0,117400.0,116700.0,117800.0,111500.0,111100.0,114900.0,114000.0,114400.0,122000.0,113700.0,100800.0,99900.0,114000.0,111700.0,117000.0,113000.0,102300.0,102200.0,106100.0,102900.0,104000.0,100200.0,101700.0,101700.0,100700.0,107700.0,105000.0,102800.0,102900.0,105100.0,107200.0,100500.0,94000.0,92700.0,96500.0,96000.0,94400.0,96100.0,93000.0,92400.0,92400.0,103100.0,104000.0,97700.0,97600.0,95500.0,94000.0,89200.0,88000.0,88200.0,86600.0,84100.0,81800.0,79000.0,81800.0,78900.0,78800.0,75600.0,73800.0,72400.0,71000.0,71600.0,68800.0,67000.0,66400.0,68100.0,67000.0,63500.0,67400.0,64000.0,63100.0,63200.0,62100.0,53700.0,47500.0,40800.0,38300.0,39500.0,39600.0,37900.0,37850.0,37300.0,39450.0,43800.0,44200.0,43000.0,42100.0,39900.0,39200.0,45350.0,43650.0,42050.0,40450.0,37500.0,41000.0,42350.0,41100.0,44250.0,44500.0,45350.0,44300.0,44300.0,45200.0,47100.0,47200.0,46350.0,44550.0,45700.0,44650.0,45000.0,44200.0,42850.0,43550.0,43900.0,41300.0,40150.0,39800.0,39200.0,41400.0,40200.0,40150.0,40650.0,39750.0,37250.0,34900.0,35100.0,35100.0,35600.0,35750.0,35600.0,35100.0,35250.0,36350.0,35250.0,36000.0,37100.0,38500.0,38300.0,38450.0,38350.0,38450.0,37900.0,37500.0,37200.0,37850.0,35350.0,34050.0,34150.0,34000.0,33850.0,33200.0,32850.0,41450.0,44350.0,43550.0,42600.0,45000.0,41800.0,42350.0,41450.0,43350.0,42850.0,42200.0,40750.0,39500.0,37750.0,39850.0,39900.0,37800.0,34950.0,31250.0,29600.0,27800.0,31100.0,31350.0,31300.0,31700.0,31350.0,33550.0,33600.0,32500.0,31900.0,32200.0,32250.0,32800.0,32100.0,32300.0,32200.0,33750.0,33400.0,34650.0,32000.0,38250.0,37200.0,38350.0,37900.0,36550.0,35250.0,40350.0,45350.0,47700.0,43350.0,38200.0,39000.0,37950.0,37500.0,36650.0,35750.0,36350.0,35000.0,35450.0,35000.0,35750.0,34550.0,32700.0,33050.0,32550.0,33000.0,32950.0,34150.0,33400.0,34100.0,33400.0,32650.0,32500.0,33500.0,33450.0,33700.0,35000.0,35800.0,38450.0,40900.0,41150.0,44900.0,43700.0,43600.0,46050.0,44800.0,47250.0,48300.0,47450.0,45600.0,43950.0,42050.0,40400.0,39350.0,39700.0,40250.0,44300.0,41450.0,42900.0,42100.0,43350.0,43300.0,41700.0,41100.0,39700.0,38850.0,40750.0,41350.0,40750.0,41300.0,43350.0,43100.0,44700.0,44400.0,43900.0,44400.0,43800.0,42900.0,41150.0,40700.0,40950.0,40850.0,42450.0,44000.0,43450.0,42700.0,42700.0,43000.0,42950.0,43350.0,44500.0,44500.0,45400.0,44050.0,44100.0,43600.0,41850.0,41650.0,40750.0,40800.0,41900.0,40950.0,40150.0,38500.0,39400.0,40100.0,38850.0,38500.0,38700.0,39850.0,39650.0,39000.0,39300.0,40050.0,39400.0,38450.0,37600.0,37400.0,36600.0,36200.0,34250.0,34000.0,34550.0,33550.0,34550.0,34050.0,33300.0,33250.0,32050.0,32000.0,32800.0,32000.0,31850.0,30800.0,31950.0,32000.0,33050.0,32350.0,33150.0,32550.0,31750.0,31550.0,31050.0,30700.0,30250.0,30700.0,31250.0,31600.0,31700.0,31850.0,31250.0,30950.0,31800.0,32550.0,31750.0,31350.0,30600.0,29650.0,32900.0,31850.0,32550.0,33550.0,33050.0,32000.0,31250.0,31000.0,31250.0,31150.0,30400.0,29900.0,30550.0,30000.0,31600.0,32400.0,33200.0,34200.0,35950.0,37550.0,38050.0,35450.0,36550.0,34100.0,34250.0,34100.0,36300.0,35900.0,35300.0,35050.0,34000.0,34350.0,31600.0,31200.0,31300.0,31050.0,30950.0,30700.0,28750.0,24700.0,27000.0,27700.0,26350.0,26750.0,26000.0,25800.0,26300.0,26300.0,26900.0,27350.0,26800.0,27850.0,26550.0,26500.0,26750.0,25650.0,26900.0,26050.0,26300.0,26700.0,25850.0,25750.0,25150.0,25200.0,26000.0,27450.0,26700.0,26850.0,26700.0,27000.0,27200.0,27400.0,27300.0,27350.0,27850.0,28400.0,29650.0,31600.0,30300.0,30700.0,29700.0,28350.0,27450.0,26650.0,27150.0,26650.0,25000.0,24050.0,23800.0,23150.0,22300.0,22000.0,20450.0,20000.0,21200.0,22700.0,21150.0,21050.0,20300.0,19920.0,19290.0,20200.0,19700.0,18780.0,19160.0,19260.0,20100.0,18830.0,19210.0,19800.0,21550.0,20900.0,20300.0,21100.0,20150.0,20450.0,21200.0,20600.0,22000.0,21350.0,21200.0,20150.0,19980.0,19520.0,20050.0,19530.0,20150.0,20200.0,19820.0,19320.0,19250.0,19000.0,18500.0,18460.0,17850.0,18580.0,18130.0,18890.0,18000.0,17430.0,16910.0,17900.0,18230.0,19360.0,19400.0,20150.0,20700.0,20350.0,20950.0,22850.0,21550.0,21400.0,20700.0,20750.0,21650.0,21400.0,21900.0,23000.0,23450.0,22700.0,23600.0,22750.0,22400.0,21450.0,21550.0,21800.0,21800.0],"bm":[671.51,674.95,683.67,679.92,688.94,701.21,696.05,709.77,710.82,711.82,716.89,709.71,711.75,712.89,717.97,732.35,738.94,741.25,738.62,740.49,750.96,764.62,766.79,761.33,772.79,779.98,784.58,772.44,772.55,779.58,765.46,784.71,775.62,788.89,793.42,778.51,783.28,778.88,780.3,791.6,787.19,802.42,816.51,815.76,813.95,809.22,788.6,788.89,758.05,781.17,781.98,797.39,802.2,802.53,813.43,812.19,824.11,827.69,833.51,843.94,850.48,847.52,854.96,857.18,872.36,865.58,880.07,887.78,898.94,890.62,894.25,903.84,909.5,909.02,909.2,885.71,868.82,855.23,838.71,830.44,850.21,842.83,855.61,843.18,845.06,842.28,835.85,829.74,824.54,822.43,814.53,816.75,834.19,835.89,841.72,852.04,859.16,855.46,847.72,843.23,851.5,856.94,863.78,868.06,870.28,880.72,876.13,883.71,885.76,896.81,871.83,878.04,887.95,888.61,886.41,875.7,876.38,874.84,879.5,874.14,866.97,861.79,868.24,889.29,890.0,891.18,870.53,867.27,860.35,878.73,879.88,893.07,896.28,898.29,914.14,923.72,931.6,934.58,929.9,939.96,900.63,883.79,913.74,935.97,939.67,909.76,920.32,918.43,898.22,892.34,908.98,911.29,912.2,901.68,878.29,886.04,877.32,888.71,893.33,882.87,901.74,899.38,909.38,916.24,923.81,928.4,919.74,919.16,921.48,917.95,906.36,914.18,912.55,898.04,882.72,899.47,899.03,891.29,883.89,882.72,860.68,857.35,839.17,827.82,841.02,807.4,801.02,816.39,795.0,817.12,835.49,822.78,810.54,820.38,808.89,784.04,769.25,763.69,784.86,770.84,743.85,748.49,757.12,736.1,739.23,772.84,782.05,839.45,824.37,811.02,802.87,789.31,774.42,794.19,809.36,811.11,799.06,813.08,817.01,814.61,815.98,815.0,810.25,816.44,822.44,831.68,827.24,828.52,813.38,819.54,813.2,830.37,835.25,839.53,829.31,840.59,838.31,850.96,858.3,862.98,859.44,854.62,848.34,859.79,866.57,878.93,871.57,866.25,878.33,879.34,884.64,875.46,882.53,868.08,859.71,854.83,833.05,840.33,842.67,839.69,840.11,836.21,823.74,837.24,819.14,818.86,799.24,798.73,814.77,807.99,807.03,811.92,826.58,845.15,853.3,859.21,857.6,858.47,866.17,864.07,870.11,868.57,867.4,853.75,863.39,862.96,872.97,866.37,870.67,863.37,873.18,875.93,889.71,889.93,887.52,880.46,894.48,891.91,891.45,904.29,903.98,913.69,916.09,911.25,910.05,905.5,912.45,891.59,879.96,882.9,872.29,860.57,859.33,858.1,860.47,852.42,832.81,833.03,855.65,841.91,845.82,845.44,862.23,853.26,856.82,869.72,868.93,867.48,865.59,871.26,872.42,870.15,864.16,854.43,862.15,870.37,855.06,847.08,846.51,845.72,846.58,839.41,847.99,851.01,838.45,831.99,839.98,844.72,845.84,850.75,866.18,864.71,868.36,870.67,871.33,862.19,858.96,858.95,861.17,857.51,852.67,841.52,841.99,842.12,838.65,840.44,847.15,829.91,836.1,840.81,847.49,859.27,860.42,858.55,852.42,850.37,852.88,839.61,829.41,822.48,828.72,809.96,812.12,814.25,797.29,797.56,807.99,803.78,803.15,813.53,779.33,691.28,732.87,748.54,745.28,764.43,772.72,764.86,776.83,786.33,777.47,787.44,779.87,773.47,773.26,766.79,764.95,762.5,756.04,767.66,769.21,760.37,731.75,725.28,706.59,714.46,706.2,709.42,731.03,733.2,739.51,748.33,755.12,767.35,759.3,779.18,774.49,763.88,762.13,768.98,781.01,778.24,775.48,770.98,770.26,773.81,765.79,765.06,753.22,759.95,738.34,745.19,734.59,727.41,740.48,744.18,738.19,743.06,729.05,754.08,751.81,743.31,733.52,743.38,728.84,710.52,689.65,681.56,685.42,689.55,686.12,682.91,680.67,677.01,696.83,693.15,692.0,694.39,678.19,675.84,690.8,677.15,670.94,661.33,627.01,661.59,675.92,683.35,693.73,698.53,694.47,697.57,684.36,668.31,679.24,680.11,675.64,665.97,678.19,686.63,705.76,717.96,718.29,719.63,723.52,717.89,708.21,718.04,711.61,724.24,724.69,727.66,726.07,732.31,724.01,728.74,728.29,703.8,719.92,730.98,740.32,742.9,749.67,749.59,745.18,749.28,756.32,768.48,773.65,778.27,768.27,774.65,773.33,769.43,771.41,770.85,743.96,737.9,746.95,734.92,727.7,725.82,721.5,729.49,722.8,734.26,743.51,745.54,738.35,725.15,719.41,720.22,711.26,716.48,707.49,693.76,672.85,691.45,684.85,683.49,687.39,651.3,658.45,643.39,681.79,695.59,708.98,711.92,699.11,711.75,717.77,715.45,716.12,726.08,726.08,729.69,719.41,726.46,717.24,721.86,722.81,729.59,722.52,725.4,731.88,739.05,733.23,725.07,713.75,715.55,723.62,717.67,715.98,725.27,727.11,728.79,736.29,734.35,740.29,750.21,756.23,764.21,771.2,786.29,789.45,768.86,777.26,775.65,779.73,782.51,791.53,784.79,800.93,798.21,787.95,781.56,781.5,783.67,782.17,793.33,775.8,778.46,784.24,790.36,797.7,800.47,799.37,812.88,812.23,818.27,820.67,821.69,812.97,813.56,809.89,806.95,804.4,804.45,803.67,805.24,772.79,784.06,798.6,803.49,805.81,809.27,811.85,807.19,814.1,815.26,798.05,787.96,777.61,777.24,782.51,798.02,801.66,801.72,798.43,796.91,785.0,794.0,796.81,805.42,811.4,818.6,824.82,833.0,834.76,847.08,852.69,851.84,845.53,857.11,863.11,874.36,872.21,860.94,852.48,835.19,846.71,841.99,845.34,854.25,859.49,860.49,847.96,864.72,865.41,859.54,875.77,872.5,879.15,872.03,883.08,902.7,903.3,901.59,890.86,900.42,914.55,926.57,901.89,898.17,876.81,888.35,884.27,906.51,918.37,897.9,902.67,878.7,871.32,891.94,863.95,856.44,856.03,877.32,880.06,912.67,922.38,928.42,932.01,929.83,924.74,927.79,931.35,935.0,934.64,937.34,938.83,916.11,911.07,901.33,915.27,929.14,919.56,915.2,919.67,932.59,925.47,945.57,957.5,955.97,947.39,944.06,947.92,949.81,948.98,942.18,951.16,954.59,968.36,976.37,951.29,970.35,993.93,1064.41,1082.59,1133.52,1164.41,1149.44,1098.36,1144.33,1149.43,1108.41,1080.77,1127.55,1115.2,1114.87,1125.99,1106.08,1160.71,1154.0,1151.99,1165.0,1165.25,1188.15,1192.78,1137.7,978.44,1116.41,1154.67,1102.28,1137.68,1136.83,1148.4,1152.96,1138.29,1136.94,1164.38,1143.48,1161.52,1096.89,1121.44,1159.55,1136.64,1141.51,1107.05,1052.39,1116.18,1056.34,1063.75,1047.37,1036.73,1089.85,1076.0,1093.63,1099.84,1121.88,1152.43,1162.97,1170.04,1174.85,1179.03,1181.12,1174.31,1203.84,1226.18,1215.58,1220.26,1192.35,1213.74,1210.17,1199.18,1207.72,1207.34,1179.29,1176.93,1191.09,1129.82,1111.09,1084.36,1056.07,1105.97,1161.13,1172.52,1133.13,1104.36,1074.8,1050.03,1026.03,1049.73,1002.44,911.39,967.81,951.63,996.93,1029.05,1034.03,1018.68,1031.96,1000.93,966.59,968.4,891.52,909.31,887.81,851.37,920.57,916.18,929.35,866.72,868.41,847.07,831.23,785.0,794.0,837.43,799.36,783.98,829.43,791.84,749.64,753.34,751.09,790.28,748.22,764.86,705.85,662.68,644.78,719.76,737.35,780.72,799.59,801.67,798.81,854.47,857.84,858.91,861.37,864.65,834.2,824.46,840.89,801.94,813.33,827.15,826.87,837.65,838.41,834.29,821.25,803.98,790.21,813.5,822.19],"vol":[48644,65331,47474,64060,25894,104797,58502,88470,50674,25070,68883,43052,54365,172752,75173,59035,49212,423751,109185,97087,83897,83308,49984,46099,112473,85649,77845,279921,107365,75524,110216,153770,142487,40535,127613,71387,46769,102576,97992,49350,149991,396545,145685,96479,44157,192880,107286,92235,86560,78329,74225,123913,195819,141664,56046,40387,73672,126357,81051,140555,71742,66857,63220,99705,75246,47059,115916,48388,75507,59995,37578,89814,60233,169271,171227,158166,267817,193592,57447,49343,458215,134292,127088,46023,73299,72595,55721,214422,65525,39328,101160,193350,195262,70149,89558,38151,86543,119035,92286,66424,74868,43506,78451,79456,35491,26866,56364,102766,58467,78690,62156,72696,101954,77284,72305,256708,83622,44391,39040,108244,41235,71593,51993,124604,92179,32185,66484,71583,104269,123712,93142,105820,260017,155362,215771,173160,93891,49937,85301,73412,217831,129986,73409,74249,84135,111300,59591,406996,877040,331997,214985,575524,347569,190788,218209,144161,146210,183459,92377,85194,98726,141108,93032,55709,49502,50411,152103,84886,50212,63009,59961,86317,56737,90664,55428,58838,85232,77764,85300,290659,236221,86287,74075,68730,51014,93892,56828,67291,133238,93489,195502,372970,247946,271227,138565,211930,168718,122299,165108,232438,146100,64577,56829,129692,165403,174228,101547,80288,117452,113237,192425,389853,198434,87740,97082,123138,165805,185039,275012,88689,88602,75747,56238,24172,35296,71314,34744,89548,120947,53887,23618,28425,67433,39252,33210,62403,31514,59146,82162,45570,34296,31336,16444,25619,16318,31348,47580,106263,87911,33365,183583,102571,52095,33738,23391,47004,58108,109219,53558,77967,94881,126309,63133,85078,53442,97681,67357,97800,140213,65048,147322,106830,47982,49539,130454,73610,167260,142960,92451,115017,152230,62630,91373,131169,68672,120354,63526,721364,183646,142426,43601,111259,72047,64879,53842,52055,44666,78036,42621,56669,82541,104274,70942,46372,127491,56098,211720,144754,81634,137662,74907,69333,30350,86661,69615,97649,57801,93225,96754,104307,72264,37624,85205,68411,74097,58559,65389,128655,161970,74601,107397,270493,144513,92950,80691,66420,52268,64360,264112,83781,59218,45475,89709,80175,119986,109663,154715,68378,104317,71920,66736,138263,66381,162512,265267,76061,99686,206543,155128,108758,168681,106143,138402,100970,237962,136771,166244,129487,183231,70088,122363,83383,104753,72659,68375,51933,72012,161009,116914,68025,65297,116614,84023,78317,81005,85528,69316,22260,32372,101366,222275,129043,164789,163061,77846,124064,100101,325550,121937,92030,65553,68733,82148,114765,59295,92376,149283,93795,37987,147529,102136,79769,72222,192430,117810,83840,92267,82434,74759,52921,69925,62637,182139,80133,85769,68337,67053,124636,91329,69151,55150,115281,197541,135299,177130,126143,100990,74569,125288,103342,129821,118679,93616,114863,70698,63470,100956,80028,147032,94595,99645,78376,90312,83484,293665,326238,475129,270334,214687,139649,145551,62464,140855,142413,539760,340923,189860,87352,103605,64199,319875,171568,174687,137571,133067,172194,125751,96165,152996,139877,130814,76370,233597,158047,135096,242884,124476,101132,59029,99659,92195,168490,220317,80259,114544,185509,145337,77852,81046,129229,106334,49388,100596,121422,158701,238988,79520,138485,112766,54016,66550,65646,40447,147681,57370,41150,298685,146864,123129,86560,165226,78099,57593,59384,47369,75520,152483,58444,87663,46917,58103,50785,90426,1550152,881405,265111,326395,431981,864432,269456,151129,183174,140205,97899,90081,78312,106847,132250,145354,161664,232532,123532,168996,118525,195031,89898,48144,65719,84660,151567,77097,98974,41693,34143,47996,51122,43163,39778,37245,108535,45774,121425,243916,593358,163795,137218,82570,118302,57089,255527,373995,409552,946109,623935,273875,171280,69229,94318,80197,83057,144430,56487,142789,81515,163672,257624,90284,100672,64133,72386,165540,55581,58525,69551,64979,23380,54942,27957,64457,148301,122520,264117,278055,174189,749029,140990,160853,258369,166988,227255,185050,88121,123465,83341,147817,104684,59256,73987,76177,250250,133345,85815,75212,148656,98820,237136,105514,130454,166071,106996,56357,41840,46817,129753,71468,85267,75403,52613,36230,71668,49539,78467,47583,60864,27353,24099,91902,35825,36662,32557,53227,45775,37552,66524,42793,60508,42765,26419,32097,50060,31869,33817,18131,69827,47650,26239,72264,31912,52370,34191,42065,40476,38313,50134,27674,46268,65472,56398,66338,51800,44596,52577,70936,57574,41879,38032,60893,26207,19681,31369,23631,50631,27454,21496,28562,17063,25991,26836,16693,21847,25551,14798,22091,40137,22792,39386,26015,29052,27493,28757,29839,31016,24262,13090,19676,23746,30332,21457,19278,26942,39207,66336,52159,89093,80329,52417,27397,26501,21976,26733,29323,35763,37485,29753,38601,80268,44422,65424,64945,73134,80122,73250,68140,31967,98020,36621,47416,36793,25926,20150,18681,25902,36948,96897,34630,15556,23932,39335,26441,44768,68709,45980,19670,20410,20575,27863,37325,28116,19426,13491,16587,9773,16803,13385,11237,8310,15407,17689,9852,20277,12905,20108,7049,14029,10245,18092,32336,16133,13007,13058,16013,13809,14413,11791,13179,29086,26053,57170,50727,47206,18577,24980,34792,28313,17740,28184,28384,51400,28055,19486,33265,34274,20307,50451,61352,37604,48414,32577,25906,27368,31748,54931,43838,36542,41564,44753,33064,48609,100933,89375,41061,67459,41424,30675,28227,40980,35135,31334,42620,24355,18699,13535,22669,19988,15919,23418,27192,32354,19451,18175,21639,12838,11632,7093,17771,25757,13800,11456,15918,26556,49837,21504,17166,15381,20656,16084,23996,19235,45780,19179,92126,35633,25498,26543,24703,20373,20026,18236,28889,23610,24679,29631,19923,17753,15446,16510,12350,10289],"val":[15,19,13,18,7,30,17,26,14,7,20,12,16,55,23,18,15,128,32,28,24,25,15,14,35,26,24,92,34,24,34,45,41,12,37,20,13,31,30,15,48,128,48,31,14,66,37,31,28,26,25,44,70,52,21,15,27,49,31,55,28,25,24,39,30,18,44,18,29,23,14,34,23,68,68,58,102,71,21,18,189,53,52,19,29,28,21,85,26,15,40,83,87,31,39,16,38,54,42,31,35,20,35,37,16,12,25,48,27,37,28,33,50,37,34,123,41,22,19,55,21,38,27,62,47,16,33,35,48,56,42,49,117,70,101,76,40,21,36,31,88,56,32,32,36,49,27,196,502,189,118,340,227,125,154,102,102,123,61,58,66,103,66,40,35,36,103,57,34,41,39,55,36,58,35,40,58,54,56,182,143,52,44,40,29,51,30,37,70,53,107,194,135,158,78,121,98,71,93,139,84,37,33,76,97,98,57,45,68,66,111,195,93,41,46,63,91,105,166,51,52,46,33,14,21,44,21,53,74,32,14,16,40,23,20,39,19,39,54,29,22,20,10,16,10,20,30,70,59,23,126,73,36,24,16,32,39,79,40,58,67,92,46,61,38,68,46,64,88,41,98,73,33,33,95,52,115,96,63,82,104,43,63,88,47,81,42,510,138,105,32,85,53,46,38,35,31,55,30,40,60,80,54,35,94,41,170,117,66,116,60,53,23,67,56,78,45,75,81,87,59,31,69,56,60,49,55,104,129,59,84,228,123,77,66,54,41,53,241,74,52,40,76,69,108,99,141,63,95,64,59,131,62,167,268,78,104,245,181,127,197,121,154,118,305,185,204,167,230,86,150,106,128,90,83,61,83,176,135,79,75,137,98,92,90,95,80,25,37,124,253,130,165,186,87,145,113,333,125,98,67,71,82,117,60,93,161,98,39,152,107,86,73,181,109,81,89,78,72,49,65,58,188,83,84,67,64,117,81,61,49,100,166,111,140,103,80,59,95,76,94,84,67,79,47,42,69,54,93,64,64,49,57,52,158,155,194,104,85,55,55,24,53,56,236,151,82,37,41,25,145,75,73,56,50,71,53,40,68,62,59,34,103,71,64,115,58,45,27,44,41,74,94,35,50,77,58,31,32,54,43,20,41,48,59,83,28,49,40,19,24,23,14,54,20,15,111,57,47,33,63,30,22,22,18,29,54,20,30,16,20,17,30,643,391,115,139,194,361,114,63,79,60,41,37,31,40,52,59,62,82,40,52,33,59,28,15,21,27,50,26,33,13,11,16,17,14,13,12,37,15,42,81,221,60,52,31,43,20,100,162,196,416,237,106,66,26,35,29,30,50,20,50,29,57,85,29,33,21,24,57,19,20,23,21,8,18,9,21,52,43,100,111,72,338,62,72,119,75,104,87,42,57,37,63,43,24,29,31,109,57,36,32,65,43,101,43,52,64,43,23,17,19,56,31,37,33,23,16,32,22,32,19,25,11,10,40,16,16,14,23,20,16,29,19,27,19,12,14,21,13,14,7,29,19,11,28,12,21,14,16,16,15,20,11,18,26,22,26,20,17,19,25,20,14,13,20,9,7,11,8,16,9,7,9,6,8,8,5,7,8,5,7,13,7,12,8,9,8,9,9,10,8,4,6,8,10,7,6,8,12,21,17,29,27,17,9,8,7,8,9,11,11,9,12,25,14,22,22,26,30,28,25,12,34,13,16,13,9,7,7,9,13,31,11,5,8,12,8,13,18,13,5,5,6,7,10,7,5,4,5,3,5,4,3,2,4,5,3,5,4,5,2,4,3,5,9,4,4,4,4,4,4,3,4,8,7,17,16,14,6,8,10,8,5,8,8,13,7,5,8,8,4,10,12,8,11,7,5,6,6,11,9,7,8,9,6,10,20,17,8,15,9,6,6,8,7,7,9,5,4,3,5,4,3,5,5,6,4,4,4,2,2,1,3,5,2,2,3,5,9,4,3,3,4,3,5,4,9,4,21,8,6,6,5,4,4,4,6,6,6,7,5,4,3,4,3,2],"valMa":[15,17,15,16,14,17,17,18,18,17,17,17,16,19,19,19,19,25,26,26,26,26,25,25,25,25,25,27,28,27,28,28,29,28,28,28,28,28,28,28,28,30,31,31,30,31,31,31,31,31,31,31,32,32,32,32,32,32,32,32,33,33,33,33,34,34,34,34,34,34,34,35,35,35,36,36,38,37,37,37,39,40,40,40,40,40,40,40,40,40,40,41,41,42,42,42,42,43,43,43,43,41,41,41,41,40,40,40,40,40,40,40,40,40,40,42,42,41,41,41,41,41,41,42,42,42,42,42,42,43,43,44,45,45,46,46,45,44,44,45,43,43,43,43,43,43,43,45,53,56,57,62,64,66,68,69,70,71,71,72,72,74,74,74,75,75,76,77,77,77,77,77,77,77,77,76,76,77,77,80,82,82,82,82,81,82,82,82,82,82,83,86,86,88,87,88,89,90,91,93,92,92,92,93,94,95,95,93,86,83,83,81,79,77,76,75,75,74,76,76,76,75,74,74,74,74,72,72,73,73,72,72,72,71,71,71,70,70,70,68,66,65,64,64,64,63,63,64,64,63,63,61,60,58,56,55,54,54,53,52,52,53,53,52,51,51,51,51,51,51,51,49,48,48,48,48,49,49,47,47,48,48,49,50,50,51,51,59,60,61,61,63,63,63,63,63,64,64,63,64,64,65,66,66,68,68,70,71,71,73,72,71,71,72,73,73,74,73,74,75,74,73,74,74,74,74,74,75,75,76,75,78,79,80,80,80,78,78,81,81,80,80,80,80,81,81,83,75,74,74,74,75,75,77,81,82,83,86,89,90,92,93,95,96,100,102,102,103,106,106,107,108,110,110,110,110,111,113,113,113,114,115,116,116,117,118,118,117,115,116,119,118,118,120,120,122,123,128,126,126,126,127,127,128,127,127,127,128,127,128,129,129,129,129,126,126,126,123,121,120,118,117,117,117,113,111,109,108,106,105,103,103,104,104,105,106,106,104,103,103,104,103,102,102,101,100,100,101,102,101,97,96,94,92,93,93,95,91,90,90,89,89,88,87,90,91,90,89,89,87,87,87,87,85,84,84,83,83,82,83,83,82,81,81,80,81,81,80,79,79,78,78,77,76,74,74,73,73,72,71,71,69,69,69,69,69,69,69,68,67,66,66,65,65,63,61,59,58,58,57,58,58,57,57,53,51,50,50,50,50,48,47,46,56,62,62,64,66,71,72,72,73,72,72,71,70,69,70,70,70,71,71,70,70,70,69,68,68,68,68,68,68,68,67,66,65,65,64,64,64,64,64,65,68,69,69,68,68,67,69,70,73,80,83,85,85,85,85,85,85,86,86,86,76,70,70,68,65,60,58,58,57,56,56,56,55,55,54,54,54,53,54,55,56,60,61,62,63,64,65,66,66,67,67,68,69,69,69,69,71,71,71,70,68,67,68,69,69,69,68,66,63,57,54,52,52,52,52,51,52,51,51,51,51,50,49,49,49,48,48,48,48,48,48,48,48,48,48,48,47,47,46,44,43,38,37,36,34,34,32,31,30,30,29,29,28,28,28,28,26,26,26,25,25,24,23,22,22,21,20,20,20,20,19,19,18,18,17,17,17,17,16,16,16,16,16,15,15,15,15,15,14,14,14,14,13,13,13,13,13,13,13,13,13,13,13,13,13,13,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,13,13,12,13,13,12,12,12,12,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,12,12,12,12,12,12,12,11,11,11,11,11,10,10,10,10,10,10,10,10,9,9,9,9,9,8,8,8,8,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,6,6,6,6,6,7,6,7,7,7,7,7,7,7,7,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,7,7,7,7,7,7,7,7,7,7,7,6,6,6,7,7,7,7,6,6,6,6,6,6,6,6,6,6,6,6,6,6],"turn":[2.159,2.9,2.107,2.843,1.149,4.651,2.596,3.927,2.249,1.113,3.057,1.911,2.413,7.667,3.336,2.62,2.184,18.807,4.846,4.309,3.724,3.697,2.218,2.046,4.992,3.801,3.455,12.424,4.765,3.352,4.892,6.825,6.324,1.799,5.664,3.168,2.076,4.553,4.349,2.19,6.657,17.6,6.466,4.282,1.96,8.561,4.762,4.094,3.842,3.476,3.294,5.5,8.691,6.287,2.487,1.792,3.27,5.608,3.597,6.238,3.184,2.967,2.806,4.425,3.34,2.089,5.145,2.148,3.351,2.663,1.668,3.986,2.673,7.513,7.599,7.02,11.886,8.592,2.55,2.19,20.337,5.96,5.64,2.043,3.253,3.222,2.473,9.517,2.908,1.745,4.49,8.581,8.666,3.113,3.975,1.693,3.841,5.283,4.096,2.948,3.323,1.931,3.482,3.526,1.575,1.192,2.502,4.561,2.595,3.492,2.759,3.226,4.525,3.43,3.209,11.393,3.711,1.97,1.733,4.804,1.83,3.177,2.308,5.53,4.091,1.428,2.951,3.177,4.628,5.491,4.134,4.697,11.54,6.895,9.576,7.685,4.167,2.216,3.786,3.258,9.668,5.769,3.258,3.295,3.734,4.94,2.645,18.064,38.925,14.735,9.542,25.543,15.426,8.468,9.685,6.398,6.489,8.142,4.1,3.781,4.382,6.263,4.129,2.473,2.197,2.237,6.751,3.767,2.229,2.797,2.661,3.831,2.518,4.024,2.46,2.611,3.783,3.451,3.786,12.9,10.484,3.83,3.288,3.05,2.264,4.167,2.522,2.987,5.913,4.149,8.677,16.553,11.004,12.038,6.15,9.406,7.488,5.428,7.328,10.316,6.484,2.866,2.522,5.756,7.341,7.733,4.507,3.563,5.213,5.026,8.54,17.303,8.807,3.894,4.309,5.465,7.359,8.213,12.206,3.936,3.932,3.362,2.496,1.073,1.567,3.165,1.542,3.974,5.368,2.392,1.048,1.262,2.993,1.742,1.474,2.77,1.399,2.625,3.647,2.023,1.522,1.391,0.73,1.137,0.724,1.391,2.112,4.716,3.902,1.481,8.148,4.552,2.312,1.497,1.038,2.086,2.579,4.847,2.377,3.46,4.211,5.606,2.802,3.776,2.372,4.335,2.989,4.341,6.223,2.887,6.539,4.741,2.13,2.199,5.79,3.267,7.423,6.345,4.103,5.105,6.756,2.78,4.055,5.822,3.048,5.342,2.819,32.016,8.151,6.321,1.935,4.938,3.198,2.879,2.39,2.31,1.982,3.463,1.892,2.515,3.663,4.628,3.149,2.058,5.658,2.49,9.397,6.425,3.623,6.11,3.325,3.077,1.347,3.846,3.09,4.334,2.565,4.138,4.294,4.629,3.207,1.67,3.782,3.036,3.289,2.599,2.902,5.71,7.189,3.311,4.767,12.005,6.414,4.125,3.581,2.948,2.32,2.856,11.722,3.718,2.628,2.018,3.982,3.558,5.325,4.867,6.867,3.035,4.63,3.192,2.962,6.136,2.946,7.213,11.773,3.376,4.424,9.167,6.885,4.827,7.486,4.711,6.143,4.481,10.561,6.07,7.378,5.747,8.132,3.111,5.431,3.701,4.649,3.225,3.035,2.305,3.196,7.146,5.189,3.019,2.898,5.176,3.729,3.476,3.595,3.796,3.076,0.988,1.437,4.499,9.865,5.727,7.314,7.237,3.455,5.506,4.443,14.449,5.412,4.085,2.909,3.051,3.646,5.094,2.632,4.1,6.626,4.163,1.686,6.548,4.533,3.54,3.205,8.541,5.229,3.721,4.095,3.659,3.318,2.349,3.103,2.78,8.084,3.557,3.807,3.033,2.976,5.532,4.053,3.069,2.448,5.116,8.767,6.005,7.861,5.599,4.482,3.31,5.561,4.587,5.762,5.267,4.155,5.098,3.138,2.817,4.481,3.552,6.526,4.198,4.423,3.479,4.008,3.705,13.034,14.479,21.087,11.998,9.528,6.198,6.46,2.772,6.252,6.321,23.956,15.131,8.426,3.877,4.598,2.849,14.197,7.615,7.753,6.106,5.906,7.642,5.581,4.268,6.79,6.208,5.806,3.389,10.368,7.015,5.996,10.78,5.525,4.488,2.62,4.423,4.092,7.478,9.778,3.562,5.084,8.233,6.45,3.455,3.597,5.736,4.719,2.192,4.465,5.389,7.044,10.607,3.529,6.146,5.005,2.397,2.954,2.914,1.795,6.554,2.546,1.826,13.256,6.518,5.465,3.842,7.333,3.466,2.556,2.636,2.102,3.352,6.768,2.594,3.891,2.082,2.579,2.254,4.013,68.8,39.119,11.766,14.486,19.172,38.366,11.959,6.707,8.13,6.223,4.345,3.998,3.476,4.742,5.847,6.563,7.268,10.477,5.638,7.737,5.316,8.406,3.907,2.155,2.912,3.837,6.628,3.421,4.493,1.85,1.502,2.147,2.246,1.922,1.773,1.654,4.813,2.007,5.38,11.22,25.632,7.182,6.03,3.654,5.258,2.543,10.999,15.805,18.237,42.56,27.559,12.074,7.695,3.089,4.226,3.638,3.7,6.391,2.516,6.404,3.6,7.348,11.496,3.948,4.472,2.811,3.233,7.356,2.472,2.603,3.109,2.895,1.038,2.438,1.247,2.805,6.594,5.38,11.601,12.067,7.787,33.361,6.297,7.299,11.488,7.46,9.788,8.031,3.919,5.519,3.736,6.671,4.724,2.651,3.287,3.396,10.94,6.093,3.755,3.384,6.624,4.387,10.76,4.687,5.836,7.323,4.716,2.479,1.862,2.053,5.723,3.172,3.713,3.319,2.346,1.589,3.222,2.224,3.495,2.105,2.699,1.217,1.046,4.075,1.593,1.642,1.445,2.333,2.056,1.659,2.912,1.875,2.679,1.904,1.167,1.415,2.227,1.428,1.514,0.805,3.093,2.092,1.172,3.262,1.397,2.346,1.542,1.891,1.801,1.671,2.228,1.24,2.044,2.915,2.535,3.001,1.708,1.473,1.728,2.27,1.895,1.381,1.227,1.973,0.849,0.642,1.038,0.775,1.658,0.897,0.706,0.937,0.563,0.858,0.868,0.54,0.71,0.847,0.482,0.721,1.315,0.744,1.281,0.85,0.949,0.892,0.929,0.96,1.018,0.799,0.428,0.643,0.779,0.992,0.709,0.634,0.884,1.298,2.111,1.7,2.895,2.595,1.697,0.907,0.877,0.715,0.866,0.953,1.18,1.221,0.971,1.261,2.58,1.429,2.112,2.136,2.349,2.57,2.4,2.29,1.026,3.28,1.209,1.568,1.186,0.854,0.665,0.614,0.854,1.196,3.22,1.139,0.51,0.788,1.296,0.86,1.52,2.403,1.534,0.636,0.656,0.67,0.928,1.213,0.905,0.632,0.436,0.548,0.316,0.55,0.442,0.369,0.268,0.509,0.57,0.325,0.67,0.427,0.656,0.228,0.454,0.336,0.602,1.045,0.537,0.425,0.427,0.519,0.456,0.476,0.382,0.429,0.925,0.838,1.87,1.641,1.56,0.616,0.823,1.162,0.927,0.587,0.913,0.942,1.709,0.936,0.63,1.099,1.126,0.667,1.658,2.022,1.23,1.537,1.095,0.837,0.9,1.048,1.792,1.404,1.208,1.354,1.481,1.067,1.574,3.446,2.954,1.334,2.209,1.373,1.012,0.912,1.359,1.132,1.031,1.409,0.786,0.611,0.446,0.777,0.653,0.518,0.764,0.885,1.036,0.63,0.609,0.709,0.423,0.378,0.229,0.583,0.859,0.439,0.378,0.518,0.87,1.609,0.713,0.547,0.501,0.674,0.521,0.777,0.614,1.458,0.607,2.968,1.18,0.838,0.882,0.801,0.648,0.655,0.596,0.922,0.765,0.804,0.94,0.659,0.568,0.517,0.545,0.404,0.329],"fcap":[675,640,620,618,615,643,651,671,640,629,661,652,661,716,703,682,678,682,666,656,642,670,666,667,694,688,694,738,714,702,685,657,643,649,660,642,648,680,693,684,722,728,740,735,721,774,771,755,720,747,756,798,802,833,825,811,817,872,857,888,882,854,862,890,894,885,861,855,865,864,864,840,856,901,899,833,854,829,820,829,928,896,915,916,899,854,866,890,892,882,899,962,1006,990,982,964,996,1025,1025,1051,1042,1022,1005,1058,1035,1020,1015,1047,1030,1051,1016,1036,1104,1078,1050,1077,1104,1111,1097,1142,1145,1187,1176,1129,1145,1142,1104,1097,1039,1013,1020,1048,1015,1009,1059,990,969,962,963,960,908,964,969,980,973,988,1003,1084,1289,1282,1232,1332,1474,1474,1593,1597,1579,1507,1494,1530,1510,1645,1609,1609,1582,1604,1525,1507,1510,1474,1451,1431,1440,1440,1433,1514,1541,1559,1489,1410,1365,1350,1332,1305,1302,1217,1205,1239,1183,1266,1235,1169,1223,1316,1275,1289,1305,1311,1275,1347,1302,1293,1323,1314,1325,1269,1262,1262,1311,1323,1298,1127,1061,1061,1061,1160,1232,1282,1361,1300,1334,1365,1329,1300,1338,1374,1374,1341,1383,1352,1318,1302,1334,1325,1354,1404,1379,1469,1489,1447,1440,1433,1413,1395,1406,1413,1431,1494,1523,1521,1548,1613,1573,1573,1523,1523,1525,1627,1667,1681,1597,1645,1640,1613,1593,1579,1543,1465,1422,1426,1505,1548,1537,1516,1638,1577,1548,1521,1532,1604,1537,1550,1561,1510,1532,1507,1480,1593,1690,1656,1656,1721,1647,1595,1573,1528,1566,1600,1595,1586,1647,1733,1715,1697,1667,1665,1805,1823,1832,1899,1793,1730,1728,1753,1821,1793,1760,1807,1881,1886,1854,1834,1834,1839,1825,1877,1908,1825,1793,1778,1755,1897,1913,1877,1850,1818,1780,1859,2053,1981,1965,1987,1911,1951,2023,2039,2059,2062,2041,1999,1987,2129,2095,2312,2280,2307,2348,2668,2625,2636,2636,2571,2503,2641,2891,3051,2765,2907,2825,2778,2753,2857,2749,2805,2735,2650,2587,2458,2602,2623,2593,2645,2629,2654,2512,2503,2589,2569,2578,2749,2562,2271,2251,2569,2517,2636,2546,2305,2303,2391,2318,2343,2258,2291,2291,2269,2427,2366,2316,2318,2368,2415,2264,2118,2089,2174,2163,2127,2165,2095,2082,2082,2323,2343,2201,2199,2152,2118,2010,1983,1987,1951,1895,1843,1780,1843,1778,1775,1703,1663,1631,1600,1613,1550,1510,1496,1534,1510,1431,1519,1442,1422,1424,1399,1210,1070,919,863,890,892,854,853,840,889,987,996,969,949,899,883,1022,983,947,911,845,924,954,926,997,1003,1022,998,998,1018,1061,1063,1044,1004,1030,1006,1014,996,965,981,989,931,905,897,883,933,906,905,916,896,839,786,791,791,802,805,802,791,794,819,794,811,836,867,863,866,864,866,854,845,838,853,796,767,769,766,763,748,740,934,999,981,960,1014,942,954,934,977,965,951,918,890,851,898,899,852,787,704,667,626,701,706,705,714,706,756,757,732,719,726,727,739,723,728,726,760,753,781,721,862,838,864,854,824,794,909,1022,1075,977,861,879,855,845,826,805,819,789,799,789,805,778,737,745,733,744,742,769,753,768,753,736,732,755,754,759,789,807,866,922,927,1012,985,982,1038,1009,1065,1088,1069,1027,990,947,910,887,894,907,998,934,967,949,977,976,940,926,894,875,918,932,918,931,977,971,1007,1000,989,1000,987,967,927,917,923,920,956,991,979,962,962,969,968,977,1003,1003,1023,993,994,982,943,938,918,919,944,923,905,867,888,904,875,867,872,898,893,879,885,902,888,866,1153,1147,1122,1110,1050,1043,1060,1029,1060,1044,1021,1020,983,981,1006,981,977,945,980,981,1014,992,1017,998,974,968,952,941,928,941,958,969,972,977,958,949,975,998,974,961,938,909,1009,977,998,1029,1014,981,958,951,958,955,932,917,937,920,969,994,1018,1049,1102,1152,1167,1087,1121,1046,1050,1046,1113,1101,1083,1075,1043,1053,969,957,960,952,949,941,882,757,828,849,808,820,797,791,807,807,825,839,822,854,814,813,820,787,825,799,807,819,793,790,771,773,797,842,819,823,819,828,834,840,837,839,854,871,909,969,929,941,911,869,842,817,833,817,767,738,730,710,684,675,627,613,650,696,649,646,623,611,592,619,604,576,588,591,616,577,589,607,661,641,623,647,618,627,650,632,675,655,650,618,613,599,615,599,618,619,608,592,590,583,567,566,547,570,556,579,552,535,519,549,559,594,595,618,635,624,642,701,661,656,635,636,664,656,672,705,719,696,724,698,687,658,661,669,669],"cumInst":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,4.0,6.1,-2.6,5.3,-1.8,-15.8,-20.5,-16.0,-20.0,-22.6,-28.0,-26.4,-17.9,-12.9,-8.2,-8.8,-8.6,-9.0,-9.5,-5.7,-5.4,-6.8,-0.0,0.3,-2.7,-13.3,16.6,10.4,11.8,9.2,-0.2,-1.1,5.0,45.4,57.1,7.7,-44.9,-37.9,-38.3,-37.5,-37.8,-38.3,-34.2,-40.0,-38.7,-45.9,-45.8,-63.3,-77.9,-75.5,-91.2,-97.4,-98.3,-98.9,-104.9,-104.8,-106.3,-108.7,-108.8,-110.4,-110.2,-109.0,-110.5,-107.0,-107.5,-91.3,-82.5,-63.1,-63.3,-50.8,-25.8,-20.6,-2.5,17.0,18.9,14.7,15.6,6.1,-2.1,-5.7,-8.5,-14.4,-6.8,-11.4,-16.4,-19.9,-13.6,-14.6,-4.3,-16.9,-38.0,-78.8,-86.1,-89.1,-87.6,-82.9,-63.3,-53.1,-44.9,-35.7,-31.7,-26.4,-14.4,-10.6,-11.8,-20.8,-24.9,-23.2,-22.8,-17.1,-16.8,-16.2,-17.9,-23.2,-22.7,-24.6,-24.5,-24.1,-23.9,-23.0,-22.9,-25.5,-27.8,-30.9,-31.5,-33.4,-38.7,-43.4,-44.4,-52.6,-57.6,-62.1,-67.0,-66.9,-72.0,-70.0,-69.4,-70.8,-76.0,-75.1,-75.8,-76.8,-75.9,-74.7,-84.0,-86.6,-87.9,-86.8,-86.4,-87.6,-87.3,-87.3,-87.7,-87.3,-88.9,-88.3,-89.6,-92.8,-94.7,-95.1,-95.5,-96.8,-96.3,-97.2,-96.1,-99.3,-100.7,-102.1,-102.5,-102.8,-103.0,-104.3,-99.5,-97.1,-97.2,-97.1,-96.7,-98.1,-99.9,-95.4,-95.3,-95.7,-97.5,-99.4,-96.2,-96.8,-96.0,-95.4,-94.6,-97.4,-98.7,-99.6,-99.9,-101.9,-102.2,-106.9,-108.3,-110.5,-109.8,-105.8,-92.9,-85.3,-74.2,-63.1,-56.1,-60.4,-57.0,-62.5,-64.1,-66.5,-65.2,-65.7,-65.8,-65.8,-66.8,-61.3,-62.1,-64.5,-65.2,-66.1,-68.1,-67.4,-67.9,-68.2,-66.3,-66.2,-66.5,-67.3,-70.9,-74.5,-73.7,-73.0,-73.2,-72.6,-73.8,-74.6,-75.3,-76.4,-77.1,-78.8,-79.2,-79.8,-79.2,-78.4,-79.0,-79.3,-80.0,-79.9,-77.9,-76.2,-76.9,-77.6,-78.7,-78.5,-79.3,-80.6,-81.4,-82.0,-85.0,-86.2,-87.7,-88.4,-90.5,-91.0,-92.1,-92.9,-93.6,-94.0,-94.5,-96.0,-98.1,-99.6,-100.6,-101.2,-101.4,-101.3,-101.0,-102.8,-102.5,-101.9,-102.2,-101.1,-99.7,-97.9,-98.0,-95.5,-93.6,-91.6,-89.8,-88.2,-86.1,-92.1,-97.3,-94.7,-91.3,-88.5,-85.7,-82.1,-78.6,-74.9,-72.0,-68.1,-66.1,-66.3,-66.4,-66.8,-66.9,-67.2,-66.9,-66.7,-63.4,-62.6,-62.6,-62.4,-63.1,-63.7,-63.7,-64.3,-65.3,-64.7,-65.0,-64.3,-64.2,-62.8,-63.0,-62.5,-62.9,-61.7,-62.7,-62.7,-63.5,-62.6,-63.1,-63.4,-64.0,-63.2,-63.3,-61.6,-59.5,-58.5,-56.8,-55.2,-54.3,-52.9,-51.2,-50.9,-50.0,-49.7,-49.1,-48.3,-47.6],"cumFrgn":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,4.1,-4.4,-6.7,-3.5,-9.0,-4.8,-0.2,6.8,5.8,4.4,2.5,-2.6,-6.7,-15.7,-19.9,-23.8,-24.7,-26.1,-24.5,-27.8,-25.1,-29.0,-28.1,-34.9,-28.4,-41.8,-36.5,-39.5,-40.0,-41.3,-37.2,-34.0,-20.0,-52.0,-67.2,-71.0,-58.8,-74.4,-83.3,-84.8,-84.6,-84.3,-88.1,-91.6,-91.2,-109.6,-103.3,-124.8,-116.7,-118.5,-112.2,-107.6,-113.1,-115.7,-115.6,-112.9,-114.6,-119.3,-122.4,-118.1,-120.1,-119.3,-116.9,-124.8,-117.0,-122.6,-120.6,-96.0,-96.2,-109.7,-103.2,-108.0,-104.3,-117.6,-123.2,-115.0,-104.8,-82.0,-69.6,-65.7,-80.0,-89.7,-76.7,-82.1,-88.4,-96.2,-100.3,-111.3,-123.2,-119.7,-109.9,-82.4,-68.2,-65.3,-62.2,-62.8,-55.1,-65.8,-71.5,-73.3,-76.4,-76.4,-81.8,-81.9,-81.2,-76.6,-76.3,-79.0,-78.0,-66.2,-71.8,-74.9,-75.3,-70.6,-74.1,-72.2,-70.1,-74.1,-75.3,-80.1,-81.0,-81.2,-86.5,-85.0,-90.0,-91.0,-88.3,-93.0,-95.0,-103.0,-100.4,-97.2,-98.0,-100.3,-99.1,-99.2,-108.4,-110.7,-107.0,-101.9,-102.7,-109.2,-109.9,-109.2,-102.6,-95.8,-94.2,-95.3,-96.4,-100.3,-98.4,-101.1,-103.6,-104.9,-106.7,-105.1,-103.5,-104.3,-103.6,-104.6,-100.5,-99.5,-98.0,-99.3,-99.4,-100.3,-100.9,-101.8,-107.4,-110.6,-114.6,-112.4,-116.4,-117.9,-116.1,-118.2,-119.2,-117.8,-116.0,-117.1,-119.6,-120.7,-121.7,-125.2,-116.6,-122.2,-125.4,-131.7,-135.6,-136.0,-136.5,-138.5,-139.4,-139.3,-142.3,-144.5,-141.2,-142.2,-134.2,-133.5,-138.4,-141.2,-139.7,-138.6,-139.2,-131.4,-132.1,-132.3,-129.9,-130.8,-126.4,-125.0,-127.0,-129.6,-131.0,-133.2,-141.5,-143.7,-144.7,-147.7,-150.6,-152.1,-153.2,-152.2,-151.4,-151.0,-150.4,-150.6,-151.7,-152.6,-152.1,-152.9,-152.0,-151.3,-150.8,-149.6,-149.7,-149.6,-149.6,-150.2,-148.7,-148.9,-147.8,-147.9,-149.5,-149.3,-149.6,-149.5,-150.0,-149.3,-151.8,-150.7,-151.2,-151.0,-150.3,-149.9,-150.5,-150.5,-149.5,-148.3,-148.9,-147.6,-152.3,-155.0,-155.5,-157.3,-160.4,-161.3,-165.8,-166.5,-167.9,-169.3,-169.4,-169.4,-169.4,-169.4,-168.4,-170.1,-167.9,-168.9,-171.5,-171.7,-173.7,-175.2,-175.3,-176.4,-178.1,-179.3,-180.2,-180.9,-182.5,-181.8,-177.9,-177.9,-180.1,-182.6,-184.1,-186.0,-188.0,-189.4,-189.7,-190.4,-189.4,-191.4,-191.9,-192.7,-193.6,-194.4,-193.0,-193.4,-193.8,-193.8,-194.0,-194.8,-195.2,-194.8,-194.6,-193.8,-195.0,-194.1,-194.3,-193.3,-193.0,-192.6,-192.5,-191.4,-190.6,-190.1,-190.0,-188.6,-187.5,-188.0,-187.1,-184.8,-187.2,-187.4,-187.5,-187.9,-188.1,-188.6,-189.4,-188.9,-189.2,-191.0,-189.4,-190.1,-191.5,-191.7,-193.0,-193.5,-194.4],"cumInd":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-4.3,1.6,13.7,2.2,13.8,22.8,22.6,13.1,17.9,21.8,28.8,32.3,28.4,32.3,31.6,36.0,36.8,38.5,37.7,37.3,34.4,39.8,32.4,38.9,35.0,59.4,23.3,32.6,31.8,35.3,40.9,38.6,18.5,9.3,12.3,65.9,105.4,113.8,123.1,123.6,123.2,123.1,123.2,132.2,130.4,156.0,149.6,187.9,193.7,197.1,206.3,207.8,213.8,216.4,222.3,219.4,223.0,229.9,233.0,230.7,232.5,230.1,229.8,233.4,223.0,212.5,200.8,157.4,157.3,157.1,124.7,124.9,104.2,98.0,101.3,96.8,85.8,73.3,71.0,70.9,87.9,103.1,81.0,92.5,103.9,115.2,113.1,125.5,126.0,134.8,145.6,158.6,151.4,151.6,147.0,142.9,117.4,117.9,115.9,108.0,106.9,101.4,94.4,90.6,91.1,95.3,101.2,102.6,101.4,84.2,89.5,91.0,93.1,94.0,97.0,96.9,94.7,98.4,99.1,103.0,103.7,106.5,114.1,115.6,121.0,124.2,126.6,135.3,138.3,154.7,157.1,158.5,164.1,166.4,170.3,168.5,177.0,180.8,182.3,176.3,177.7,185.1,184.6,182.7,185.3,180.9,180.7,180.7,181.4,186.4,184.2,186.9,189.8,190.7,195.2,192.8,192.3,196.2,197.3,198.7,194.9,195.3,193.5,195.7,194.7,198.8,201.2,203.5,209.5,213.0,217.1,216.2,215.4,214.4,212.2,214.2,214.7,214.7,214.7,211.2,213.6,215.0,217.8,223.0,211.5,218.2,219.1,223.6,226.5,229.6,232.0,235.0,236.3,238.3,241.7,248.6,246.8,250.0,241.6,236.8,228.8,224.2,211.8,199.8,194.1,190.5,188.1,195.7,195.0,197.8,192.1,191.1,193.1,195.7,198.1,195.0,204.0,208.5,210.1,213.9,219.3,220.1,221.6,221.1,218.4,218.0,217.7,218.8,223.5,228.0,226.6,226.9,226.2,224.9,225.7,225.2,226.0,227.0,227.7,230.0,228.9,229.7,228.2,227.5,229.7,229.8,230.8,230.6,229.2,226.8,229.9,229.4,231.0,230.6,230.7,231.6,233.0,233.6,235.5,235.5,237.6,236.9,243.7,247.0,248.5,251.5,255.3,256.6,261.6,263.7,267.2,270.0,271.2,271.7,271.9,271.8,270.5,273.9,271.4,271.7,274.7,273.8,274.5,274.2,274.2,273.0,272.8,272.0,271.1,270.3,269.8,275.0,276.3,273.8,272.5,272.3,271.1,269.4,267.9,265.6,263.0,260.0,257.0,259.2,259.8,261.0,262.0,262.8,261.1,261.2,258.3,257.5,257.8,258.4,259.5,259.7,259.5,259.4,261.7,260.3,260.8,259.1,258.6,256.8,256.9,255.4,255.0,253.4,254.0,252.7,252.4,252.1,251.7,249.7,252.6,252.1,252.2,250.9,248.9,248.4,247.5,245.4,244.8,245.3,242.0,242.7,243.2,243.0,243.7,243.3,243.4],"ddayIndex":581,"events":[{"n":1,"i":217,"date":"2023-11-20","tradingDate":"2023-11-20","snapped":false,"phase":"사전","category":"공시","impact":"중립","title":"직전 조달 — 제2회 사모 CB 300억 발행결정","detail":"전환가 53500원·표면이자 0%·만기이자 3%·전환청구 개시 2024-11-22. 필수 감점 규칙(최근 3년 내 2회 이상 조달)의 근거","verified":"확정","source":"DART 20231120000583","close":56900.0,"chg":4.02,"bmChg":1.75,"excess":2.27,"volMult":1.9,"val":105,"valMult":1.4,"rs":105.3},{"n":2,"i":365,"date":"2024-06-28","tradingDate":"2024-06-28","snapped":false,"phase":"사전","category":"시장","impact":"중립","title":"사상 최고가 135400원","detail":"이후 하락 추세 전환. D-day 종가 47700원은 이 고점 대비 -64.8%","verified":"확정","source":"시세데이터","close":135400.0,"chg":5.53,"bmChg":0.21,"excess":5.32,"volMult":1.4,"val":185,"valMult":1.8,"rs":242.4},{"n":3,"i":533,"date":"2025-03-12","tradingDate":"2025-03-12","snapped":false,"phase":"사전","category":"시장","impact":"긍정","title":"거래량 평균의 15.6배·+26.2%","detail":"당일 회사 공시 없음. 매각 추진 보도인지 업종 재료인지 미확인","verified":"미확인","source":"시세데이터","close":41450.0,"chg":26.18,"bmChg":1.11,"excess":25.07,"volMult":15.6,"val":643,"valMult":11.5,"rs":85.5},{"n":4,"i":573,"date":"2025-05-12","tradingDate":"2025-05-12","snapped":false,"phase":"사전","category":"시장","impact":"긍정","title":"거래량 6.0배·+19.5%","detail":"당일 회사 공시 없음","verified":"미확인","source":"시세데이터","close":38250.0,"chg":19.53,"bmChg":0.4,"excess":19.13,"volMult":6.0,"val":221,"valMult":3.2,"rs":79.3},{"n":5,"i":581,"date":"2025-05-22","tradingDate":"2025-05-22","snapped":false,"phase":"T0","category":"공시","impact":"중립","title":"기준일 — 이사회 결의 및 경영권 양수도 MOU 체결","detail":"종가 47700원(+5.2%). 직전 3거래일 +35.3%. 발행가 기준주가 산정 기산일은 05-21","verified":"확정","source":"DART 20250523000001","close":47700.0,"chg":5.18,"bmChg":-0.82,"excess":6.0,"volMult":4.1,"val":196,"valMult":2.7,"rs":100.0},{"n":6,"i":582,"date":"2025-05-23","tradingDate":"2025-05-23","snapped":false,"phase":"T0","category":"공시","impact":"부정","title":"유상증자 결정 공시 — 제3자배정 1450억","detail":"신주 3615960주·발행가 40100원(할인율 0%)·희석률 26.53%. 시설 450억 + 타법인취득 1000억(대상 미정). 당일 -9.1%·거래량 9.5배","verified":"확정","source":"DART 20250523000001","close":43350.0,"chg":-9.12,"bmChg":-0.24,"excess":-8.88,"volMult":9.5,"val":416,"valMult":5.2,"rs":91.1},{"n":7,"i":583,"date":"2025-05-26","tradingDate":"2025-05-26","snapped":false,"phase":"T0","category":"시장","impact":"부정","title":"이틀째 -11.9%","detail":"공시 이틀 합계 -19.9%. 거래량 6.3배","verified":"확정","source":"시세데이터","close":38200.0,"chg":-11.88,"bmChg":1.3,"excess":-13.18,"volMult":6.3,"val":237,"valMult":2.9,"rs":79.2},{"n":8,"i":601,"date":"2025-06-23","tradingDate":"2025-06-23","snapped":false,"phase":"T0","category":"시장","impact":"부정","title":"T0 저점 33400원","detail":"D+20 초과 -39.3%p·RS 64.0. T0 구간 개인 +156억 순매수(거래대금의 15.6%)·기관 -113억. 공시일 포함 시 개인 +210억·기관 -162억","verified":"확정","source":"시세데이터","close":33400.0,"chg":-2.2,"bmChg":-0.85,"excess":-1.34,"volMult":0.6,"val":19,"valMult":0.3,"rs":64.0},{"n":9,"i":620,"date":"2025-07-18","tradingDate":"2025-07-18","snapped":false,"phase":"T1","category":"시장","impact":"긍정","title":"명목 주가 회복 48300원","detail":"D+39거래일에 D-day 종가를 넘어섰으나 상대강도(RS)는 끝내 100을 회복하지 못했다","verified":"확정","source":"시세데이터","close":48300.0,"chg":2.22,"bmChg":0.29,"excess":1.93,"volMult":1.9,"val":87,"valMult":1.3,"rs":88.5},{"n":10,"i":649,"date":"2025-08-29","tradingDate":"2025-08-29","snapped":false,"phase":"T1","category":"공시","impact":"부정","title":"본계약(SPA) 체결 — 구주 매각 단가 70000원 공개","detail":"2002788주·1401.95억. 당일 종가 43800원 대비 +59.8% 프리미엄. 신주 발행가 40100원 대비 +74.6%","verified":"확정","source":"DART 20250829900956","close":43800.0,"chg":-1.35,"bmChg":-0.19,"excess":-1.16,"volMult":0.7,"val":32,"valMult":0.6,"rs":82.7},{"n":11,"i":650,"date":"2025-09-01","tradingDate":"2025-09-01","snapped":false,"phase":"T1","category":"공시","impact":"부정","title":"정정 — 납입일 08-29→10-17·상장 09-12→10-31·배정대상자 변경","detail":"어센트에쿼티파트너스 → 뷰티시너지2025 사모투자합자회사. 일정 2개월 연기","verified":"확정","source":"DART 20250829002243","close":42900.0,"chg":-2.05,"bmChg":-1.49,"excess":-0.56,"volMult":0.5,"val":22,"valMult":0.4,"rs":82.2},{"n":12,"i":673,"date":"2025-10-02","tradingDate":"2025-10-02","snapped":false,"phase":"T1","category":"공시","impact":"부정","title":"정정 — 배정대상자 3번째 변경","detail":"뷰티시너지2025 PEF → 뷰티시너지 주식회사(SPC). 인수 주체가 두 번 바뀌었다","verified":"확정","source":"DART 20251002000611","close":41900.0,"chg":2.7,"bmChg":1.05,"excess":1.64,"volMult":0.7,"val":29,"valMult":0.7,"rs":73.8},{"n":13,"i":679,"date":"2025-10-17","tradingDate":"2025-10-17","snapped":false,"phase":"T1","category":"공시","impact":"중립","title":"납입 완료·구주 종결·최대주주 변경·임시주총","detail":"실제발행 3615960주=예정 100%. 최대주주 배은철 외 2인(66.03%) → 뷰티시너지(41.22%). 이사 7인 중 5인 교체·창업자 대표 사임. 인수자금 자기자금 1351.95억+차입금 1500억(KB증권 등·담보 회사 보통주)","verified":"확정","source":"DART 20251017900528 · 20251017900530","close":38850.0,"chg":-3.12,"bmChg":-0.68,"excess":-2.44,"volMult":0.3,"val":14,"valMult":0.4,"rs":68.0},{"n":14,"i":689,"date":"2025-10-31","tradingDate":"2025-10-31","snapped":false,"phase":"T2","category":"공시","impact":"중립","title":"신주 3615960주 상장","detail":"전량 1년 보호예수(해제 2026-10-17). 상장 유통물량 순증 0","verified":"확정","source":"DART 20251017900530","close":37600.0,"chg":-2.21,"bmChg":1.07,"excess":-3.28,"volMult":0.5,"val":20,"valMult":0.7,"rs":62.8},{"n":15,"i":705,"date":"2025-11-24","tradingDate":"2025-11-24","snapped":false,"phase":"T2","category":"공시","impact":"중립","title":"CB 90억 만기 전 취득·소각","detail":"전환이 아닌 현금 상환. 잔액 210억","verified":"확정","source":"DART 20251124900317","close":31850.0,"chg":-0.47,"bmChg":-0.87,"excess":0.4,"volMult":0.2,"val":6,"valMult":0.3,"rs":56.0},{"n":16,"i":755,"date":"2026-02-05","tradingDate":"2026-02-05","snapped":false,"phase":"T2","category":"공시","impact":"긍정","title":"청주공장 신축 결정 790억","detail":"당초 유증 시설자금 450억의 1.76배. 착공 2026-02-23·준공 2027-09-22 예정. 다만 재원은 '내부보유자금 및 차입금'으로 기재","verified":"확정","source":"DART 20260205900810","close":34250.0,"chg":0.44,"bmChg":-3.57,"excess":4.01,"volMult":0.4,"val":13,"valMult":1.0,"rs":46.5},{"n":17,"i":761,"date":"2026-02-13","tradingDate":"2026-02-13","snapped":false,"phase":"T3","category":"실적","impact":"부정","title":"2025년 실적 — 영업이익 -22.9%·순이익 -56.1%","detail":"매출 2885억(+2.0%)으로 사상 최대인데 영업이익 223억·순이익 142억. 회사 설명은 '다품종 소량 생산 구조 전환에 따른 단기 수익성 저하'","verified":"확정","source":"DART 20260213901969","close":34000.0,"chg":-3.0,"bmChg":-1.77,"excess":-1.23,"volMult":0.3,"val":9,"valMult":0.7,"rs":46.2},{"n":18,"i":764,"date":"2026-02-23","tradingDate":"2026-02-23","snapped":false,"phase":"T3","category":"공시","impact":"중립","title":"CB 잔액 210억 조기상환·소각 — 잔액 0","detail":"전환가 53500원에 도달하지 못해 전환 0원. 조달 300억이 전액 현금으로 나갔다","verified":"확정","source":"DART 20260223901373","close":31200.0,"chg":-1.27,"bmChg":-0.17,"excess":-1.09,"volMult":0.3,"val":11,"valMult":0.8,"rs":40.7},{"n":19,"i":789,"date":"2026-03-31","tradingDate":"2026-03-31","snapped":false,"phase":"T3","category":"공시","impact":"중립","title":"차건아 각자대표 선임","detail":"인수인 측 인사. 배수아·차건아 각자대표 체제","verified":"확정","source":"DART 20260331901683","close":26300.0,"chg":0.96,"bmChg":-4.94,"excess":5.9,"volMult":0.2,"val":5,"valMult":0.4,"rs":37.6},{"n":20,"i":826,"date":"2026-05-26","tradingDate":"2026-05-26","snapped":false,"phase":"T3","category":"공시","impact":"긍정","title":"자기주식 취득 신탁 50억 체결","detail":"PE 체제의 주가 방어 개시. 계약기간 2026-05-27~11-30","verified":"확정","source":"DART 20260526000181","close":22700.0,"chg":7.08,"bmChg":0.98,"excess":6.09,"volMult":0.5,"val":11,"valMult":1.6,"rs":29.1},{"n":21,"i":831,"date":"2026-06-02","tradingDate":"2026-06-02","snapped":false,"phase":"T3","category":"시장","impact":"부정","title":"D+250 — 초과수익 -102.5%p","detail":"종가 19290원·RS 28.3. 아카이브 유상증자 케이스 중 최악 수준","verified":"확정","source":"시세데이터","close":19290.0,"chg":-3.16,"bmChg":-2.29,"excess":-0.88,"volMult":0.6,"val":11,"valMult":1.7,"rs":28.3},{"n":22,"i":871,"date":"2026-07-30","tradingDate":"2026-07-30","snapped":false,"phase":"T3","category":"시장","impact":"부정","title":"최저 종가 16910원","detail":"D-day 대비 -64.5%. RS 최저는 27.2(2026-05-21)","verified":"확정","source":"시세데이터","close":16910.0,"chg":-2.98,"bmChg":-2.7,"excess":-0.28,"volMult":0.2,"val":4,"valMult":0.5,"rs":39.5},{"n":23,"i":880,"date":"2026-08-12","tradingDate":"2026-08-12","snapped":false,"phase":"T3","category":"공시","impact":"긍정","title":"자사주 신탁 50억 재체결","detail":"08-06 기존 계약 해지(50억 전량 집행 완료) 후 재체결. 계약기간 2026-08-13~2027-02-12","verified":"확정","source":"DART 20260812000327 · 20260806000477","close":22850.0,"chg":9.07,"bmChg":0.12,"excess":8.94,"volMult":0.9,"val":21,"valMult":3.2,"rs":40.0},{"n":24,"i":878,"date":"2026-08-10","tradingDate":"2026-08-10","snapped":false,"phase":"T3","category":"실적","impact":"부정","title":"2Q26 — 영업이익 16.0억(-81.6% YoY)·순손실 -62.3억","detail":"상반기 누계 매출 1442억(+3.1%)·영업이익 45.7억(-67.9%)·순손실 -11.5억","verified":"확정","source":"DART 20260810900119","close":20350.0,"chg":-1.69,"bmChg":6.97,"excess":-8.66,"volMult":0.5,"val":9,"valMult":1.4,"rs":35.8}],"periods":[{"label":"D-day","date":"2025-05-22","close":47700.0,"sr":0.0,"br":0.0,"ex":0.0,"rs":100.0},{"label":"D+1","date":"2025-05-23","close":43350.0,"sr":-9.1,"br":-0.2,"ex":-8.9,"rs":91.1},{"label":"D+5","date":"2025-05-29","close":37500.0,"sr":-21.4,"br":2.6,"ex":-24.0,"rs":76.6},{"label":"D+20","date":"2025-06-23","close":33400.0,"sr":-30.0,"br":9.4,"ex":-39.3,"rs":64.0},{"label":"D+60","date":"2025-08-19","close":40750.0,"sr":-14.6,"br":9.8,"ex":-24.4,"rs":77.8},{"label":"D+120","date":"2025-11-18","close":32050.0,"sr":-32.8,"br":22.4,"ex":-55.2,"rs":54.9},{"label":"D+250","date":"2026-06-02","close":19290.0,"sr":-59.6,"br":43.0,"ex":-102.5,"rs":28.3},{"label":"최근","date":"2026-09-07","close":21800.0,"sr":-54.3,"br":14.6,"ex":-68.9,"rs":39.9}],"stats":{"ddayDate":"2025-05-22","ddayClose":47700.0,"lastDate":"2026-09-07","lastClose":21800.0,"srTotal":-54.3,"brTotal":14.6,"exTotal":-68.9,"rsLast":39.9,"troughPct":-64.5,"troughDate":"2026-07-30","peakPct":1.3,"peakDate":"2025-07-18","rsMin":27.2,"rsMinDate":"2026-05-21","rsMax":100.0,"rsMaxDate":"2025-05-22","priceRecDays":39,"priceRecDate":"2025-07-18","rsRecDays":null,"rsRecDate":null,"startDate":"2023-01-02","srFull":-27.2,"brFull":22.4,"phases":[{"label":"사전 — 매각 기대 선반영","note":"초과 +45.7%p. 3주체 순매수 합계 +2.2억(거래대금의 0.12%) — #회전랠리","from":"2025-03-11","to":"2025-05-22","days":49,"sr":45.2,"br":-0.5,"ex":45.7,"rsEnd":100.0,"avgVal":83,"valVsBase":1.56,"turn":9.235,"valVsPrev":null,"instNet":57,"frgnNet":-67,"indNet":12,"orgnSub":{"금융투자":5,"투신":10,"연기금등":20,"사모펀드":26,"보험":-5,"은행":0,"기타금융":0,"국가":0}},{"label":"T0 매각·희석 충격","note":"초과 -32.6%p. 개인 +156억(거래대금의 15.6%) 순매수, 기관 -113억 — #개인받이. 공시 당일(05-23)까지 포함하면 개인 +210억·기관 -162억","from":"2025-05-23","to":"2025-06-23","days":19,"sr":-23.0,"br":9.6,"ex":-32.6,"rsEnd":64.0,"avgVal":71,"valVsBase":1.34,"turn":8.329,"valVsPrev":0.86,"instNet":-113,"frgnNet":-45,"indNet":156,"orgnSub":{"금융투자":5,"투신":-47,"연기금등":-31,"사모펀드":-28,"보험":-12,"은행":0,"기타금융":0,"국가":0}},{"label":"T1 본계약·납입 대기","note":"초과 +6.6%p. 08-29 구주 단가 70,000원 공개, 납입 2개월 연기, 배정대상자 3회 변경","from":"2025-06-24","to":"2025-10-17","days":77,"sr":13.9,"br":7.3,"ex":6.6,"rsEnd":68.0,"avgVal":41,"valVsBase":0.77,"turn":4.302,"valVsPrev":0.58,"instNet":38,"frgnNet":15,"indNet":-55,"orgnSub":{"금융투자":30,"투신":-38,"연기금등":26,"사모펀드":19,"보험":2,"은행":0,"기타금융":0,"국가":0}},{"label":"T2 PE 체제 출범","note":"초과 -37.5%p. 신주상장·CB 90억 상환. 회전율 1.28%로 급감","from":"2025-10-20","to":"2026-02-12","days":80,"sr":-9.0,"br":28.6,"ex":-37.5,"rsEnd":46.8,"avgVal":14,"valVsBase":0.26,"turn":1.363,"valVsPrev":0.34,"instNet":1,"frgnNet":-29,"indNet":29,"orgnSub":{"금융투자":37,"투신":4,"연기금등":-33,"사모펀드":-3,"보험":-5,"은행":0,"기타금융":0,"국가":0}},{"label":"T3 실적 쇼크·자금 미집행","note":"초과 -10.2%p. 2025 순이익 -56.1%, 2Q26 순손실. 일평균 거래대금 7억(평균의 0.13배)","from":"2026-02-13","to":"2026-09-07","days":136,"sr":-35.9,"br":-25.7,"ex":-10.2,"rsEnd":39.9,"avgVal":7,"valVsBase":0.13,"turn":0.926,"valVsPrev":0.5,"instNet":19,"frgnNet":-63,"indNet":45,"orgnSub":{"금융투자":41,"투신":-12,"연기금등":-5,"사모펀드":-6,"보험":0,"은행":0,"기타금융":0,"국가":0}}],"shares":{"listed":13630000,"floatShares":3072000,"floatRatio":22.5,"asOf":"2026-09-07","note":"유통비율은 현재 스냅샷. IPO 보호예수 구간의 회전율은 과소평가된다."},"flow":{"avgTurn":4.312,"recentTurn":0.854,"avgVal":53,"peakVal":643,"peakDate":"2025-03-12","topUpRatio":"9/15","recentVal":6,"recentMult":0.11,"instTotal":-105,"frgnTotal":-127,"indTotal":231,"flowSource":"키움 ka10059 (개인 포함 · 금액 기준)","hasIndiv":true,"topDays":[{"date":"2023-08-07","val":502,"mult":9.4,"chg":18.9},{"date":"2023-08-10","val":340,"mult":5.5,"chg":8.0},{"date":"2024-03-05","val":510,"mult":8.7,"chg":7.6},{"date":"2024-05-21","val":241,"mult":3.0,"chg":10.4},{"date":"2024-06-13","val":268,"mult":3.3,"chg":-1.4},{"date":"2024-06-18","val":245,"mult":2.8,"chg":13.6},{"date":"2024-06-27","val":305,"mult":3.1,"chg":9.5},{"date":"2024-08-02","val":253,"mult":2.1,"chg":-6.8},{"date":"2024-08-13","val":333,"mult":2.6,"chg":-9.5},{"date":"2025-03-12","val":643,"mult":11.5,"chg":26.2},{"date":"2025-03-13","val":391,"mult":6.4,"chg":7.0},{"date":"2025-03-19","val":361,"mult":5.1,"chg":-7.1},{"date":"2025-05-23","val":416,"mult":5.2,"chg":-9.1},{"date":"2025-05-26","val":237,"mult":2.9,"chg":-11.9},{"date":"2025-07-10","val":338,"mult":5.6,"chg":9.1}]},"band":{"i0":582,"i1":601,"label":"T0 매각·희석 충격 구간 (D+1 → D+20)"},"kpis":[{"k":"씨앤씨인터내셔널 수익률","v":"-54%","tone":-54.3,"n":"2025-05-22 → 2026-09-07"},{"k":"KOSDAQ 동기간","v":"+15%","tone":14.6,"n":"같은 기간 지수"},{"k":"초과수익","v":"-69%p","hero":1,"n":"현재 상대강도 RS 39.9"},{"k":"RS 최고","v":"100","n":"2025-05-22"},{"k":"RS 고점 → 현재","v":"100 → 40","tone":-60.1,"n":"고점 이후 -60p"},{"k":"RS 최저","v":"27","n":"2026-05-21"}]}};
+const PORTAL = {"summary":"사모펀드가 경영권을 사면서 구주와 신주에 매긴 두 가격의 차이는 74.6%였다. 그 차액은 누가 냈는가?","related":[{"name":"이수페타시스","title":"혼합형 유상증자와 비관련 인수 철회","href":"007660_dashboard.html","reason":"같은 유상증자 사례"},{"name":"삼성SDI","title":"본업 증설형 유상증자와 수요 회복의 시차","href":"006400_dashboard.html","reason":"같은 유상증자 사례"},{"name":"포스코퓨처엠","title":"증자 진행 신호와 이후 성과의 엇갈림","href":"003670_dashboard.html","reason":"같은 유상증자 사례"},{"name":"LS마린솔루션","title":"시설자금 100%와 기대의 선반영","href":"060370_dashboard.html","reason":"같은 유상증자 사례"},{"name":"에코프로머티리얼즈","title":"낮은 희석률이 지켜주지 못한 것","href":"450080_rcps_dashboard.html","reason":"같은 유상증자 사례"},{"name":"SK이노베이션","title":"채무상환형 유상증자와 두 개의 업황","href":"096770_dashboard.html","reason":"같은 유상증자 사례"},{"name":"한화에어로스페이스","title":"시설투자 기대와 상대강도의 유효기간","href":"012450_dashboard.html","reason":"같은 유상증자 사례"},{"name":"LIG디펜스앤에어로스페이스","title":"정책자금 우선주와 유도무기 캐파 증설","href":"079550_dashboard.html","reason":"같은 유상증자 사례"},{"name":"HLB제약","title":"규제가 밀어놓은 5주","href":"047920_dashboard.html","reason":"같은 유상증자 사례"},{"name":"삼성바이오로직스","title":"3조로 스위스 펩타이드 CDMO를 산다","href":"207940_rights_dashboard.html","reason":"같은 유상증자 사례"},{"name":"한국피아이엠","title":"흥행한 이전상장 공모와 늦어진 시설투자","href":"448900_dashboard.html","reason":"같은 유상증자 사례"},{"name":"넥사다이내믹스","title":"현금 100억이 상가 20실로 바뀌었다","href":"351320_dashboard.html","reason":"같은 유상증자 사례"},{"name":"한울앤제주","title":"세부내역이 '미정'인 시설자금 120억","href":"276730_dashboard.html","reason":"같은 유상증자 사례"},{"name":"부광약품","title":"실적은 먼저 좋아졌지만 증자자금은 아직 일하지 않았다","href":"003000_dashboard.html","reason":"같은 유상증자 사례"},{"name":"아이씨티케이","title":"고객이 주주가 된 양자보안 칩 증자","href":"456010_dashboard.html","reason":"같은 유상증자 사례"}]};
+const $ = s => document.querySelector(s);
+const fmt = n => n.toLocaleString('ko-KR');
+const pct = (v,p=1) => (v>=0?'+':'') + v.toFixed(p) + '%';
+const cls = v => v > 0 ? 'up' : v < 0 ? 'down' : 'flat';
+const IMPACT = {'긍정':'var(--up)','부정':'var(--down)','중립':'var(--flat)','미확인':'var(--ink-3)'};
+
+let baseMode = 'dday', rangeMode = 'dday', selected = null;
+const panels = {rs:true, turn:true, flow:true};
+
+/* ============ portal context ============ */
+function validFrom(){
+  const raw = new URLSearchParams(location.search).get('from') || '';
+  if (!/^(home|cases|search|macro)(\?|$)/.test(raw)) return 'cases';
+  return raw;
+}
+const portalFrom = validFrom();
+$('#caseBack').href = `index.html#${portalFrom}`;
+const context = $('#caseContext');
+context.innerHTML = `<div class="crumb">홈 / 사례 탐색 / ${D.meta.name}</div><strong>이 사례에서 볼 질문</strong><div>${PORTAL?.summary || '사건과 이후의 시장 반응을 지수 대비로 확인합니다.'}</div>`;
+if (PORTAL?.related?.length) {
+  $('#relatedCases').hidden = false;
+  $('#relatedList').innerHTML = PORTAL.related.map(x => `<a href="${x.href}?from=${encodeURIComponent(portalFrom)}">${x.name} — ${x.title}<p>${x.reason}</p></a>`).join('');
+}
+
+/* ============ header ============ */
+const M = D.meta, S = D.stats;
+$('#eyebrow').textContent = `${M.issue_type} 케이스 · ${M.market} ${M.code}`;
+$('#headline').textContent = `${M.name} — ${M.headline}`;
+$('#thesis').textContent = M.thesis;
+$('#ddayLbl').innerHTML = `모든 수익률·상대강도는 <b>기준일 ${S.ddayDate}</b> 종가 기준${M.dday_note ? ' — ' + M.dday_note : ''}`;
+const CHIPS = M.chips || [
+  ['유형코드', M.type_code, true], ['조달방식', M.method], ['업종', M.sector],
+  ['조달금액', `${M.amount_initial} → ${M.amount_final}`],
+  ['스코어카드', M.score], ['공시일', M.announce_date || M.dday],
+];
+$('#chips').innerHTML = CHIPS.filter(c=>c[1])
+  .map(([k,v,key]) => `<span class="chip${key?' key':''}">${k} <b>${v}</b></span>`).join('');
+
+/* ============ kpi ============ */
+$('#kpis').innerHTML = S.kpis.map(o => `<div class="kpi${o.hero?' hero':''}">
+  <div class="k">${o.k}</div>
+  <div class="v ${o.tone!==undefined?cls(o.tone):''}">${o.v}</div>
+  <div class="n">${o.n||''}</div></div>`).join('');
+
+/* ============ legend & panel availability ============ */
+const hasTurn = !!(D.turn && D.turn.length);
+const hasFlow = !!(D.cumFrgn && D.cumFrgn.length);
+document.querySelectorAll('#metricControls input').forEach(input=>{
+  const available = input.dataset.panel === 'rs' || (input.dataset.panel === 'turn' ? hasTurn : hasFlow);
+  input.disabled = !available;
+  if(!available){ input.checked = false; panels[input.dataset.panel] = false; }
+});
+function renderLegend(){
+  $('#legend').innerHTML = `
+   <span><i class="swatch" style="background:var(--accent)"></i>${M.name} (정규화)</span>
+   <span><i class="swatch" style="background:var(--bm);height:0;border-top:2.5px dashed var(--bm)"></i>${M.benchmark_label} (정규화)</span>
+   ${panels.rs?'<span><i class="swatch" style="background:var(--rs)"></i>상대강도 RS = 종목 ÷ 지수</span>':''}
+   ${panels.turn?`<span><i class="swatch" style="background:var(--flow);height:11px;width:9px;border-radius:1px"></i>일별 회전율 (유동시총 대비)</span>`:''}
+   ${panels.flow?`<span><i class="swatch" style="background:var(--frgn)"></i>외국인 누적 순매수</span>
+   <span><i class="swatch" style="background:var(--inst)"></i>기관 누적 순매수</span>
+   ${D.cumInd?`<span><i class="swatch" style="background:var(--indiv)"></i>개인 누적 순매수</span>`:''}`:''}
+   ${S.band?`<span><i class="swatch" style="background:var(--warn-band);height:11px;width:16px;border-radius:2px;border:1px solid var(--line-strong)"></i>${S.band.label}</span>`:''}
+   <span style="color:var(--ink-3)">번호 = 이벤트 · <b style="color:var(--up)">적</b> 호재 /
+     <b style="color:var(--down)">청</b> 악재 / 회색 중립·미확인</span>`;
+}
+renderLegend();
+
+/* ============ chart ============ */
+const W=1120, ML=56, MR=94;
+const A0=100, A1=290;           // 패널 A 정규화 주가
+let B0=null, B1=null, C0=null, C1=null, E0=null, E1=null, XAXIS=A1;
+const LANES=5, LANE_Y=14, LANE_H=15, BR=6.8;   // 이벤트 배지 레인
+const PL=ML, PR=W-MR;
+const NS='http://www.w3.org/2000/svg';
+const el=(t,a={})=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e;};
+
+function syncPanelLayout(){
+  let y=A1+36;
+  if(panels.rs){ B0=y; B1=y+80; y=B1+36; } else { B0=B1=null; }
+  if(panels.turn){ C0=y; C1=y+80; y=C1+36; } else { C0=C1=null; }
+  if(panels.flow){ E0=y; E1=y+90; y=E1+36; } else { E0=E1=null; }
+  XAXIS=y-36;
+}
+
+function slice(){ return rangeMode==='all' ? 0 : D.ddayIndex; }
+function baseI(){ return baseMode==='dday' ? D.ddayIndex : slice(); }
+
+function series(){
+  const s=slice(), b=baseI(), out=[];
+  for(let i=s;i<D.dates.length;i++){
+    const sn=D.close[i]/D.close[b]*100, bn=D.bm[i]/D.bm[b]*100;
+    out.push({i, sn, bn, rs:sn/bn*100});
+  }
+  return out;
+}
+let SER=[], X=null, YA=null, YB=null, YC=null;
+
+function draw(){
+  syncPanelLayout();
+  SER=series();
+  const s=slice(), N=SER.length;
+  const svg=$('#chart'); svg.textContent='';
+  svg.setAttribute('viewBox', `0 0 ${W} ${XAXIS+36}`);
+
+  X = i => PL + (i-s)/(D.dates.length-1-s)*(PR-PL);
+  const vals=SER.flatMap(d=>[d.sn,d.bn]);
+  let lo=Math.min(...vals), hi=Math.max(...vals); let pad=(hi-lo)*0.10||10;
+  const aLo=lo-pad, aHi=hi+pad;
+  YA = v => A1 - (v-aLo)/(aHi-aLo)*(A1-A0);
+  let bLo=null, bHi=null;
+  if(panels.rs){
+    const rv=SER.map(d=>d.rs);
+    let rlo=Math.min(...rv,100), rhi=Math.max(...rv,100); let rp=(rhi-rlo)*0.14||8;
+    bLo=rlo-rp; bHi=rhi+rp;
+    YB = v => B1 - (v-bLo)/(bHi-bLo)*(B1-B0);
+  } else YB=null;
+
+  const g=(...k)=>{const q=el('g');k.forEach(x=>q.appendChild(x));svg.appendChild(q);return q;};
+  const txt=(x,y,t,o={})=>el('text',{x,y,'font-size':o.fs||10.5,fill:o.fill||'var(--ink-3)',
+    'text-anchor':o.ta||'start','font-weight':o.fw||400,
+    'font-family':o.mono?'Pretendard Variable, Pretendard, sans-serif':'inherit'});
+  const put=(x,y,t,o={})=>{const e=txt(x,y,t,o);e.textContent=t;svg.appendChild(e);return e;};
+
+  /* --- 악재 반영 구간 음영 (D-day → RS 회복일) --- */
+  if(S.band && S.band.i1>=s){
+    const x1=X(Math.max(S.band.i0,s)), x2=X(S.band.i1);
+    svg.appendChild(el('rect',{x:x1,y:LANE_Y-BR,width:Math.max(x2-x1,2),height:XAXIS-LANE_Y+BR,
+      fill:'var(--warn-band)'}));
+  }
+
+  /* --- y 그리드 --- */
+  for(let t=0;t<=4;t++){
+    const v=aLo+(aHi-aLo)*t/4, y=YA(v);
+    svg.appendChild(el('line',{x1:PL,x2:PR,y1:y,y2:y,stroke:'var(--line)','stroke-width':1}));
+    put(PL-8, y+3.5, Math.round(v), {ta:'end',mono:1});
+  }
+  if(panels.rs) for(let t=0;t<=2;t++){
+    const v=bLo+(bHi-bLo)*t/2, y=YB(v);
+    svg.appendChild(el('line',{x1:PL,x2:PR,y1:y,y2:y,stroke:'var(--line)','stroke-width':1}));
+    put(PL-8, y+3.5, Math.round(v), {ta:'end',mono:1});
+  }
+  /* 100 기준선 */
+  [[YA(100),A0,A1]].concat(panels.rs?[[YB(100),B0,B1]]:[]).forEach(([y,t,b])=>{
+    if(y>=t-1&&y<=b+1) svg.appendChild(el('line',{x1:PL,x2:PR,y1:y,y2:y,
+      stroke:'var(--line-strong)','stroke-width':1,'stroke-dasharray':'2 3'}));
+  });
+
+  /* --- x 눈금 (분기) --- */
+  let lastQ='';
+  SER.forEach(d=>{
+    const [Y,Mo]=D.dates[d.i].split('-');
+    const q=`${Y}-${Mo}`;
+    if(['01','04','07','10'].includes(Mo) && q!==lastQ){
+      lastQ=q; const x=X(d.i);
+      svg.appendChild(el('line',{x1:x,x2:x,y1:XAXIS,y2:XAXIS+5,stroke:'var(--line-strong)','stroke-width':1}));
+      put(x, XAXIS+18, Mo==='01'?Y:`${Mo}월`, {ta:'middle',mono:1,fs:10,
+        fw:Mo==='01'?600:400, fill:Mo==='01'?'var(--ink-2)':'var(--ink-3)'});
+    }
+  });
+
+  /* --- RS 영역 + 라인 --- */
+  if(panels.rs){
+    const y100=YB(100);
+    const rsArea=SER.map(d=>`${X(d.i)},${YB(d.rs)}`).join(' ');
+    svg.appendChild(el('polygon',{points:`${PL},${y100} ${rsArea} ${PR},${y100}`,
+      fill:'var(--rs-soft)',stroke:'none'}));
+    svg.appendChild(el('path',{d:'M'+SER.map(d=>`${X(d.i)},${YB(d.rs)}`).join('L'),
+      fill:'none',stroke:'var(--rs)','stroke-width':2.2,'stroke-linejoin':'round'}));
+  }
+
+  /* --- 상단 라인 --- */
+  svg.appendChild(el('path',{d:'M'+SER.map(d=>`${X(d.i)},${YA(d.bn)}`).join('L'),
+    fill:'none',stroke:'var(--bm)','stroke-width':2,'stroke-dasharray':'5 4','stroke-linejoin':'round'}));
+  svg.appendChild(el('path',{d:'M'+SER.map(d=>`${X(d.i)},${YA(d.sn)}`).join('L'),
+    fill:'none',stroke:'var(--accent)','stroke-width':2.2,'stroke-linejoin':'round'}));
+
+  /* --- 패널 C: 일별 회전율 (관심의 크기) --- */
+  if(panels.turn){
+    const cser = d => D.turn[d.i];
+    const vmax=Math.max(...SER.map(cser))||1;
+    YC = v => C1 - v/vmax*(C1-C0);
+    for(let t=0;t<=2;t++){
+      const v=vmax*t/2, y=YC(v);
+      svg.appendChild(el('line',{x1:PL,x2:PR,y1:y,y2:y,stroke:'var(--line)','stroke-width':1}));
+      put(PL-8, y+3.5, t===0?'0':v.toFixed(1)+'%', {ta:'end',mono:1,fs:9.5});
+    }
+    const bw=Math.max((PR-PL)/SER.length*0.8, 0.7);
+    SER.forEach(d=>{
+      const v=cser(d), x=X(d.i), h=C1-YC(v);
+      if(h<=0) return;
+      svg.appendChild(el('rect',{x:x-bw/2,y:YC(v),width:bw,height:h,
+        fill:'var(--flow)',opacity:D.valMa[d.i] && D.val[d.i]>D.valMa[d.i]*2 ? .95 : .42}));
+    });
+    const cma=SER.map((d,k)=>{const w=SER.slice(Math.max(0,k-59),k+1).map(cser);
+      return w.reduce((p,q)=>p+q,0)/w.length;});
+    svg.appendChild(el('path',{d:'M'+SER.map((d,k)=>`${X(d.i)},${YC(cma[k])}`).join('L'),
+      fill:'none',stroke:'var(--flow-ma)','stroke-width':1.8,'stroke-linejoin':'round'}));
+  } else YC=null;
+
+  /* --- 패널 D: 외국인·기관 누적 순매수 (돈의 방향) ★ --- */
+  if(panels.flow){
+    const b0=SER[0].i;
+    const fr=SER.map(d=>D.cumFrgn[d.i]-D.cumFrgn[b0]);
+    const it=SER.map(d=>D.cumInst[d.i]-D.cumInst[b0]);
+    const id=D.cumInd?SER.map(d=>D.cumInd[d.i]-D.cumInd[b0]):null;
+    const all=fr.concat(it).concat(id||[]).concat([0]);
+    let flo=Math.min(...all), fhi=Math.max(...all); const fp=(fhi-flo)*0.12||10;
+    flo-=fp; fhi+=fp;
+    const YE = v => E1 - (v-flo)/(fhi-flo)*(E1-E0);
+    for(let t=0;t<=2;t++){
+      const v=flo+(fhi-flo)*t/2, y=YE(v);
+      svg.appendChild(el('line',{x1:PL,x2:PR,y1:y,y2:y,stroke:'var(--line)','stroke-width':1}));
+      put(PL-8,y+3.5,Math.round(v).toLocaleString(),{ta:'end',mono:1,fs:9.5});
+    }
+    const y0=YE(0);
+    svg.appendChild(el('line',{x1:PL,x2:PR,y1:y0,y2:y0,stroke:'var(--line-strong)',
+      'stroke-width':1,'stroke-dasharray':'2 3'}));
+    if(id) svg.appendChild(el('path',{d:'M'+SER.map((d,k)=>`${X(d.i)},${YE(id[k])}`).join('L'),
+      fill:'none',stroke:'var(--indiv)','stroke-width':2,'stroke-linejoin':'round'}));
+    svg.appendChild(el('path',{d:'M'+SER.map((d,k)=>`${X(d.i)},${YE(it[k])}`).join('L'),
+      fill:'none',stroke:'var(--inst)','stroke-width':2,'stroke-linejoin':'round'}));
+    svg.appendChild(el('path',{d:'M'+SER.map((d,k)=>`${X(d.i)},${YE(fr[k])}`).join('L'),
+      fill:'none',stroke:'var(--frgn)','stroke-width':2.2,'stroke-linejoin':'round'}));
+    const lf=fr[fr.length-1], li=it[it.length-1];
+    const lab2=[{y:YE(lf),c:'var(--frgn)',t:`외국인 ${lf>=0?'+':''}${Math.round(lf).toLocaleString()}억`},
+                {y:YE(li),c:'var(--inst)',t:`기관 ${li>=0?'+':''}${Math.round(li).toLocaleString()}억`}]
+      .concat(id?[{y:YE(id[id.length-1]),c:'var(--indiv)',
+        t:`개인 ${id[id.length-1]>=0?'+':''}${Math.round(id[id.length-1]).toLocaleString()}억`}]:[])
+      .sort((a,b)=>a.y-b.y);
+    for(let q=1;q<lab2.length;q++) if(lab2[q].y-lab2[q-1].y<13) lab2[q].y=lab2[q-1].y+13;
+    lab2.forEach(l=>put(PR+8,l.y+3.5,l.t,{fs:10.5,fw:600,fill:l.c}));
+    put(PL, E0-11, (D.cumInd?'개인·외국인·기관':'외국인·기관')+' 누적 순매수 (억원, 구간 시작=0) — 돈의 방향',
+        {fs:11,fw:600,fill:'var(--ink-2)'});
+  }
+
+  /* --- 패널 제목 --- */
+  put(PL, A0-11, '정규화 주가 (기준=100)', {fs:11,fw:600,fill:'var(--ink-2)'});
+  if(panels.rs) put(PL, B0-11, '상대강도 RS — 100 위 = 지수 초과', {fs:11,fw:600,fill:'var(--ink-2)'});
+  if(panels.turn) put(PL, C0-11,
+      '일별 회전율 (거래대금 ÷ 유동시가총액, %) — 총시총이 아니라 유동시총 기준 · 선 = 60일 이동평균',
+      {fs:11,fw:600,fill:'var(--ink-2)'});
+
+  /* --- 끝점 직접 라벨 --- */
+  const last=SER[SER.length-1];
+  const lab=[
+    {y:YA(last.sn), c:'var(--accent)', t:`${M.name} ${last.sn.toFixed(0)}`},
+    {y:YA(last.bn), c:'var(--bm)', t:`${M.benchmark_label} ${last.bn.toFixed(0)}`},
+  ].sort((a,b)=>a.y-b.y);
+  if(lab[1].y-lab[0].y<14){lab[0].y-=(14-(lab[1].y-lab[0].y))/2;lab[1].y+=(14-(lab[1].y-lab[0].y))/2;}
+  lab.forEach(l=>{ put(PR+8,l.y+3.5,l.t,{fs:11,fw:600,fill:l.c,mono:0}); });
+  [[last.sn,'var(--accent)'],[last.bn,'var(--bm)']].forEach(([v,c])=>{
+    svg.appendChild(el('circle',{cx:PR,cy:YA(v),r:3.4,fill:c,stroke:'var(--surface)','stroke-width':2}));
+  });
+  if(panels.rs){
+    put(PR+8, YB(last.rs)+3.5, `RS ${last.rs.toFixed(0)}`, {fs:11,fw:600,fill:'var(--rs)'});
+    svg.appendChild(el('circle',{cx:PR,cy:YB(last.rs),r:3.4,fill:'var(--rs)',
+      stroke:'var(--surface)','stroke-width':2}));
+  }
+
+  /* --- 이벤트 마커 (레인 배치로 충돌 회피) --- */
+  const lanes=new Array(LANES).fill(-1e9);
+  D.events.filter(e=>e.i>=s).forEach(e=>{
+    const x=X(e.i), col=IMPACT[e.impact], on=selected===e.n;
+    let ln=lanes.findIndex(v=>x-v>BR*2+2);
+    if(ln<0) ln=lanes.indexOf(Math.min(...lanes));
+    lanes[ln]=x;
+    const cy=LANE_Y+ln*LANE_H;
+    svg.appendChild(el('line',{x1:x,x2:x,y1:cy+BR,y2:XAXIS,stroke:col,
+      'stroke-width':on?1.8:1,'stroke-dasharray':e.impact==='미확인'?'2 3':'3 3',
+      opacity:on?.95:.38}));
+    const grp=el('g',{class:'evm','data-n':e.n,style:'cursor:pointer'});
+    grp.appendChild(el('circle',{cx:x,cy,r:on?BR+1.6:BR,fill:col,
+      stroke:'var(--surface)','stroke-width':on?2.2:1.5}));
+    const t=el('text',{x,y:cy+3.2,'font-size':8.8,'text-anchor':'middle',fill:'#fff',
+      'font-weight':700,'font-family':'Pretendard Variable, Pretendard, sans-serif','pointer-events':'none'});
+    t.textContent=e.n; grp.appendChild(t);
+    grp.addEventListener('click',()=>select(e.n,true));
+    svg.appendChild(grp);
+  });
+
+  /* --- 크로스헤어 --- */
+  const ch=el('g',{id:'cross',opacity:0,'pointer-events':'none'});
+  ch.appendChild(el('line',{id:'chl',y1:A0-8,y2:XAXIS,stroke:'var(--ink-3)','stroke-width':1}));
+  ch.appendChild(el('circle',{id:'chA',r:4,fill:'var(--accent)',stroke:'var(--surface)','stroke-width':1.8}));
+  ch.appendChild(el('circle',{id:'chB',r:3.6,fill:'var(--bm)',stroke:'var(--surface)','stroke-width':1.8}));
+  if(panels.rs) ch.appendChild(el('circle',{id:'chR',r:3.6,fill:'var(--rs)',stroke:'var(--surface)','stroke-width':1.8}));
+  if(panels.turn) ch.appendChild(el('circle',{id:'chV',r:3.6,fill:'var(--flow-ma)',stroke:'var(--surface)','stroke-width':1.8}));
+  svg.appendChild(ch);
+  svg.appendChild(el('rect',{id:'hit',x:PL,y:A0-10,width:PR-PL,height:XAXIS-A0+10,
+    fill:'transparent',style:'cursor:crosshair'}));
+  bindHover();
+}
+
+/* ============ hover ============ */
+function bindHover(){
+  const svg=$('#chart'), hit=$('#hit'), tip=$('#tip'), cross=$('#cross');
+  const move=ev=>{
+    const r=svg.getBoundingClientRect();
+    const vx=(ev.clientX-r.left)/r.width*W;
+    const s=slice();
+    let k=Math.round((vx-PL)/(PR-PL)*(D.dates.length-1-s));
+    k=Math.max(0,Math.min(SER.length-1,k));
+    const d=SER[k], x=X(d.i);
+    cross.setAttribute('opacity','1');
+    $('#chl').setAttribute('x1',x); $('#chl').setAttribute('x2',x);
+    $('#chA').setAttribute('cx',x); $('#chA').setAttribute('cy',YA(d.sn));
+    $('#chB').setAttribute('cx',x); $('#chB').setAttribute('cy',YA(d.bn));
+    if(panels.rs){ $('#chR').setAttribute('cx',x); $('#chR').setAttribute('cy',YB(d.rs)); }
+    if(panels.turn){ $('#chV').setAttribute('cx',x); $('#chV').setAttribute('cy',YC(D.turn[d.i])); }
+    const ex=d.sn-d.bn;
+    tip.innerHTML=`<div class="d">${D.dates[d.i]}</div>
+      <div class="r"><em>${M.name}</em><b class="num">${fmt(D.close[d.i])}원</b></div>
+      <div class="r"><em>정규화</em><b class="num" style="color:var(--accent)">${d.sn.toFixed(1)}</b></div>
+      <div class="r"><em>${M.benchmark_label}</em><b class="num" style="color:var(--bm)">${d.bn.toFixed(1)}</b></div>
+      <div class="r"><em>초과</em><b class="num ${cls(ex)}">${pct(ex)}p</b></div>
+      ${panels.rs?`<div class="r"><em>상대강도 RS</em><b class="num" style="color:var(--rs)">${d.rs.toFixed(1)}</b></div>`:''}
+      ${panels.turn?`<div class="r"><em>회전율(유동시총)</em><b class="num" style="color:var(--flow-ma)">${D.turn[d.i].toFixed(2)}%</b></div>
+      <div class="r"><em>유동시총</em><b class="num">${fmt(D.fcap[d.i])}억</b></div>`:''}
+      ${panels.flow&&D.cumInd?`<div class="r"><em>개인 누적</em><b class="num" style="color:var(--indiv)">${fmt(Math.round(D.cumInd[d.i]-D.cumInd[SER[0].i]))}억</b></div>`:''}
+      ${panels.flow&&D.cumFrgn?`<div class="r"><em>외국인 누적</em><b class="num" style="color:var(--frgn)">${fmt(Math.round(D.cumFrgn[d.i]-D.cumFrgn[SER[0].i]))}억</b></div>
+      <div class="r"><em>기관 누적</em><b class="num" style="color:var(--inst)">${fmt(Math.round(D.cumInst[d.i]-D.cumInst[SER[0].i]))}억</b></div>`:''}`;
+    const wrap=$('#chartWrap').getBoundingClientRect();
+    const px=(x/W)*r.width + (r.left-wrap.left);
+    tip.style.opacity='1';
+    tip.style.left=Math.min(Math.max(px+14,4), wrap.width-tip.offsetWidth-4)+'px';
+    tip.style.top='16px';
+  };
+  hit.addEventListener('mousemove',move);
+  hit.addEventListener('mouseleave',()=>{tip.style.opacity='0';cross.setAttribute('opacity','0');});
+}
+
+/* ============ tables ============ */
+$('#perBmTh').textContent = M.benchmark_label;
+if(S.phases && S.phases.length){
+  $('#phaseCard').hidden = false;
+  $('#phBmTh').textContent = M.benchmark_label;
+  $('#phTbl tbody').innerHTML = S.phases.map(p=>`<tr>
+    <td><b>${p.label}</b>${p.note?`<div class="ev-d">${p.note}</div>`:''}</td>
+    <td class="num" style="white-space:nowrap">${p.from}<br>&rarr; ${p.to}</td>
+    <td class="n num">${p.days}</td>
+    <td class="n num ${cls(p.sr)}">${pct(p.sr)}</td>
+    <td class="n num ${cls(p.br)}">${pct(p.br)}</td>
+    <td class="n num ${cls(p.ex)}"><b>${(p.ex>=0?'+':'')+p.ex.toFixed(1)}%p</b></td>
+    <td class="n num">${p.rsEnd.toFixed(1)}</td>
+    <td class="n num"><b>${p.turn!==null&&p.turn!==undefined?p.turn.toFixed(2)+'%':'—'}</b></td>
+    <td class="n num">${fmt(p.avgVal)}억</td>
+    <td class="n num ${p.valVsPrev?cls(p.valVsPrev-1):''}">${p.valVsPrev?p.valVsPrev.toFixed(2)+'x':'—'}</td>
+    <td class="n num ${p.frgnNet!==undefined?cls(p.frgnNet):''}">${p.frgnNet!==undefined?(p.frgnNet>=0?'+':'')+fmt(p.frgnNet)+'억':'—'}</td>
+    <td class="n num ${p.instNet!==undefined?cls(p.instNet):''}">${p.instNet!==undefined?(p.instNet>=0?'+':'')+fmt(p.instNet)+'억':'—'}</td>
+    <td class="n num ${p.indNet!==undefined?cls(p.indNet):''}">${p.indNet!==undefined?(p.indNet>=0?'+':'')+fmt(p.indNet)+'억':'—'}</td></tr>`).join('');
+}
+$('#perTbl tbody').innerHTML = D.periods.map(p=>`<tr>
+  <td><b>${p.label}</b></td><td class="num">${p.date}</td>
+  <td class="n num">${fmt(p.close)}</td>
+  <td class="n num ${cls(p.sr)}">${pct(p.sr)}</td>
+  <td class="n num ${cls(p.br)}">${pct(p.br)}</td>
+  <td class="n num ${cls(p.ex)}"><b>${(p.ex>=0?'+':'')+p.ex.toFixed(1)}%p</b></td>
+  <td class="n num">${p.rs.toFixed(1)}</td></tr>`).join('');
+
+$('#evTbl tbody').innerHTML = D.events.map(e=>`<tr data-n="${e.n}">
+  <td class="n"><span class="ev-n" style="background:${IMPACT[e.impact]}">${e.n}</span></td>
+  <td class="num" style="white-space:nowrap">${e.date}${e.snapped?
+    `<div style="font-size:10.5px;color:var(--ink-3)">→ ${e.tradingDate} 반영</div>`:''}</td>
+  <td><span class="tag ${e.phase}">${e.phase}</span>
+      <div class="phase" style="margin-top:4px">${e.category}</div></td>
+  <td><div class="ev-t">${e.title}</div>${e.detail?`<div class="ev-d">${e.detail}</div>`:''}
+      ${e.verified==='미확인'?'<div class="ev-d" style="color:var(--ink-3)">※ 사유 미확인 — 공시 확인 필요</div>':''}</td>
+  <td class="n num">${fmt(e.close)}</td>
+  <td class="n num ${cls(e.chg)}"><b>${pct(e.chg)}</b></td>
+  <td class="n num ${cls(e.bmChg)}">${pct(e.bmChg)}</td>
+  <td class="n num ${cls(e.excess)}"><b>${(e.excess>=0?'+':'')+e.excess.toFixed(1)}%p</b></td>
+  <td class="n num">${fmt(e.val)}억</td>
+  <td class="n num ${e.valMult>=2?'up':''}"><b>${e.valMult}x</b></td></tr>`).join('');
+
+function select(n,fromChart){
+  selected = selected===n ? null : n;
+  document.querySelectorAll('#evTbl tbody tr').forEach(tr=>
+    tr.setAttribute('aria-selected', String(+tr.dataset.n===selected)));
+  draw();
+  if(fromChart && selected){
+    const tr=document.querySelector(`#evTbl tbody tr[data-n="${selected}"]`);
+    tr?.scrollIntoView({block:'center',behavior:'smooth'});
+  }
+}
+document.querySelectorAll('#evTbl tbody tr').forEach(tr=>
+  tr.addEventListener('click',()=>select(+tr.dataset.n,false)));
+
+/* ============ proceeds & rules ============ */
+if(!(M.use_of_proceeds||[]).length){ $('#proceeds').closest('.card').hidden = true; }
+/* ---- 자금 유입 ---- */
+const F = S.flow, evByDate = Object.fromEntries(D.events.map(e=>[e.tradingDate, e]));
+$('#flowSum').innerHTML = [
+  {k:'유통비율', v:`${S.shares?S.shares.floatRatio:'-'}%`,
+   n:S.shares?`유통 ${(S.shares.floatShares/1e6).toFixed(1)}백만주 / 상장 ${(S.shares.listed/1e6).toFixed(1)}백만주`:''},
+  {k:'평균 회전율 (유동시총)', v:F.avgTurn!=null?`${F.avgTurn.toFixed(2)}%/일`:'-',
+   hero:1, n:'총시총이 아니라 유동시총 기준'},
+  {k:'최근 20일 회전율', v:F.recentTurn!=null?`${F.recentTurn.toFixed(2)}%/일`:'-',
+   tone:F.recentTurn-F.avgTurn, n:'전체 평균 대비'},
+  {k:'전체 평균 일거래대금', v:`${fmt(F.avgVal)}억`},
+  {k:'최대 거래대금', v:`${fmt(F.peakVal)}억`, n:F.peakDate},
+  {k:'상위 15일 중 상승일', v:F.topUpRatio, n:'돈이 몰린 날은 오르는가'},
+  {k:'최근 20일 평균', v:`${fmt(F.recentVal)}억`, n:`전체 평균의 ${F.recentMult}배`,
+   tone:F.recentMult-1},
+].concat(F.frgnTotal!==null&&F.frgnTotal!==undefined?[
+  {k:'기준일 이후 외국인', v:`${F.frgnTotal>=0?'+':''}${fmt(F.frgnTotal)}억`, tone:F.frgnTotal},
+  {k:'기준일 이후 기관', v:`${F.instTotal>=0?'+':''}${fmt(F.instTotal)}억`, tone:F.instTotal},
+]:[]).concat(F.hasIndiv?[{k:'기준일 이후 개인', v:`${F.indTotal>=0?'+':''}${fmt(F.indTotal)}억`, tone:F.indTotal, n:F.flowSource}]:[]).map(o=>`<div class="fbox${o.hero?' hero':''}"><div class="k">${o.k}</div>
+  <div class="v ${o.tone!==undefined?cls(o.tone):''}">${o.v}</div>
+  <div class="n">${o.n||''}</div></div>`).join('');
+$('#flowTbl tbody').innerHTML = F.topDays.map((d,i)=>{
+  const ev = evByDate[d.date];
+  return `<tr${ev?` data-n="${ev.n}"`:''}>
+    <td class="n num">${i+1}</td><td class="num">${d.date}</td>
+    <td class="n num"><b>${fmt(d.val)}억</b></td>
+    <td class="n num ${d.mult>=3?'up':''}">${d.mult}x</td>
+    <td class="n num ${cls(d.chg)}"><b>${pct(d.chg)}</b></td>
+    <td>${ev?`<span class="ev-n" style="background:${IMPACT[ev.impact]};margin-right:6px">${ev.n}</span>${ev.title}`
+      :'<span style="color:var(--ink-3)">기록된 이벤트 없음 — 사유 확인 필요</span>'}</td></tr>`;
+}).join('');
+document.querySelectorAll('#flowTbl tbody tr[data-n]').forEach(tr=>
+  tr.addEventListener('click',()=>select(+tr.dataset.n,false)));
+
+/* ---- 기관 세부 ---- */
+if(S.phases && S.phases.length && S.phases[0].orgnSub){
+  $('#orgnCard').hidden = false;
+  const subs = Object.keys(S.phases[0].orgnSub);
+  $('#orgnTbl thead').innerHTML = '<tr><th>국면</th><th class="n">초과수익</th>'
+    + '<th class="n">기관계</th>'
+    + subs.map(k=>'<th class="n">'+k+'</th>').join('') + '</tr>';
+  $('#orgnTbl tbody').innerHTML = S.phases.map(p=>{
+    const cells = subs.map(k=>{
+      const v = p.orgnSub[k];
+      return '<td class="n num ' + (Math.abs(v)>=500?cls(v):'') + '">'
+        + (v>=0?'+':'') + fmt(v) + '</td>';
+    }).join('');
+    return '<tr><td><b>' + p.label + '</b></td>'
+      + '<td class="n num ' + cls(p.ex) + '">' + pct(p.ex) + 'p</td>'
+      + '<td class="n num ' + cls(p.instNet) + '"><b>' + (p.instNet>=0?'+':'')
+      + fmt(p.instNet) + '</b></td>' + cells + '</tr>';
+  }).join('');
+  $('#orgnCard').insertAdjacentHTML('beforeend',
+    '<div class="card-bd" style="padding-top:0;font-size:12px;color:var(--ink-3)">'
+    + '단위: 억원 순매수 · 굵은 색은 ±500억 이상</div>');
+}
+
+if(M.proceeds_title) $('#proceedsTitle').textContent = M.proceeds_title;
+if(M.proceeds_hint) $('#proceedsHint').textContent = M.proceeds_hint;
+$('#proceeds').innerHTML = (M.use_of_proceeds||[]).map(p=>{
+  const col = p.verdict==='긍정' ? 'var(--up)' : p.verdict==='부정' ? 'var(--down)' : 'var(--flat)';
+  return `<div class="pcard">
+    <div class="top"><span class="pcode" style="background:${col}">${p.code}</span>
+      <h3>${p.item}</h3><span class="pamt num">${p.amount}</span></div>
+    <div class="bar"><i style="width:${p.share}%;background:${col}"></i></div>
+    <div style="font-size:11.5px;color:var(--ink-3);margin-bottom:8px">
+      ${p.code_label} · 조달액의 <b class="num" style="color:${col}">${p.share}%</b></div>
+    <p>${p.nature}</p>
+    <div class="pfate">이후 <b>${p.fate}</b></div></div>`;
+}).join('');
+
+$('#rules').innerHTML = M.rules.map(r=>`<div class="rule">
+  <div class="rn">${r.n}</div><div><h3>${r.title}</h3><p>${r.body}</p></div></div>`).join('');
+
+$('#caveats').innerHTML = M.caveats.map(c=>`<li>${c}</li>`).join('');
+$('#foot').innerHTML =
+  `주가·지수: 네이버 금융 수정주가 일별 종가 (${S.startDate} ~ ${S.lastDate}, ${D.dates.length}거래일) ·
+   이벤트 출처: DART 공시 및 언론 보도 · 자동 생성: <span class="num">tools/build_dashboard.py</span><br>
+   학습·기록용 자료이며 투자 권유나 자문이 아닙니다.`;
+
+draw();
+$('#segBase').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  baseMode=b.dataset.v;
+  [...e.currentTarget.children].forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+  draw();
+});
+$('#segRange').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  rangeMode=b.dataset.v;
+  [...e.currentTarget.children].forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+  draw();
+});
+$('#metricControls').addEventListener('change',e=>{
+  const input=e.target.closest('input[data-panel]'); if(!input) return;
+  panels[input.dataset.panel] = input.checked;
+  renderLegend();
+  draw();
+});
+window.addEventListener('resize',()=>draw());
+</script>
+</body>
+</html>

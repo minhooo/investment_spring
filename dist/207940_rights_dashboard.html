@@ -1,0 +1,872 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="투자 사건의 주가·상대강도·수급과 사후 검증을 함께 읽는 사례 분석">
+<title>삼성바이오로직스 유상증자 해부</title>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  color-scheme: light;
+  --bg:#faf9f6; --surface:#ffffff; --surface-2:#f4f2ee; --surface-3:#edeae3;
+  --line:#e4e1da; --line-strong:#cdc9bf;
+  --ink:#17160f; --ink-2:#5c5a50; --ink-3:#8b887c;
+  --accent:#4a3aa7; --accent-soft:#4a3aa71a;
+  --bm:#9a978c; --rs:#1baf7a; --rs-soft:#1baf7a1f;
+  --flow:#eda100; --flow-ma:#b87d00; --flow-soft:#eda1001f;
+  --frgn:#2a78d6; --inst:#eb6834; --indiv:#c2557f;
+  --up:#d33a3a; --down:#2a6fd6; --flat:#8b887c;
+  --warn-band:#d33a3a0f;
+  --shadow:0 1px 2px #17160f0a, 0 4px 14px #17160f0a;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#131419; --surface:#1a1c22; --surface-2:#212429; --surface-3:#282c33;
+    --line:#2d313a; --line-strong:#434956;
+    --ink:#f0efe9; --ink-2:#b3b1a7; --ink-3:#85837a;
+    --accent:#9085e9; --accent-soft:#9085e926;
+    --bm:#7c8290; --rs:#34c692; --rs-soft:#34c69226;
+    --flow:#c98500; --flow-ma:#eda100; --flow-soft:#eda10026;
+    --frgn:#3987e5; --inst:#d95926; --indiv:#e08bb0;
+    --up:#ef6a6a; --down:#5f9df2; --flat:#85837a;
+    --warn-band:#ef6a6a14;
+    --shadow:0 1px 2px #0006, 0 4px 16px #0005;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#131419; --surface:#1a1c22; --surface-2:#212429; --surface-3:#282c33;
+  --line:#2d313a; --line-strong:#434956;
+  --ink:#f0efe9; --ink-2:#b3b1a7; --ink-3:#85837a;
+  --accent:#9085e9; --accent-soft:#9085e926;
+  --bm:#7c8290; --rs:#34c692; --rs-soft:#34c69226;
+  --flow:#c98500; --flow-ma:#eda100; --flow-soft:#eda10026;
+  --frgn:#3987e5; --inst:#d95926; --indiv:#e08bb0;
+  --up:#ef6a6a; --down:#5f9df2; --flat:#85837a;
+  --warn-band:#ef6a6a14;
+  --shadow:0 1px 2px #0006, 0 4px 16px #0005;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,system-ui,"Malgun Gothic",sans-serif;
+  font-size:14px; line-height:1.6; -webkit-font-smoothing:antialiased;
+  word-break:keep-all; overflow-wrap:break-word;
+}
+.num{font-family:"Pretendard Variable",Pretendard,sans-serif; font-variant-numeric:tabular-nums}
+.wrap{max-width:1180px; margin:0 auto; padding:36px 22px 72px}
+
+/* ---------- header ---------- */
+.eyebrow{
+  font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ink-3); font-weight:600; margin-bottom:14px;
+}
+h1{
+  font-size:clamp(26px,3.4vw,38px); line-height:1.22; font-weight:700;
+  margin:0 0 6px; letter-spacing:-.02em; text-wrap:balance;
+}
+.sub{font-size:15px; color:var(--ink-2); max-width:64ch; margin:0 0 18px}
+.chips{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:30px}
+.chip{
+  font-size:11.5px; padding:4px 9px; border-radius:4px; font-weight:500;
+  background:var(--surface-2); color:var(--ink-2); border:1px solid var(--line);
+}
+.chip b{color:var(--ink); font-weight:600}
+.chip.key{background:var(--accent-soft); border-color:transparent; color:var(--accent)}
+
+/* ---------- kpi ---------- */
+.kpis{
+  display:grid; grid-template-columns:repeat(6,1fr);
+  gap:1px; background:var(--line); border:1px solid var(--line);
+  border-radius:8px; overflow:hidden; margin-bottom:14px;
+}
+.kpi{background:var(--surface); padding:15px 16px 14px}
+.kpi .k{font-size:11px; color:var(--ink-3); font-weight:500; letter-spacing:.01em}
+.kpi .v{font-size:25px; font-weight:600; letter-spacing:-.02em; margin-top:5px; line-height:1.1}
+.kpi .n{font-size:11.5px; color:var(--ink-3); margin-top:4px}
+.kpi.hero{background:var(--surface-3)}
+.kpi.hero .v{color:var(--accent)}
+.up{color:var(--up)} .down{color:var(--down)} .flat{color:var(--flat)}
+
+/* ---------- card ---------- */
+.card{
+  background:var(--surface); border:1px solid var(--line); border-radius:10px;
+  box-shadow:var(--shadow); margin-bottom:26px;
+}
+.card-hd{
+  display:flex; flex-wrap:wrap; gap:12px 18px; align-items:baseline;
+  justify-content:space-between; padding:16px 18px 12px;
+  border-bottom:1px solid var(--line);
+}
+.card-hd h2{font-size:15px; font-weight:600; margin:0; letter-spacing:-.01em}
+.card-hd .hint{font-size:12px; color:var(--ink-3)}
+.card-bd{padding:16px 18px 18px}
+
+/* ---------- controls ---------- */
+.ctrls{display:flex; flex-wrap:wrap; gap:14px; align-items:center}
+.seg{display:inline-flex; background:var(--surface-2); border:1px solid var(--line); border-radius:6px; padding:2px}
+.seg button{
+  font:inherit; font-size:12px; font-weight:500; padding:4px 11px; border:0;
+  background:transparent; color:var(--ink-2); border-radius:4px; cursor:pointer;
+  font-family:inherit; transition:background .12s,color .12s;
+}
+.seg button[aria-pressed="true"]{background:var(--surface); color:var(--ink); box-shadow:0 1px 2px #0000001a; font-weight:600}
+.seg button:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.seg-l{font-size:11px; color:var(--ink-3); font-weight:500; margin-right:-8px}
+.metric-toggle{display:flex; flex-wrap:wrap; gap:6px; margin:0; padding:0; border:0}
+.metric-toggle label{
+  display:inline-flex; align-items:center; gap:6px; min-height:28px; padding:4px 8px;
+  border:1px solid var(--line); border-radius:5px; background:var(--surface); color:var(--ink-2);
+  font-size:12px; font-weight:500; cursor:pointer; user-select:none;
+}
+.metric-toggle input{appearance:none; width:14px; height:14px; margin:0; border:1px solid var(--line-strong);
+  border-radius:3px; background:var(--surface); display:grid; place-content:center; cursor:pointer}
+.metric-toggle input::before{content:''; width:7px; height:4px; border:solid #fff; border-width:0 0 2px 2px;
+  transform:rotate(-45deg) translate(1px,-1px) scale(0); transform-origin:center; transition:transform .12s}
+.metric-toggle input:checked{background:var(--accent); border-color:var(--accent)}
+.metric-toggle input:checked::before{transform:rotate(-45deg) translate(1px,-1px) scale(1)}
+.metric-toggle input:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.metric-toggle input:disabled{cursor:not-allowed; opacity:.45}
+.metric-toggle label:has(input:disabled){cursor:not-allowed; opacity:.55}
+
+/* ---------- chart ---------- */
+.legend{display:flex; flex-wrap:wrap; gap:16px; padding:2px 18px 12px; font-size:12px; color:var(--ink-2)}
+.legend span{display:inline-flex; align-items:center; gap:7px}
+.swatch{width:16px; height:2.5px; border-radius:2px; display:inline-block}
+.chart-scroll{overflow-x:auto; position:relative; padding:0 4px 4px}
+svg.chart{display:block; width:100%; min-width:780px; height:auto}
+.tip{
+  position:absolute; pointer-events:none; opacity:0; transition:opacity .1s;
+  background:var(--surface); border:1px solid var(--line-strong); border-radius:7px;
+  box-shadow:var(--shadow); padding:9px 11px; font-size:12px; min-width:172px; z-index:5;
+}
+.tip .d{font-size:11px; color:var(--ink-3); margin-bottom:6px; font-weight:500}
+.tip .r{display:flex; justify-content:space-between; gap:16px; line-height:1.7}
+.tip .r em{font-style:normal; color:var(--ink-2)}
+.tip .r b{font-weight:600}
+
+/* ---------- tables ---------- */
+.tbl-scroll{overflow-x:auto}
+table{border-collapse:collapse; width:100%; font-size:13px}
+th,td{padding:8px 10px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top}
+th{
+  font-size:10.5px; font-weight:600; color:var(--ink-3); letter-spacing:.06em;
+  text-transform:uppercase; white-space:nowrap; border-bottom:1px solid var(--line-strong);
+  position:sticky; top:0; background:var(--surface);
+}
+td.n,th.n{text-align:right; white-space:nowrap}
+tbody tr{cursor:pointer; transition:background .1s}
+tbody tr:hover{background:var(--surface-2)}
+tbody tr[aria-selected="true"]{background:var(--accent-soft)}
+tbody tr:last-child td{border-bottom:0}
+.ev-n{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:19px; height:19px; border-radius:50%; font-size:10.5px; font-weight:600;
+  color:#fff; flex:none;
+}
+.ev-t{font-weight:500; line-height:1.45}
+.ev-d{font-size:12px; color:var(--ink-2); margin-top:3px; line-height:1.5; max-width:56ch}
+.tag{
+  font-size:10px; padding:2px 6px; border-radius:3px; font-weight:600;
+  border:1px solid var(--line-strong); color:var(--ink-2); white-space:nowrap;
+}
+.tag.T0{background:var(--warn-band)}
+.phase{font-size:11px; color:var(--ink-3); font-weight:600; letter-spacing:.04em}
+
+/* ---------- flow ---------- */
+.flowsum{display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+  background:var(--line); border:1px solid var(--line); border-radius:8px; overflow:hidden}
+.fbox{background:var(--surface-2); padding:12px 14px}
+.fbox.hero{background:var(--flow-soft)}
+.fbox .k{font-size:11px; color:var(--ink-3); font-weight:500}
+.fbox .v{font-size:20px; font-weight:600; margin-top:4px; letter-spacing:-.01em}
+.fbox.hero .v{color:var(--flow-ma)}
+.fbox .n{font-size:11px; color:var(--ink-3); margin-top:3px}
+@media (max-width:720px){ .flowsum{grid-template-columns:repeat(2,1fr)} }
+
+/* ---------- proceeds ---------- */
+.split{display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:14px}
+.pcard{border:1px solid var(--line); border-radius:8px; padding:14px 15px; background:var(--surface-2)}
+.pcard .top{display:flex; align-items:center; gap:8px; margin-bottom:8px}
+.pcode{
+  width:26px; height:26px; border-radius:5px; display:grid; place-items:center;
+  font-weight:700; font-size:13px; color:#fff; flex:none;
+}
+.pcard h3{font-size:14px; margin:0; font-weight:600; flex:1}
+.pamt{font-size:13px; font-weight:600}
+.bar{height:5px; border-radius:3px; background:var(--surface-3); overflow:hidden; margin:9px 0 10px}
+.bar i{display:block; height:100%; border-radius:3px}
+.pcard p{margin:0 0 8px; font-size:12.5px; color:var(--ink-2); line-height:1.55}
+.pfate{font-size:12px; padding-top:8px; border-top:1px dashed var(--line-strong); color:var(--ink-2)}
+.pfate b{color:var(--ink)}
+
+/* ---------- rules ---------- */
+.rule{display:flex; gap:14px; padding:14px 0; border-bottom:1px solid var(--line)}
+.rule:last-child{border-bottom:0; padding-bottom:0}
+.rule .rn{
+  font-family:"Pretendard Variable",Pretendard,sans-serif; font-size:12px; font-weight:600;
+  color:var(--accent); background:var(--accent-soft); border-radius:5px;
+  width:28px; height:24px; display:grid; place-items:center; flex:none; margin-top:1px;
+}
+.rule h3{font-size:14px; margin:0 0 4px; font-weight:600}
+.rule p{margin:0; font-size:13px; color:var(--ink-2); line-height:1.62; max-width:78ch}
+
+/* ---------- notes ---------- */
+.notes{background:var(--surface-2); border:1px solid var(--line); border-radius:8px; padding:16px 18px}
+.notes h2{font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); margin:0 0 10px}
+.notes ul{margin:0; padding-left:17px}
+.notes li{font-size:12.5px; color:var(--ink-2); margin-bottom:6px; line-height:1.55}
+.notes li:last-child{margin-bottom:0}
+.foot{margin-top:26px; font-size:11.5px; color:var(--ink-3); line-height:1.7; border-top:1px solid var(--line); padding-top:16px}
+.spring-case-bar{border-bottom:1px solid var(--line);background:var(--surface);margin-bottom:0}.spring-case-bar-in{max-width:1180px;margin:0 auto;padding:12px 22px;display:flex;align-items:center;gap:26px;flex-wrap:wrap}.spring-case-brand{font-size:17px;font-weight:700;color:var(--accent);text-decoration:none;white-space:nowrap}.spring-case-nav{display:flex;gap:4px;flex-wrap:wrap}.spring-case-nav a{font-size:13px;color:var(--ink-2);padding:7px 9px;border-radius:6px;text-decoration:none}.spring-case-nav a:hover,.spring-case-nav a[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:600}.spring-case-back{margin-left:auto;color:var(--accent);font-size:13px;text-decoration:none;font-weight:600}.case-context{border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:0 0 22px;background:var(--surface)}.case-context .crumb{font-size:12px;color:var(--ink-3);margin-bottom:3px}.case-context strong{font-size:13px}.related{margin-top:25px;border-top:1px solid var(--line);padding-top:18px}.related h2{font-size:16px;margin:0 0 10px}.related a{display:block;color:var(--accent);font-weight:600;text-decoration:none;padding:8px 0;border-top:1px solid var(--line)}.related p{font-size:12px;color:var(--ink-2);margin:2px 0 0}
+@media (max-width:1020px){ .kpis{grid-template-columns:repeat(3,1fr)} }
+@media (max-width:600px){ .kpis{grid-template-columns:repeat(2,1fr)} }
+@media (max-width:640px){
+  .wrap{padding:26px 14px 56px}
+  .card-bd,.card-hd{padding-left:13px; padding-right:13px}
+  .ev-d{display:none}
+}
+@media (max-width:640px){.spring-case-bar-in{padding:12px 14px;gap:10px}.spring-case-nav{order:3;width:100%}.spring-case-back{margin-left:auto}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="spring-case-bar">
+  <div class="spring-case-bar-in">
+    <a class="spring-case-brand" href="index.html#home">투자 샘터</a>
+    <nav class="spring-case-nav" aria-label="주요 메뉴">
+      <a href="index.html#home">홈</a><a href="index.html#cases" aria-current="page">사례 탐색</a><a href="macro.html">거시 인과지도</a><a href="index-radar.html">지수 레이더</a>
+    </nav>
+    <a class="spring-case-back" id="caseBack" href="index.html#cases">← 탐색으로 돌아가기</a>
+  </div>
+</header>
+<div class="wrap">
+  <div class="case-context" id="caseContext"></div>
+  <div class="eyebrow" id="eyebrow"></div>
+  <h1 id="headline"></h1>
+  <p class="sub" id="thesis"></p>
+  <div class="chips" id="chips"></div>
+
+  <div class="kpis" id="kpis"></div>
+  <p style="font-size:12px;color:var(--ink-3);margin:0 0 26px">
+    <span id="ddayLbl"></span> · 주가는 수정주가(권리락·증자 반영)
+  </p>
+
+  <div class="card">
+    <div class="card-hd">
+      <h2>지수 대비 상대 성과와 이벤트</h2>
+      <div class="ctrls">
+        <span class="seg-l">기준점</span>
+        <div class="seg" id="segBase">
+          <button data-v="dday" aria-pressed="true">기준일=100</button>
+          <button data-v="start" aria-pressed="false">기간시작=100</button>
+        </div>
+        <span class="seg-l">구간</span>
+        <div class="seg" id="segRange">
+          <button data-v="dday" aria-pressed="true">기준일 이후</button>
+          <button data-v="all" aria-pressed="false">전체</button>
+        </div>
+        <fieldset class="metric-toggle" id="metricControls" aria-label="차트 표시 항목">
+          <label><input type="checkbox" data-panel="rs" checked>상대강도</label>
+          <label><input type="checkbox" data-panel="turn" checked>일별 회전율</label>
+          <label><input type="checkbox" data-panel="flow" checked>누적 순매수</label>
+        </fieldset>
+      </div>
+    </div>
+    <div class="legend" id="legend"></div>
+    <div class="chart-scroll" id="chartWrap">
+      <svg class="chart" id="chart" viewBox="0 0 1120 588" role="img"
+           aria-label="정규화 주가, 상대강도 RS, 일별 거래대금 추이"></svg>
+      <div class="tip" id="tip"></div>
+    </div>
+  </div>
+
+  <div class="card" id="phaseCard" hidden>
+    <div class="card-hd">
+      <h2>국면별 성과 &#9733;</h2>
+      <span class="hint">이슈의 각 국면에서 지수 대비 얼마를 벌고 잃었는가</span>
+    </div>
+    <div class="tbl-scroll">
+      <table id="phTbl"><thead><tr>
+        <th>국면</th><th>기간</th><th class="n">거래일</th><th class="n">종목</th>
+        <th class="n" id="phBmTh">지수</th><th class="n">초과수익</th><th class="n">종료 RS</th>
+        <th class="n">평균 회전율</th><th class="n">평균 거래대금</th><th class="n">직전 대비</th>
+        <th class="n">외국인 순매수</th><th class="n">기관 순매수</th><th class="n">개인 순매수</th>
+      </tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">
+      <h2>구간별 수익률</h2>
+      <span class="hint">초과수익 = 종목 − 지수 · RS는 D-day를 100으로 둔 상대강도</span>
+    </div>
+    <div class="tbl-scroll">
+      <table id="perTbl"><thead><tr>
+        <th>구간</th><th>날짜</th><th class="n">종가</th><th class="n">종목</th>
+        <th class="n" id="perBmTh">지수</th><th class="n">초과수익</th><th class="n">RS</th>
+      </tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">
+      <h2>이벤트 타임라인</h2>
+      <span class="hint">행을 누르면 차트에서 해당 시점이 표시됩니다 · 초과 = 당일 종목 등락 − 지수 등락</span>
+    </div>
+    <div class="tbl-scroll">
+      <table id="evTbl"><thead><tr>
+        <th class="n">#</th><th>날짜</th><th>단계</th><th>이벤트</th>
+        <th class="n">종가</th><th class="n">당일</th><th class="n">지수</th>
+        <th class="n">초과</th><th class="n">거래대금</th><th class="n">평균대비</th>
+      </tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">
+      <h2>자금 유입 — 돈이 몰린 날과 주가 &#9733;</h2>
+      <span class="hint">이 아카이브의 중심 가설: 종목에 돈이 몰려야 주가가 움직인다</span>
+    </div>
+    <div class="card-bd">
+      <div class="flowsum" id="flowSum"></div>
+    </div>
+    <div class="tbl-scroll">
+      <table id="flowTbl"><thead><tr>
+        <th class="n">#</th><th>날짜</th><th class="n">거래대금</th>
+        <th class="n">60일 평균 대비</th><th class="n">당일 등락</th><th>같은 날 기록된 이벤트</th>
+      </tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+
+  <div class="card" id="orgnCard" hidden>
+    <div class="card-hd">
+      <h2>기관 세부 — "기관"은 누구인가</h2>
+      <span class="hint">기관계 하나로 묶으면 연기금과 증권사 자기매매가 같은 칸에 들어간다</span>
+    </div>
+    <div class="tbl-scroll">
+      <table id="orgnTbl"><thead></thead><tbody></tbody></table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd"><h2 id="proceedsTitle">자금용도 분해</h2>
+      <span class="hint" id="proceedsHint">혼합형 유상증자는 항목별로 쪼개 각각 평가한다</span></div>
+    <div class="card-bd"><div class="split" id="proceeds"></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd"><h2>이식 가능한 규칙</h2>
+      <span class="hint">다음 종목의 같은 이슈에 적용할 문장</span></div>
+    <div class="card-bd" id="rules"></div>
+  </div>
+
+  <div class="notes">
+    <h2>한계와 확인 필요 사항</h2>
+    <ul id="caveats"></ul>
+  </div>
+  <section class="related" id="relatedCases" hidden>
+    <h2>함께 볼 사례</h2>
+    <div id="relatedList"></div>
+  </section>
+  <div class="foot" id="foot"></div>
+</div>
+
+<script>
+const D = {"meta":{"code":"207940","name":"삼성바이오로직스","data_key":"207940_삼성바이오로직스_분할후","market":"KOSPI","sector":"바이오 CDMO (인적분할 후 Pure-play)","issue_type":"유상증자","dday":"2026-08-27","announce_date":"2026-08-28 (이사회 결의 · 주요사항보고서 20260828000001)","dday_note":"공시는 2026-08-28 장 개시 전에 반영돼 당일 -6.78%였다. 따라서 기준일은 직전 거래일 2026-08-27 종가 1,594,000원이다","type_code":"G(E 90.2% + C 9.8%) · 주주배정후 실권주 일반공모 · S(희석률 4.67%)","method":"주주배정 후 실권주 일반공모 (할인율 15% · 우리사주 20% 우선배정 · 신주인수권증서 상장)","amount_initial":"3조 94억 (예정발행가 1,322,000원 기준)","amount_final":"확정발행가 2026-11-04 예정 — 미확정","score":"+12 / 조건부 긍정 → 필수 감점 2건(증분이익 미제시·경쟁사 동시증설)으로 중립·판단보류 강등","benchmark_label":"KOSPI","headline":"희석률은 아카이브 최저 4.67%, 스코어는 최고 +12. 그런데 회사는 이 3조가 얼마를 벌어올지 말하지 않았다","thesis":"인적분할로 CDMO만 남은 회사가 9개월 만에 스위스 펩타이드 CDMO PolyPeptide를 2조 7,062억에 사기 위해 3조를 조달한다. 자금용도에 채무상환·운영자금이 0원이고, 부채비율 51.3%·순현금·AA0라 차입이 불가능해서가 아니라 선택하지 않은 조달이며, 희석률 4.67%는 아카이브 최저다. 필요 세후 ROIC는 2.94%(연 882억)에 불과한데, 피인수사는 3년 연속 순손실이고 2026년 반기에 겨우 155억 흑자로 돌아섰다 — 연환산 310억으로 필요액의 35%다. 감점이 5번(페이백) 한 곳에만 몰려 있고, 그 항목은 회사가 숫자를 내놓기만 하면 즉시 바뀐다. 이 케이스는 아카이브 최초의 진행중 케이스로, 확정발행가(11-04)·청약률(11-10)·신주상장(11-30)·공개매수 성사가 모두 미도래다.","theme_ids":["bio"],"pattern_ids":["M&A관련다각화","시설투자","혼합용도","개인받이"],"use_of_proceeds":[{"item":"타법인 증권 취득 — 스위스 PolyPeptide Group AG 100% 공개매수","amount":"2조 7,062억","share":90,"nature":"합성 펩타이드 CDMO. Bachem·WuXi TIDES와 함께 선도 3사, 미국·유럽·인도 등 5개국 생산 네트워크. 본업(항체 CDMO)의 인접 모달리티라 관련 다각화(E)다. 다만 2023~2025년 3년 연속 순손실이었고 2026년 반기에 155억 흑자전환했다. PolyPeptide 이사회가 100% 매각을 결정하고 Morgan Stanley 주관으로 2026년 2월부터 진행한 경쟁 입찰에서 낙찰받은 자산이다. 인수 배수는 2025년 매출 대비 PSR 4.04배, 자본 대비 PBR 4.65배","code":"E","code_label":"M&A · 관련 다각화","verdict":"조건부","fate":"미집행 — 공개매수 최소 응모조건 66.7%, 기업결합 승인 후 12월 말 종결 목표"},{"item":"시설자금 — 제2바이오캠퍼스 6공장 증설 (180kL)","amount":"2,947억","share":10,"nature":"기존 본업 캐파 확대. 2026~2029년 집행 예정이며 총 투자비 1.90조 중 일부다. 1~4공장은 완전가동, 5공장(18만L, 2025-04 완공) 램프업으로 전체 가동률 69.9%. 수주잔고는 최소구매물량 기준 99억 달러","code":"C","code_label":"증설형","verdict":"긍정","fate":"미집행 — 2029년 가동 목표"}],"rules":[{"n":1,"title":"희석률이 5% 미만이면 희석이 아니라 인수가격이 질문이다","body":"필요 세후 ROIC r* = (NI ÷ C) × d ÷ (1-d) = 2.94%. 조달금 3조가 연 882억만 벌면 EPS 희석이 상쇄된다. 장벽이 이렇게 낮으면 '희석 걱정'은 의미가 없고, 남는 질문은 '2조 7,062억이 적정한 값인가' 하나다. 현재 PolyPeptide의 기여는 연 310억으로 필요액의 35%이고, 순이익이 2.8배가 되어야 EPS 중립이다."},{"n":2,"title":"타법인취득이 E형이어도 피인수사의 손익을 따로 확인한다","body":"실질분류로 E(관련 다각화)까지 왔다고 통과시키면 안 된다. PolyPeptide는 3년 연속 순손실이었고 그 사실은 희석률·발행가·조달방식 어느 형태 지표에도 나타나지 않는다. 게다가 매물로 나와 경쟁 입찰로 팔린 자산이라 승자의 저주 리스크를 별도로 표시해야 한다."},{"n":3,"title":"작은 T0 충격을 '시장이 승인했다'로 읽지 않는다","body":"공시 당일 초과수익 -4.99%는 아카이브 최소 수준이다(이수페타시스 -21.5%p). 그러나 같은 아카이브의 에코프로머티리얼즈 RCPS는 희석 6.84%·발행가 11.9% 할증·T0 무반응이었는데 결과가 -199.3%p였다. 형태 지표가 좋으면 시장이 T0에서 아무것도 할인하지 않고, 실질은 T1·T2에서야 반영된다."},{"n":4,"title":"인수 공시와 조달 공시의 시차를 기록한다","body":"7월 20일 인수 공시의 자금조달방법은 '보유자금 및 차입금'이었고, 39일 뒤 8월 28일에 '유상증자'로 정정됐다. 시장은 그 사이 다른 전제를 들고 있었다. 조달 방법이 확정되지 않은 상태의 대형 M&A 공시는 그 자체가 신호다."}],"caveats":["이 대시보드의 시세는 2025-11-24(인적분할 후 변경상장일)부터 시작한다. 그 이전 구간은 삼성바이오에피스를 포함한 다른 자산이므로 같은 선에 놓으면 분할에 따른 가격 단절(+46.5%)이 수익률로 잘못 계산된다. 원본 전체 시계열은 인적분할 케이스가 쓴다.","이 케이스의 시세는 키움 ka10081 원주가(무수정)다. 인적분할 존속회사의 수정주가는 분할 전 구간을 재상장 첫날 시초가에 이어붙이는 계수로 상향되기 때문이다. 신주배정기준일(2026-10-06) 권리락 이후에는 원주가에 기계적 하락이 생기므로, 그 시점부터는 권리락 조정을 반영해 다시 받아야 한다.","희석률 4.67%는 신주수 ÷ 증자 후 총주식수다. 회사가 공시에 쓴 '증자비율 4.90%'는 증자 전 발행주식수 기준이라 값이 다르다.","페이백과 EPS 중립 시점은 전부 자체 추정이다. 회사는 인수·증설의 증분 영업이익을 제시하지 않았고, PolyPeptide의 2031년 전망은 회사가 KB증권·PolyPeptide 자료를 인용한 것이다.","최대주주(삼성물산 43.06% 782,818주 · 삼성전자 31.22% 567,503주)의 청약 참여는 D-day 시점에 확약되지 않았다. 배정분 합계 1조 7,852억은 조달액의 59.5%다.","결과 판정(#결과_상승/하락/횡보)은 최소 D+250 이후에나 가능하다. 현재는 D+6이다."],"phases":[{"label":"P0 분할 후 단독 상장","start":"2025-11-24","end":"2026-07-17","note":"CDMO 단독 자산으로 거래된 구간. 이 구간의 시세가 유상증자 판단의 기준선이다"},{"label":"P1 인수 발표","start":"2026-07-20","end":"2026-08-27","note":"PolyPeptide 인수 공시(자금조달방법 미확정) ~ 유상증자 공시 직전. 인수 발표 당일 초과 +0.8%p, 2분기 실적일 +15.8%p"},{"label":"T0 희석 충격","start":"2026-08-28","end":"2026-09-04","note":"유상증자 공시 이후. 진행중 — 확정발행가·청약률·신주상장 미도래"}],"band":{"start":"2026-08-28","end":"2026-09-04","label":"T0 희석 충격 구간 (진행중 · D+6)"},"share_steps":[{"from":"1900-01-01","listed":46290951,"note":"인적분할 후 보통주 (DART 확정, 2025-11-03 신고)"}]},"dates":["2025-11-24","2025-11-25","2025-11-26","2025-11-27","2025-11-28","2025-12-01","2025-12-02","2025-12-03","2025-12-04","2025-12-05","2025-12-08","2025-12-09","2025-12-10","2025-12-11","2025-12-12","2025-12-15","2025-12-16","2025-12-17","2025-12-18","2025-12-19","2025-12-22","2025-12-23","2025-12-24","2025-12-26","2025-12-29","2025-12-30","2026-01-02","2026-01-05","2026-01-06","2026-01-07","2026-01-08","2026-01-09","2026-01-12","2026-01-13","2026-01-14","2026-01-15","2026-01-16","2026-01-19","2026-01-20","2026-01-21","2026-01-22","2026-01-23","2026-01-26","2026-01-27","2026-01-28","2026-01-29","2026-01-30","2026-02-02","2026-02-03","2026-02-04","2026-02-05","2026-02-06","2026-02-09","2026-02-10","2026-02-11","2026-02-12","2026-02-13","2026-02-19","2026-02-20","2026-02-23","2026-02-24","2026-02-25","2026-02-26","2026-02-27","2026-03-03","2026-03-04","2026-03-05","2026-03-06","2026-03-09","2026-03-10","2026-03-11","2026-03-12","2026-03-13","2026-03-16","2026-03-17","2026-03-18","2026-03-19","2026-03-20","2026-03-23","2026-03-24","2026-03-25","2026-03-26","2026-03-27","2026-03-30","2026-03-31","2026-04-01","2026-04-02","2026-04-03","2026-04-06","2026-04-07","2026-04-08","2026-04-09","2026-04-10","2026-04-13","2026-04-14","2026-04-15","2026-04-16","2026-04-17","2026-04-20","2026-04-21","2026-04-22","2026-04-23","2026-04-24","2026-04-27","2026-04-28","2026-04-29","2026-04-30","2026-05-04","2026-05-06","2026-05-07","2026-05-08","2026-05-11","2026-05-12","2026-05-13","2026-05-14","2026-05-15","2026-05-18","2026-05-19","2026-05-20","2026-05-21","2026-05-22","2026-05-26","2026-05-27","2026-05-28","2026-05-29","2026-06-01","2026-06-02","2026-06-04","2026-06-05","2026-06-08","2026-06-09","2026-06-10","2026-06-11","2026-06-12","2026-06-15","2026-06-16","2026-06-17","2026-06-18","2026-06-19","2026-06-22","2026-06-23","2026-06-24","2026-06-25","2026-06-26","2026-06-29","2026-06-30","2026-07-01","2026-07-02","2026-07-03","2026-07-06","2026-07-07","2026-07-08","2026-07-09","2026-07-10","2026-07-13","2026-07-14","2026-07-15","2026-07-16","2026-07-20","2026-07-21","2026-07-22","2026-07-23","2026-07-24","2026-07-27","2026-07-28","2026-07-29","2026-07-30","2026-07-31","2026-08-03","2026-08-04","2026-08-05","2026-08-06","2026-08-07","2026-08-10","2026-08-11","2026-08-12","2026-08-13","2026-08-14","2026-08-18","2026-08-19","2026-08-20","2026-08-21","2026-08-24","2026-08-25","2026-08-26","2026-08-27","2026-08-28","2026-08-31","2026-09-01","2026-09-02","2026-09-03","2026-09-04"],"close":[1789000.0,1627000.0,1651000.0,1646000.0,1607000.0,1649000.0,1654000.0,1654000.0,1680000.0,1641000.0,1629000.0,1660000.0,1665000.0,1669000.0,1692000.0,1772000.0,1790000.0,1750000.0,1738000.0,1733000.0,1724000.0,1720000.0,1691000.0,1692000.0,1706000.0,1695000.0,1683000.0,1713000.0,1721000.0,1767000.0,1885000.0,1878000.0,1859000.0,1908000.0,1927000.0,1965000.0,1947000.0,1921000.0,1920000.0,1873000.0,1778000.0,1802000.0,1807000.0,1790000.0,1791000.0,1776000.0,1745000.0,1711000.0,1749000.0,1759000.0,1700000.0,1668000.0,1694000.0,1710000.0,1712000.0,1719000.0,1710000.0,1720000.0,1736000.0,1717000.0,1723000.0,1728000.0,1766000.0,1778000.0,1681000.0,1516000.0,1647000.0,1644000.0,1579000.0,1592000.0,1657000.0,1625000.0,1592000.0,1568000.0,1587000.0,1626000.0,1585000.0,1601000.0,1523000.0,1547000.0,1585000.0,1585000.0,1606000.0,1530000.0,1504000.0,1572000.0,1585000.0,1554000.0,1555000.0,1586000.0,1598000.0,1580000.0,1571000.0,1550000.0,1536000.0,1602000.0,1616000.0,1601000.0,1605000.0,1588000.0,1561000.0,1514000.0,1528000.0,1509000.0,1504000.0,1473000.0,1470000.0,1485000.0,1480000.0,1468000.0,1472000.0,1458000.0,1443000.0,1410000.0,1449000.0,1419000.0,1386000.0,1346000.0,1337000.0,1395000.0,1415000.0,1425000.0,1384000.0,1373000.0,1363000.0,1377000.0,1367000.0,1350000.0,1340000.0,1243000.0,1296000.0,1298000.0,1286000.0,1295000.0,1332000.0,1333000.0,1370000.0,1430000.0,1374000.0,1295000.0,1273000.0,1385000.0,1386000.0,1343000.0,1448000.0,1391000.0,1396000.0,1406000.0,1421000.0,1405000.0,1422000.0,1363000.0,1325000.0,1395000.0,1400000.0,1368000.0,1383000.0,1396000.0,1345000.0,1395000.0,1372000.0,1379000.0,1518000.0,1545000.0,1549000.0,1479000.0,1527000.0,1485000.0,1423000.0,1476000.0,1491000.0,1514000.0,1556000.0,1569000.0,1609000.0,1549000.0,1564000.0,1548000.0,1531000.0,1544000.0,1574000.0,1551000.0,1573000.0,1585000.0,1599000.0,1594000.0,1486000.0,1518000.0,1520000.0,1501000.0,1477000.0,1447000.0],"bm":[3846.06,3857.78,3960.87,3986.91,3926.59,3920.37,3994.93,4036.3,4028.51,4100.05,4154.85,4143.55,4135.0,4110.62,4167.16,4090.59,3999.13,4056.41,3994.51,4020.55,4105.93,4117.32,4108.62,4129.68,4220.56,4214.17,4309.63,4457.52,4525.48,4551.06,4552.37,4586.32,4624.79,4692.64,4723.1,4797.55,4840.74,4904.66,4885.75,4909.93,4952.53,4990.07,4949.59,5084.85,5170.81,5221.25,5224.36,4949.67,5288.08,5371.1,5163.57,5089.14,5298.04,5301.69,5354.49,5522.27,5507.01,5677.25,5808.53,5846.09,5969.64,6083.86,6307.27,6244.13,5791.91,5093.54,5583.9,5584.87,5251.87,5532.59,5609.95,5583.25,5487.24,5549.85,5640.48,5925.03,5763.22,5781.2,5405.75,5553.92,5642.21,5460.46,5438.87,5277.3,5052.46,5478.7,5234.05,5377.3,5450.33,5494.78,5872.34,5778.01,5858.87,5808.62,5967.75,6091.39,6226.05,6191.92,6219.09,6388.47,6417.93,6475.81,6475.63,6615.03,6641.02,6690.9,6598.87,6936.99,7384.56,7490.05,7498.0,7822.24,7643.15,7844.01,7981.41,7493.18,7516.04,7271.66,7208.95,7815.59,7847.71,8047.51,8228.7,8185.29,8476.15,8788.38,8801.49,8639.41,8160.59,7484.41,8096.93,7730.82,7763.95,8123.62,8545.98,8726.6,8864.24,9063.84,9052.42,9114.55,8203.84,8471.02,8930.3,8411.21,8394.65,8476.48,8303.41,7648.09,8088.34,8051.33,7656.31,7246.79,7291.91,7475.94,6806.93,6856.83,7284.41,6820.6,6516.27,6747.95,6797.7,7096.89,6690.62,6755.75,6023.66,5663.24,5593.56,6595.45,6257.45,6358.95,6598.26,6296.38,6258.77,6299.66,6345.53,6579.04,6813.34,6977.94,6869.83,6471.17,6852.58,6912.95,6696.96,6742.74,6808.21,6912.37,6788.88,6820.02,6835.8,6562.72,6579.48,6687.21],"vol":[560815,224828,115530,70847,50331,54392,33670,44310,34738,54357,36652,44895,34891,60950,44882,107019,54125,40730,38712,45677,42564,36146,36975,27002,25923,26967,46684,51390,36813,61546,128454,70385,68736,77125,86681,70485,68134,44904,42737,59612,182684,62438,72980,74402,59883,67355,63642,67005,50120,55355,59550,57738,57218,46371,31291,39569,30115,40847,32604,67316,47116,45641,88413,97725,81261,83414,70178,57347,56445,48257,48088,63692,42424,29984,29429,50561,30824,31941,32660,27709,35752,30276,27116,34318,82617,51951,77387,27956,25964,31451,52453,37749,30706,31922,67443,64483,32491,26261,25519,47766,44657,139459,59422,88430,40649,70039,44538,91513,102714,66462,62693,67575,84654,76826,75777,82235,54234,68759,82110,50454,65301,44640,45686,58500,128284,67442,54844,69504,47701,78137,59718,44562,66303,54753,43859,40379,60218,113690,99207,51541,61840,95518,76241,53490,85788,74245,39712,65143,54162,35577,51193,48968,51344,43685,45614,65068,40849,29974,40527,51667,37607,42385,198056,99652,155654,91074,83710,90690,47113,51711,52180,48730,51786,42211,69856,69313,55792,29916,37718,28670,62565,44704,32870,42479,40816,29767,111160,86767,29197,36243,34227,45399],"val":[9879,3702,1917,1179,815,896,556,736,580,897,598,741,578,1020,756,1899,974,714,679,788,737,623,626,455,440,457,787,875,633,1084,2384,1312,1284,1478,1671,1387,1312,863,823,1122,3280,1123,1316,1336,1073,1198,1118,1154,872,975,1029,956,970,793,538,678,515,707,565,1164,813,787,1548,1729,1387,1302,1140,938,882,771,800,1032,676,470,469,825,491,513,501,427,567,483,429,529,1262,806,1245,439,405,498,843,601,484,495,1041,1023,524,420,410,762,702,2141,907,1339,614,1037,656,1346,1521,980,921,987,1224,1084,1076,1180,748,930,1084,702,926,637,635,799,1742,928,749,944,644,972,766,571,851,714,586,540,816,1625,1368,675,805,1288,1069,718,1217,1042,548,923,772,496,718,677,685,610,644,888,571,416,552,719,526,586,2971,1540,2406,1356,1259,1341,673,750,779,730,794,659,1121,1092,868,464,577,437,989,692,514,669,652,474,1667,1306,441,543,505,658],"valMa":[9879,6791,5166,4169,3498,3065,2706,2460,2251,2116,1978,1875,1775,1721,1657,1672,1631,1580,1532,1495,1459,1421,1386,1348,1311,1279,1260,1247,1225,1221,1258,1260,1261,1267,1279,1282,1282,1271,1260,1256,1306,1301,1302,1303,1297,1295,1291,1289,1280,1274,1269,1263,1258,1249,1236,1226,1214,1205,1194,1194,1042,994,988,997,1006,1013,1023,1026,1031,1029,1033,1037,1039,1030,1025,1007,999,996,993,987,984,982,978,980,993,999,1007,1000,996,986,960,948,935,919,908,902,889,882,875,869,826,843,836,836,828,826,818,821,832,832,830,831,835,840,849,857,861,865,873,866,868,865,850,834,840,834,828,828,824,827,826,819,822,826,828,823,828,847,861,866,869,883,894,897,896,900,888,896,902,902,900,902,905,907,900,898,899,899,901,900,897,872,906,909,939,944,955,954,940,936,934,930,923,916,916,915,917,909,901,896,897,898,896,894,876,868,884,890,886,879,875,876],"turn":[4.678,1.928,0.983,0.607,0.43,0.46,0.285,0.377,0.292,0.463,0.311,0.378,0.294,0.518,0.379,0.908,0.461,0.346,0.331,0.385,0.362,0.307,0.314,0.228,0.219,0.229,0.396,0.433,0.312,0.52,1.072,0.592,0.585,0.656,0.735,0.598,0.571,0.381,0.363,0.507,1.563,0.528,0.617,0.632,0.507,0.571,0.543,0.571,0.422,0.469,0.513,0.485,0.485,0.393,0.266,0.334,0.255,0.348,0.276,0.574,0.4,0.386,0.743,0.824,0.699,0.728,0.586,0.483,0.473,0.41,0.409,0.538,0.36,0.254,0.25,0.43,0.262,0.272,0.279,0.234,0.303,0.258,0.226,0.293,0.711,0.434,0.666,0.239,0.22,0.266,0.447,0.322,0.261,0.27,0.574,0.541,0.275,0.222,0.216,0.406,0.381,1.198,0.503,0.752,0.346,0.596,0.378,0.768,0.87,0.565,0.53,0.573,0.719,0.651,0.629,0.704,0.458,0.585,0.687,0.426,0.554,0.378,0.389,0.493,1.083,0.571,0.464,0.593,0.407,0.663,0.501,0.373,0.561,0.467,0.373,0.343,0.504,0.963,0.844,0.442,0.536,0.788,0.653,0.453,0.712,0.635,0.333,0.556,0.46,0.299,0.428,0.421,0.438,0.371,0.39,0.55,0.35,0.252,0.348,0.437,0.325,0.36,1.658,0.845,1.316,0.777,0.698,0.765,0.401,0.43,0.442,0.409,0.432,0.356,0.59,0.597,0.47,0.254,0.319,0.24,0.532,0.378,0.277,0.358,0.345,0.252,0.95,0.729,0.246,0.307,0.29,0.386],"fcap":[211177,192054,194887,194297,189694,194651,195242,195242,198311,193707,192290,195950,196540,197012,199727,209171,211295,206574,205157,204567,203504,203032,199609,199727,201380,200081,198665,202206,203150,208580,222509,221683,219440,225224,227467,231953,229828,226759,226641,221093,209879,212712,213302,211295,211413,209643,205983,201970,206456,207636,200671,196894,199963,201852,202088,202914,201852,203032,204921,202678,203386,203977,208462,209879,198429,178952,194415,194061,186388,187923,195596,191818,187923,185090,187333,191936,187097,188985,179778,182611,187097,187097,189576,180604,177535,185562,187097,183437,183555,187215,188631,186506,185444,182965,181313,189103,190756,188985,189457,187451,184264,178716,180368,178125,177535,173876,173522,175292,174702,173286,173758,172105,170335,166439,171043,167502,163606,158885,157822,164669,167030,168210,163370,162072,160891,162544,161363,159357,158176,146726,152982,153219,151802,152864,157232,157350,161718,168800,162190,152864,150268,163488,163606,158530,170925,164196,164787,165967,167738,165849,167856,160891,156406,164669,165259,161482,163252,164787,158767,164669,161954,162780,179188,182375,182847,174584,180250,175292,167974,174230,176001,178716,183673,185208,189930,182847,184618,182729,180722,182257,185798,183083,185680,187097,188749,188159,175410,179188,179424,177181,174348,170807],"cumInst":[1214.3,777.6,636.3,627.2,589.7,826.8,773.7,686.0,664.4,583.6,439.2,435.9,392.3,286.5,483.0,1051.2,1244.2,1226.7,1277.9,1310.8,1272.0,1206.2,1057.9,1074.1,974.0,902.5,642.3,446.0,469.4,489.8,373.3,514.5,556.0,588.6,559.7,614.6,480.5,295.2,167.5,177.0,-213.8,-194.7,-630.7,-1080.3,-1364.0,-1664.7,-1908.4,-1997.9,-1926.6,-1946.8,-2251.9,-2273.0,-2069.0,-2016.1,-2130.2,-2140.9,-2245.7,-2261.0,-2244.9,-2447.5,-2368.3,-2376.1,-2370.3,-2427.3,-2563.2,-2666.2,-2793.8,-2937.8,-3050.6,-3231.2,-3267.5,-3027.3,-3153.8,-3243.0,-3339.6,-3221.7,-3351.9,-3333.0,-3496.7,-3505.1,-3389.5,-3310.4,-3288.7,-3276.1,-3170.1,-3014.2,-2669.7,-2668.3,-2600.5,-2464.8,-2354.0,-2376.2,-2457.9,-2604.7,-2670.4,-2600.4,-2631.7,-2712.7,-2798.7,-3006.3,-3140.3,-3821.8,-3957.7,-4377.7,-4447.7,-4761.8,-4857.5,-5171.0,-5655.7,-5727.7,-5790.5,-6021.1,-6066.2,-6248.2,-6345.0,-6395.8,-6402.8,-6347.5,-6529.8,-6639.7,-6804.8,-6863.6,-7013.3,-7049.9,-7237.9,-7239.0,-7293.4,-7322.8,-7266.6,-7588.0,-7669.1,-7673.4,-7888.4,-8062.3,-8133.8,-8139.2,-8212.4,-8264.0,-8415.3,-8609.9,-8625.2,-8592.1,-8681.0,-8692.5,-8543.6,-8758.0,-8743.6,-8559.5,-8464.5,-8449.9,-8259.1,-8217.7,-8188.0,-8170.3,-8006.8,-7993.7,-8135.9,-8107.1,-8044.7,-7886.9,-7904.1,-7920.4,-6816.6,-6345.3,-5524.6,-5218.0,-4938.7,-5224.6,-5415.2,-5526.9,-5671.6,-5657.3,-5466.4,-5450.7,-5187.2,-5420.5,-5817.8,-5911.2,-5921.7,-5903.0,-5974.5,-5976.1,-5907.6,-5699.6,-5638.9,-5639.2,-5760.2,-5773.0,-5808.2,-5872.2,-5932.0,-6013.5],"cumFrgn":[-468.5,-1187.5,-802.8,-795.6,-838.0,-895.1,-947.9,-985.2,-970.5,-1229.0,-1116.2,-892.2,-805.8,-632.7,-721.2,-633.7,-716.4,-691.8,-784.3,-912.7,-1030.2,-990.2,-1051.7,-1115.1,-1029.4,-1044.1,-1144.3,-803.7,-765.1,-632.4,302.2,163.0,122.9,234.2,411.6,592.1,641.8,721.6,798.3,571.6,-1240.9,-1224.1,-774.0,-702.8,-831.5,-857.2,-1006.6,-954.0,-988.9,-967.8,-1068.5,-1244.8,-1568.9,-1545.2,-1514.6,-1549.6,-1477.3,-1292.9,-1284.6,-1361.9,-1534.9,-1557.1,-1091.7,-774.0,-820.2,-773.3,-601.2,-392.3,-316.4,-253.3,-47.7,-480.3,-546.8,-604.8,-462.0,-378.8,-444.5,-394.6,-428.0,-480.7,-435.3,-452.1,-440.5,-542.2,-594.3,-719.4,-683.6,-820.8,-913.3,-934.2,-1161.0,-1161.0,-1218.7,-1153.1,-1478.5,-1260.6,-1179.4,-1157.6,-1002.7,-1076.6,-1234.6,-1990.4,-2071.6,-2622.4,-2807.1,-3102.9,-3289.2,-3684.9,-3617.4,-3945.5,-4009.1,-3925.8,-3958.3,-4060.3,-3950.4,-3780.9,-3906.2,-4083.8,-3918.3,-3770.7,-3715.4,-3708.9,-3759.8,-3725.3,-3588.9,-3537.2,-3426.4,-3362.4,-3471.1,-3461.3,-3350.5,-3309.3,-3073.8,-2989.6,-2949.5,-2943.1,-2756.9,-2471.3,-2440.1,-2536.7,-2400.3,-2144.7,-1931.0,-1921.3,-1642.8,-1531.0,-1565.9,-1411.6,-1385.2,-1416.9,-1447.2,-1497.3,-1523.5,-1349.4,-1340.7,-1383.3,-1154.1,-1121.4,-1269.7,-1305.4,-1281.2,-1351.5,-665.0,-810.2,-1131.7,-1243.9,-1228.8,-1252.4,-1236.6,-990.0,-770.4,-617.2,-460.6,-308.2,-127.4,9.6,394.9,384.1,409.3,457.2,603.8,656.1,712.9,656.7,702.2,748.5,518.3,593.3,682.5,740.2,733.2,694.0],"cumInd":[-610.6,493.7,218.6,216.6,318.2,148.0,251.2,395.3,402.2,721.8,751.8,540.4,495.0,415.0,361.7,-254.8,-350.6,-345.8,-305.9,-210.9,-57.0,-22.4,168.0,209.7,214.5,300.7,650.7,512.1,442.5,286.4,-454.0,-451.0,-472.6,-626.5,-775.0,-996.2,-887.5,-780.1,-729.5,-510.4,1614.1,1574.7,1544.9,1896.0,2258.9,2578.2,2955.7,2990.2,2970.3,2976.1,3373.9,3571.0,3692.0,3614.8,3678.0,3721.2,3750.6,3634.0,3605.9,3890.6,3981.2,4004.5,3741.4,3462.5,3632.1,3673.2,3639.2,3589.3,3622.7,3738.9,3575.3,3768.1,3882.3,4027.4,4024.5,3847.6,4035.7,3966.7,4155.1,4212.5,4066.7,4014.2,3981.8,3987.8,3943.7,3909.2,3557.8,3679.6,3698.6,3606.3,3710.5,3733.7,3870.0,3959.3,4339.8,4053.5,3998.9,4050.4,3986.0,4263.6,4556.1,5924.1,6094.9,7020.3,7267.6,7896.2,8169.9,8854.9,9267.2,9666.6,9780.8,9962.4,10047.8,10301.0,10321.1,10213.9,10325.0,10427.3,10455.4,10420.5,10516.0,10567.3,10766.5,10758.6,10816.0,10760.9,10725.9,10770.2,10822.8,11103.8,11064.7,11031.8,11010.8,11102.7,11136.9,11136.5,11023.0,10795.7,10911.6,11195.3,11062.6,10780.7,10643.5,10651.8,10226.6,10316.3,10334.5,10061.3,9941.7,9957.8,9800.0,9815.5,9808.0,9619.2,9452.2,9479.8,9395.1,9337.5,9385.9,9267.6,9256.3,9340.7,7602.9,7274.2,6837.2,6654.2,6405.0,6695.1,6861.4,6730.7,6658.0,6494.8,6177.4,6003.5,5587.9,5687.6,5709.7,5813.9,5799.7,5732.9,5662.0,5611.8,5502.3,5351.4,5247.5,5204.3,5547.5,5466.5,5412.9,5416.6,5471.6,5591.4],"ddayIndex":185,"events":[{"n":1,"i":0,"date":"2025-11-24","tradingDate":"2025-11-24","snapped":false,"phase":"P0","category":"시장","impact":"중립","title":"인적분할 후 CDMO 단독 재상장","detail":"삼성에피스홀딩스 인적분할 후 변경상장 첫날. 이 대시보드의 시세는 이 날부터 시작한다 — 이전 구간은 삼성바이오에피스를 포함한 다른 자산이므로 같은 선에 놓을 수 없다. 첫 종가 1,789,000원","verified":"확정","source":"DART/KRX","close":1789000.0,"chg":0.0,"bmChg":0.0,"excess":0.0,"volMult":9.1,"val":9879,"valMult":1.0,"rs":201.7},{"n":2,"i":158,"date":"2026-07-17","tradingDate":"2026-07-20","snapped":true,"phase":"T0","category":"공시","impact":"중립","title":"PolyPeptide 인수 이사회 결의","detail":"스위스 상장 펩타이드 CDMO PolyPeptide Group AG 100% 공개매수 결의. 공개매수가 CHF 44.31 · 총 2조 7062억. 최대주주 Draupnir Holding 55.65% 전량 응모 확약","verified":"확정","source":"DART 주요사항보고서(타법인주식및출자증권양수결정)","close":1345000.0,"chg":-3.65,"bmChg":-4.46,"excess":0.81,"volMult":0.7,"val":552,"valMult":0.6,"rs":89.5},{"n":3,"i":158,"date":"2026-07-20","tradingDate":"2026-07-20","snapped":false,"phase":"T0","category":"공시","impact":"중립","title":"인수 공시 — 당일 초과수익 +0.8%p","detail":"2조 7062억짜리 인수 발표인데 지수 대비 +0.81%p에 그쳤다. 이때 공시된 자금조달방법은 '보유자금 및 차입금'이었다","verified":"확정","source":"DART/시세데이터","close":1345000.0,"chg":-3.65,"bmChg":-4.46,"excess":0.81,"volMult":0.7,"val":552,"valMult":0.6,"rs":89.5},{"n":4,"i":162,"date":"2026-07-24","tradingDate":"2026-07-24","snapped":false,"phase":"T0","category":"실적","impact":"긍정","title":"2분기 잠정실적 반영 +10.08% (초과 +15.8%p)","detail":"7/23 장마감후 공시. 2026 반기 매출 2조 5780억(+28.0%), 영업이익률 45.3%. 수급은 개인 -1738억 / 외국인 +686억 / 기관 +1104억 — 전형적 외국인주도 구간. 인수 발표보다 실적이 주가를 20배 크게 움직였다","verified":"확정","source":"DART 공정공시/키움 ka10059","close":1518000.0,"chg":10.08,"bmChg":-5.72,"excess":15.8,"volMult":3.2,"val":2971,"valMult":3.3,"rs":98.4},{"n":5,"i":185,"date":"2026-08-27","tradingDate":"2026-08-27","snapped":false,"phase":"T0","category":"시장","impact":"중립","title":"기준일 — 공시 미반영 마지막 종가","detail":"종가 1,594,000원. 예정발행가 산정의 기산일이기도 하다","verified":"확정","source":"시세데이터","close":1594000.0,"chg":-0.31,"bmChg":1.53,"excess":-1.84,"volMult":0.5,"val":474,"valMult":0.5,"rs":100.0},{"n":6,"i":186,"date":"2026-08-28","tradingDate":"2026-08-28","snapped":false,"phase":"T0","category":"공시","impact":"부정","title":"3조 유상증자 결의 — 당일 -6.78% (초과 -4.99%p)","detail":"신주 2,270,000주 · 예정발행가 1,322,000원 · 조달 3조 94억 · 희석률 4.67%. 자금용도는 타법인취득 2조 7062억(90.2%) + 시설자금 2947억(9.8%, 제2바이오캠퍼스 6공장). 같은 날 인수 공시를 정정해 자금조달방법을 '보유자금 및 차입금' → '유상증자 등을 통한 조달 자금'으로 변경. 수급 개인 +343억 / 외국인 -230억 / 기관 -121억","verified":"확정","source":"DART 주요사항보고서(유상증자결정)","close":1486000.0,"chg":-6.78,"bmChg":-1.79,"excess":-4.99,"volMult":1.8,"val":1667,"valMult":1.9,"rs":94.9},{"n":7,"i":187,"date":"2026-08-31","tradingDate":"2026-08-31","snapped":false,"phase":"T0","category":"규제","impact":"중립","title":"공매도 청약금지 기간 개시","detail":"2026-08-31 ~ 11-04 기간 중 공매도한 자는 이 모집에 청약할 수 없다","verified":"확정","source":"DART 증권신고서","close":1518000.0,"chg":2.15,"bmChg":0.46,"excess":1.69,"volMult":1.4,"val":1306,"valMult":1.5,"rs":96.5},{"n":8,"i":191,"date":"2026-09-04","tradingDate":"2026-09-04","snapped":false,"phase":"T0","category":"시장","impact":"부정","title":"D+6 누적 초과수익 -5.96%","detail":"종가 1,447,000원. 개인 순매수·외국인 순매도 기조 지속. 확정발행가(11-04)·청약률(11-10)·신주상장(11-30)은 모두 미도래","verified":"확정","source":"시세데이터","close":1447000.0,"chg":-2.03,"bmChg":1.64,"excess":-3.67,"volMult":0.7,"val":658,"valMult":0.8,"rs":93.8}],"periods":[{"label":"D-day","date":"2026-08-27","close":1594000.0,"sr":0.0,"br":0.0,"ex":0.0,"rs":100.0},{"label":"D+1","date":"2026-08-28","close":1486000.0,"sr":-6.8,"br":-1.8,"ex":-5.0,"rs":94.9},{"label":"D+5","date":"2026-09-03","close":1477000.0,"sr":-7.3,"br":-4.8,"ex":-2.5,"rs":97.3},{"label":"최근","date":"2026-09-04","close":1447000.0,"sr":-9.2,"br":-3.3,"ex":-6.0,"rs":93.8}],"stats":{"ddayDate":"2026-08-27","ddayClose":1594000.0,"lastDate":"2026-09-04","lastClose":1447000.0,"srTotal":-9.2,"brTotal":-3.3,"exTotal":-6.0,"rsLast":93.8,"troughPct":-9.2,"troughDate":"2026-09-04","peakPct":0.0,"peakDate":"2026-08-27","rsMin":93.8,"rsMinDate":"2026-09-04","rsMax":100.0,"rsMaxDate":"2026-08-27","priceRecDays":null,"priceRecDate":null,"rsRecDays":null,"rsRecDate":null,"startDate":"2025-11-24","srFull":-19.1,"brFull":73.9,"phases":[{"label":"P0 분할 후 단독 상장","note":"CDMO 단독 자산으로 거래된 구간. 이 구간의 시세가 유상증자 판단의 기준선이다","from":"2025-11-24","to":"2026-07-20","days":158,"sr":-24.8,"br":69.4,"ex":-94.2,"rsEnd":89.5,"avgVal":979,"valVsBase":1.01,"turn":0.522,"valVsPrev":null,"instNet":-9259,"frgnNet":-801,"indNet":9996,"orgnSub":{"금융투자":1167,"투신":-2100,"연기금등":-5942,"사모펀드":-820,"보험":-1548,"은행":-16,"기타금융":2,"국가":0}},{"label":"P1 인수 발표","note":"PolyPeptide 인수 공시(자금조달방법 미확정) ~ 유상증자 공시 직전. 인수 발표 당일 초과 +0.8%p, 2분기 실적일 +15.8%p","from":"2026-07-20","to":"2026-08-27","days":27,"sr":18.5,"br":6.1,"ex":12.4,"rsEnd":100.0,"avgVal":935,"valVsBase":0.96,"turn":0.522,"valVsPrev":0.96,"instNet":2406,"frgnNet":2018,"indNet":-4182,"orgnSub":{"금융투자":-87,"투신":681,"연기금등":1601,"사모펀드":-9,"보험":222,"은행":0,"기타금융":-4,"국가":0}},{"label":"T0 희석 충격","note":"유상증자 공시 이후. 진행중 — 확정발행가·청약률·신주상장 미도래","from":"2026-08-28","to":"2026-09-04","days":5,"sr":-2.6,"br":-1.5,"ex":-1.1,"rsEnd":93.8,"avgVal":853,"valVsBase":0.88,"turn":0.485,"valVsPrev":0.91,"instNet":-253,"frgnNet":176,"indNet":44,"orgnSub":{"금융투자":13,"투신":-141,"연기금등":-95,"사모펀드":-1,"보험":-29,"은행":0,"기타금융":0,"국가":0}}],"shares":{"listed":46291000,"floatShares":11800000,"floatRatio":25.5,"asOf":"2026-09-06","note":"유통비율은 현재 스냅샷. IPO 보호예수 구간의 회전율은 과소평가된다."},"flow":{"avgTurn":0.522,"recentTurn":0.415,"avgVal":971,"peakVal":9879,"peakDate":"2025-11-24","topUpRatio":"9/15","recentVal":756,"recentMult":0.78,"instTotal":-374,"frgnTotal":-54,"indTotal":387,"flowSource":"키움 ka10059 (개인 포함 · 금액 기준)","hasIndiv":true,"topDays":[{"date":"2025-11-24","val":9879,"mult":1.0,"chg":0},{"date":"2025-11-25","val":3702,"mult":0.5,"chg":-9.1},{"date":"2025-11-26","val":1917,"mult":0.4,"chg":1.5},{"date":"2025-12-15","val":1899,"mult":1.1,"chg":4.7},{"date":"2026-01-08","val":2384,"mult":1.9,"chg":6.7},{"date":"2026-01-14","val":1671,"mult":1.3,"chg":1.0},{"date":"2026-01-22","val":3280,"mult":2.5,"chg":-5.1},{"date":"2026-02-26","val":1548,"mult":1.6,"chg":2.2},{"date":"2026-02-27","val":1729,"mult":1.7,"chg":0.7},{"date":"2026-04-23","val":2141,"mult":2.5,"chg":-3.0},{"date":"2026-05-29","val":1742,"mult":2.1,"chg":-0.7},{"date":"2026-06-18","val":1625,"mult":1.9,"chg":4.4},{"date":"2026-07-24","val":2971,"mult":3.3,"chg":10.1},{"date":"2026-07-28","val":2406,"mult":2.6,"chg":0.3},{"date":"2026-08-28","val":1667,"mult":1.9,"chg":-6.8}]},"band":{"i0":186,"i1":191,"label":"T0 희석 충격 구간 (진행중 · D+6)"},"kpis":[{"k":"삼성바이오로직스 수익률","v":"-9%","tone":-9.2,"n":"2026-08-27 → 2026-09-04"},{"k":"KOSPI 동기간","v":"-3%","tone":-3.3,"n":"같은 기간 지수"},{"k":"초과수익","v":"-6%p","hero":1,"n":"현재 상대강도 RS 93.8"},{"k":"RS 최고","v":"100","n":"2026-08-27"},{"k":"RS 고점 → 현재","v":"100 → 94","tone":-6.200000000000003,"n":"고점 이후 -6p"},{"k":"RS 최저","v":"94","n":"2026-09-04"}]}};
+const PORTAL = {"summary":"희석률은 아카이브 최저인데 회사는 이 3조가 얼마를 벌어올지 말하지 않았다. 진행중인 케이스를 결과 없이 판정하면 어떻게 되는가?","related":[{"name":"이수페타시스","title":"혼합형 유상증자와 비관련 인수 철회","href":"007660_dashboard.html","reason":"같은 유상증자 사례"},{"name":"삼성SDI","title":"본업 증설형 유상증자와 수요 회복의 시차","href":"006400_dashboard.html","reason":"같은 유상증자 사례"},{"name":"포스코퓨처엠","title":"증자 진행 신호와 이후 성과의 엇갈림","href":"003670_dashboard.html","reason":"같은 유상증자 사례"},{"name":"LS마린솔루션","title":"시설자금 100%와 기대의 선반영","href":"060370_dashboard.html","reason":"같은 유상증자 사례"},{"name":"에코프로머티리얼즈","title":"낮은 희석률이 지켜주지 못한 것","href":"450080_rcps_dashboard.html","reason":"같은 유상증자 사례"},{"name":"SK이노베이션","title":"채무상환형 유상증자와 두 개의 업황","href":"096770_dashboard.html","reason":"같은 유상증자 사례"},{"name":"한화에어로스페이스","title":"시설투자 기대와 상대강도의 유효기간","href":"012450_dashboard.html","reason":"같은 유상증자 사례"},{"name":"LIG디펜스앤에어로스페이스","title":"정책자금 우선주와 유도무기 캐파 증설","href":"079550_dashboard.html","reason":"같은 유상증자 사례"},{"name":"HLB제약","title":"규제가 밀어놓은 5주","href":"047920_dashboard.html","reason":"같은 유상증자 사례"},{"name":"씨앤씨인터내셔널","title":"7만원과 4만100원","href":"352480_dashboard.html","reason":"같은 유상증자 사례"},{"name":"한국피아이엠","title":"흥행한 이전상장 공모와 늦어진 시설투자","href":"448900_dashboard.html","reason":"같은 유상증자 사례"},{"name":"넥사다이내믹스","title":"현금 100억이 상가 20실로 바뀌었다","href":"351320_dashboard.html","reason":"같은 유상증자 사례"},{"name":"한울앤제주","title":"세부내역이 '미정'인 시설자금 120억","href":"276730_dashboard.html","reason":"같은 유상증자 사례"},{"name":"부광약품","title":"실적은 먼저 좋아졌지만 증자자금은 아직 일하지 않았다","href":"003000_dashboard.html","reason":"같은 유상증자 사례"},{"name":"아이씨티케이","title":"고객이 주주가 된 양자보안 칩 증자","href":"456010_dashboard.html","reason":"같은 유상증자 사례"}]};
+const $ = s => document.querySelector(s);
+const fmt = n => n.toLocaleString('ko-KR');
+const pct = (v,p=1) => (v>=0?'+':'') + v.toFixed(p) + '%';
+const cls = v => v > 0 ? 'up' : v < 0 ? 'down' : 'flat';
+const IMPACT = {'긍정':'var(--up)','부정':'var(--down)','중립':'var(--flat)','미확인':'var(--ink-3)'};
+
+let baseMode = 'dday', rangeMode = 'dday', selected = null;
+const panels = {rs:true, turn:true, flow:true};
+
+/* ============ portal context ============ */
+function validFrom(){
+  const raw = new URLSearchParams(location.search).get('from') || '';
+  if (!/^(home|cases|search|macro)(\?|$)/.test(raw)) return 'cases';
+  return raw;
+}
+const portalFrom = validFrom();
+$('#caseBack').href = `index.html#${portalFrom}`;
+const context = $('#caseContext');
+context.innerHTML = `<div class="crumb">홈 / 사례 탐색 / ${D.meta.name}</div><strong>이 사례에서 볼 질문</strong><div>${PORTAL?.summary || '사건과 이후의 시장 반응을 지수 대비로 확인합니다.'}</div>`;
+if (PORTAL?.related?.length) {
+  $('#relatedCases').hidden = false;
+  $('#relatedList').innerHTML = PORTAL.related.map(x => `<a href="${x.href}?from=${encodeURIComponent(portalFrom)}">${x.name} — ${x.title}<p>${x.reason}</p></a>`).join('');
+}
+
+/* ============ header ============ */
+const M = D.meta, S = D.stats;
+$('#eyebrow').textContent = `${M.issue_type} 케이스 · ${M.market} ${M.code}`;
+$('#headline').textContent = `${M.name} — ${M.headline}`;
+$('#thesis').textContent = M.thesis;
+$('#ddayLbl').innerHTML = `모든 수익률·상대강도는 <b>기준일 ${S.ddayDate}</b> 종가 기준${M.dday_note ? ' — ' + M.dday_note : ''}`;
+const CHIPS = M.chips || [
+  ['유형코드', M.type_code, true], ['조달방식', M.method], ['업종', M.sector],
+  ['조달금액', `${M.amount_initial} → ${M.amount_final}`],
+  ['스코어카드', M.score], ['공시일', M.announce_date || M.dday],
+];
+$('#chips').innerHTML = CHIPS.filter(c=>c[1])
+  .map(([k,v,key]) => `<span class="chip${key?' key':''}">${k} <b>${v}</b></span>`).join('');
+
+/* ============ kpi ============ */
+$('#kpis').innerHTML = S.kpis.map(o => `<div class="kpi${o.hero?' hero':''}">
+  <div class="k">${o.k}</div>
+  <div class="v ${o.tone!==undefined?cls(o.tone):''}">${o.v}</div>
+  <div class="n">${o.n||''}</div></div>`).join('');
+
+/* ============ legend & panel availability ============ */
+const hasTurn = !!(D.turn && D.turn.length);
+const hasFlow = !!(D.cumFrgn && D.cumFrgn.length);
+document.querySelectorAll('#metricControls input').forEach(input=>{
+  const available = input.dataset.panel === 'rs' || (input.dataset.panel === 'turn' ? hasTurn : hasFlow);
+  input.disabled = !available;
+  if(!available){ input.checked = false; panels[input.dataset.panel] = false; }
+});
+function renderLegend(){
+  $('#legend').innerHTML = `
+   <span><i class="swatch" style="background:var(--accent)"></i>${M.name} (정규화)</span>
+   <span><i class="swatch" style="background:var(--bm);height:0;border-top:2.5px dashed var(--bm)"></i>${M.benchmark_label} (정규화)</span>
+   ${panels.rs?'<span><i class="swatch" style="background:var(--rs)"></i>상대강도 RS = 종목 ÷ 지수</span>':''}
+   ${panels.turn?`<span><i class="swatch" style="background:var(--flow);height:11px;width:9px;border-radius:1px"></i>일별 회전율 (유동시총 대비)</span>`:''}
+   ${panels.flow?`<span><i class="swatch" style="background:var(--frgn)"></i>외국인 누적 순매수</span>
+   <span><i class="swatch" style="background:var(--inst)"></i>기관 누적 순매수</span>
+   ${D.cumInd?`<span><i class="swatch" style="background:var(--indiv)"></i>개인 누적 순매수</span>`:''}`:''}
+   ${S.band?`<span><i class="swatch" style="background:var(--warn-band);height:11px;width:16px;border-radius:2px;border:1px solid var(--line-strong)"></i>${S.band.label}</span>`:''}
+   <span style="color:var(--ink-3)">번호 = 이벤트 · <b style="color:var(--up)">적</b> 호재 /
+     <b style="color:var(--down)">청</b> 악재 / 회색 중립·미확인</span>`;
+}
+renderLegend();
+
+/* ============ chart ============ */
+const W=1120, ML=56, MR=94;
+const A0=100, A1=290;           // 패널 A 정규화 주가
+let B0=null, B1=null, C0=null, C1=null, E0=null, E1=null, XAXIS=A1;
+const LANES=5, LANE_Y=14, LANE_H=15, BR=6.8;   // 이벤트 배지 레인
+const PL=ML, PR=W-MR;
+const NS='http://www.w3.org/2000/svg';
+const el=(t,a={})=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e;};
+
+function syncPanelLayout(){
+  let y=A1+36;
+  if(panels.rs){ B0=y; B1=y+80; y=B1+36; } else { B0=B1=null; }
+  if(panels.turn){ C0=y; C1=y+80; y=C1+36; } else { C0=C1=null; }
+  if(panels.flow){ E0=y; E1=y+90; y=E1+36; } else { E0=E1=null; }
+  XAXIS=y-36;
+}
+
+function slice(){ return rangeMode==='all' ? 0 : D.ddayIndex; }
+function baseI(){ return baseMode==='dday' ? D.ddayIndex : slice(); }
+
+function series(){
+  const s=slice(), b=baseI(), out=[];
+  for(let i=s;i<D.dates.length;i++){
+    const sn=D.close[i]/D.close[b]*100, bn=D.bm[i]/D.bm[b]*100;
+    out.push({i, sn, bn, rs:sn/bn*100});
+  }
+  return out;
+}
+let SER=[], X=null, YA=null, YB=null, YC=null;
+
+function draw(){
+  syncPanelLayout();
+  SER=series();
+  const s=slice(), N=SER.length;
+  const svg=$('#chart'); svg.textContent='';
+  svg.setAttribute('viewBox', `0 0 ${W} ${XAXIS+36}`);
+
+  X = i => PL + (i-s)/(D.dates.length-1-s)*(PR-PL);
+  const vals=SER.flatMap(d=>[d.sn,d.bn]);
+  let lo=Math.min(...vals), hi=Math.max(...vals); let pad=(hi-lo)*0.10||10;
+  const aLo=lo-pad, aHi=hi+pad;
+  YA = v => A1 - (v-aLo)/(aHi-aLo)*(A1-A0);
+  let bLo=null, bHi=null;
+  if(panels.rs){
+    const rv=SER.map(d=>d.rs);
+    let rlo=Math.min(...rv,100), rhi=Math.max(...rv,100); let rp=(rhi-rlo)*0.14||8;
+    bLo=rlo-rp; bHi=rhi+rp;
+    YB = v => B1 - (v-bLo)/(bHi-bLo)*(B1-B0);
+  } else YB=null;
+
+  const g=(...k)=>{const q=el('g');k.forEach(x=>q.appendChild(x));svg.appendChild(q);return q;};
+  const txt=(x,y,t,o={})=>el('text',{x,y,'font-size':o.fs||10.5,fill:o.fill||'var(--ink-3)',
+    'text-anchor':o.ta||'start','font-weight':o.fw||400,
+    'font-family':o.mono?'Pretendard Variable, Pretendard, sans-serif':'inherit'});
+  const put=(x,y,t,o={})=>{const e=txt(x,y,t,o);e.textContent=t;svg.appendChild(e);return e;};
+
+  /* --- 악재 반영 구간 음영 (D-day → RS 회복일) --- */
+  if(S.band && S.band.i1>=s){
+    const x1=X(Math.max(S.band.i0,s)), x2=X(S.band.i1);
+    svg.appendChild(el('rect',{x:x1,y:LANE_Y-BR,width:Math.max(x2-x1,2),height:XAXIS-LANE_Y+BR,
+      fill:'var(--warn-band)'}));
+  }
+
+  /* --- y 그리드 --- */
+  for(let t=0;t<=4;t++){
+    const v=aLo+(aHi-aLo)*t/4, y=YA(v);
+    svg.appendChild(el('line',{x1:PL,x2:PR,y1:y,y2:y,stroke:'var(--line)','stroke-width':1}));
+    put(PL-8, y+3.5, Math.round(v), {ta:'end',mono:1});
+  }
+  if(panels.rs) for(let t=0;t<=2;t++){
+    const v=bLo+(bHi-bLo)*t/2, y=YB(v);
+    svg.appendChild(el('line',{x1:PL,x2:PR,y1:y,y2:y,stroke:'var(--line)','stroke-width':1}));
+    put(PL-8, y+3.5, Math.round(v), {ta:'end',mono:1});
+  }
+  /* 100 기준선 */
+  [[YA(100),A0,A1]].concat(panels.rs?[[YB(100),B0,B1]]:[]).forEach(([y,t,b])=>{
+    if(y>=t-1&&y<=b+1) svg.appendChild(el('line',{x1:PL,x2:PR,y1:y,y2:y,
+      stroke:'var(--line-strong)','stroke-width':1,'stroke-dasharray':'2 3'}));
+  });
+
+  /* --- x 눈금 (분기) --- */
+  let lastQ='';
+  SER.forEach(d=>{
+    const [Y,Mo]=D.dates[d.i].split('-');
+    const q=`${Y}-${Mo}`;
+    if(['01','04','07','10'].includes(Mo) && q!==lastQ){
+      lastQ=q; const x=X(d.i);
+      svg.appendChild(el('line',{x1:x,x2:x,y1:XAXIS,y2:XAXIS+5,stroke:'var(--line-strong)','stroke-width':1}));
+      put(x, XAXIS+18, Mo==='01'?Y:`${Mo}월`, {ta:'middle',mono:1,fs:10,
+        fw:Mo==='01'?600:400, fill:Mo==='01'?'var(--ink-2)':'var(--ink-3)'});
+    }
+  });
+
+  /* --- RS 영역 + 라인 --- */
+  if(panels.rs){
+    const y100=YB(100);
+    const rsArea=SER.map(d=>`${X(d.i)},${YB(d.rs)}`).join(' ');
+    svg.appendChild(el('polygon',{points:`${PL},${y100} ${rsArea} ${PR},${y100}`,
+      fill:'var(--rs-soft)',stroke:'none'}));
+    svg.appendChild(el('path',{d:'M'+SER.map(d=>`${X(d.i)},${YB(d.rs)}`).join('L'),
+      fill:'none',stroke:'var(--rs)','stroke-width':2.2,'stroke-linejoin':'round'}));
+  }
+
+  /* --- 상단 라인 --- */
+  svg.appendChild(el('path',{d:'M'+SER.map(d=>`${X(d.i)},${YA(d.bn)}`).join('L'),
+    fill:'none',stroke:'var(--bm)','stroke-width':2,'stroke-dasharray':'5 4','stroke-linejoin':'round'}));
+  svg.appendChild(el('path',{d:'M'+SER.map(d=>`${X(d.i)},${YA(d.sn)}`).join('L'),
+    fill:'none',stroke:'var(--accent)','stroke-width':2.2,'stroke-linejoin':'round'}));
+
+  /* --- 패널 C: 일별 회전율 (관심의 크기) --- */
+  if(panels.turn){
+    const cser = d => D.turn[d.i];
+    const vmax=Math.max(...SER.map(cser))||1;
+    YC = v => C1 - v/vmax*(C1-C0);
+    for(let t=0;t<=2;t++){
+      const v=vmax*t/2, y=YC(v);
+      svg.appendChild(el('line',{x1:PL,x2:PR,y1:y,y2:y,stroke:'var(--line)','stroke-width':1}));
+      put(PL-8, y+3.5, t===0?'0':v.toFixed(1)+'%', {ta:'end',mono:1,fs:9.5});
+    }
+    const bw=Math.max((PR-PL)/SER.length*0.8, 0.7);
+    SER.forEach(d=>{
+      const v=cser(d), x=X(d.i), h=C1-YC(v);
+      if(h<=0) return;
+      svg.appendChild(el('rect',{x:x-bw/2,y:YC(v),width:bw,height:h,
+        fill:'var(--flow)',opacity:D.valMa[d.i] && D.val[d.i]>D.valMa[d.i]*2 ? .95 : .42}));
+    });
+    const cma=SER.map((d,k)=>{const w=SER.slice(Math.max(0,k-59),k+1).map(cser);
+      return w.reduce((p,q)=>p+q,0)/w.length;});
+    svg.appendChild(el('path',{d:'M'+SER.map((d,k)=>`${X(d.i)},${YC(cma[k])}`).join('L'),
+      fill:'none',stroke:'var(--flow-ma)','stroke-width':1.8,'stroke-linejoin':'round'}));
+  } else YC=null;
+
+  /* --- 패널 D: 외국인·기관 누적 순매수 (돈의 방향) ★ --- */
+  if(panels.flow){
+    const b0=SER[0].i;
+    const fr=SER.map(d=>D.cumFrgn[d.i]-D.cumFrgn[b0]);
+    const it=SER.map(d=>D.cumInst[d.i]-D.cumInst[b0]);
+    const id=D.cumInd?SER.map(d=>D.cumInd[d.i]-D.cumInd[b0]):null;
+    const all=fr.concat(it).concat(id||[]).concat([0]);
+    let flo=Math.min(...all), fhi=Math.max(...all); const fp=(fhi-flo)*0.12||10;
+    flo-=fp; fhi+=fp;
+    const YE = v => E1 - (v-flo)/(fhi-flo)*(E1-E0);
+    for(let t=0;t<=2;t++){
+      const v=flo+(fhi-flo)*t/2, y=YE(v);
+      svg.appendChild(el('line',{x1:PL,x2:PR,y1:y,y2:y,stroke:'var(--line)','stroke-width':1}));
+      put(PL-8,y+3.5,Math.round(v).toLocaleString(),{ta:'end',mono:1,fs:9.5});
+    }
+    const y0=YE(0);
+    svg.appendChild(el('line',{x1:PL,x2:PR,y1:y0,y2:y0,stroke:'var(--line-strong)',
+      'stroke-width':1,'stroke-dasharray':'2 3'}));
+    if(id) svg.appendChild(el('path',{d:'M'+SER.map((d,k)=>`${X(d.i)},${YE(id[k])}`).join('L'),
+      fill:'none',stroke:'var(--indiv)','stroke-width':2,'stroke-linejoin':'round'}));
+    svg.appendChild(el('path',{d:'M'+SER.map((d,k)=>`${X(d.i)},${YE(it[k])}`).join('L'),
+      fill:'none',stroke:'var(--inst)','stroke-width':2,'stroke-linejoin':'round'}));
+    svg.appendChild(el('path',{d:'M'+SER.map((d,k)=>`${X(d.i)},${YE(fr[k])}`).join('L'),
+      fill:'none',stroke:'var(--frgn)','stroke-width':2.2,'stroke-linejoin':'round'}));
+    const lf=fr[fr.length-1], li=it[it.length-1];
+    const lab2=[{y:YE(lf),c:'var(--frgn)',t:`외국인 ${lf>=0?'+':''}${Math.round(lf).toLocaleString()}억`},
+                {y:YE(li),c:'var(--inst)',t:`기관 ${li>=0?'+':''}${Math.round(li).toLocaleString()}억`}]
+      .concat(id?[{y:YE(id[id.length-1]),c:'var(--indiv)',
+        t:`개인 ${id[id.length-1]>=0?'+':''}${Math.round(id[id.length-1]).toLocaleString()}억`}]:[])
+      .sort((a,b)=>a.y-b.y);
+    for(let q=1;q<lab2.length;q++) if(lab2[q].y-lab2[q-1].y<13) lab2[q].y=lab2[q-1].y+13;
+    lab2.forEach(l=>put(PR+8,l.y+3.5,l.t,{fs:10.5,fw:600,fill:l.c}));
+    put(PL, E0-11, (D.cumInd?'개인·외국인·기관':'외국인·기관')+' 누적 순매수 (억원, 구간 시작=0) — 돈의 방향',
+        {fs:11,fw:600,fill:'var(--ink-2)'});
+  }
+
+  /* --- 패널 제목 --- */
+  put(PL, A0-11, '정규화 주가 (기준=100)', {fs:11,fw:600,fill:'var(--ink-2)'});
+  if(panels.rs) put(PL, B0-11, '상대강도 RS — 100 위 = 지수 초과', {fs:11,fw:600,fill:'var(--ink-2)'});
+  if(panels.turn) put(PL, C0-11,
+      '일별 회전율 (거래대금 ÷ 유동시가총액, %) — 총시총이 아니라 유동시총 기준 · 선 = 60일 이동평균',
+      {fs:11,fw:600,fill:'var(--ink-2)'});
+
+  /* --- 끝점 직접 라벨 --- */
+  const last=SER[SER.length-1];
+  const lab=[
+    {y:YA(last.sn), c:'var(--accent)', t:`${M.name} ${last.sn.toFixed(0)}`},
+    {y:YA(last.bn), c:'var(--bm)', t:`${M.benchmark_label} ${last.bn.toFixed(0)}`},
+  ].sort((a,b)=>a.y-b.y);
+  if(lab[1].y-lab[0].y<14){lab[0].y-=(14-(lab[1].y-lab[0].y))/2;lab[1].y+=(14-(lab[1].y-lab[0].y))/2;}
+  lab.forEach(l=>{ put(PR+8,l.y+3.5,l.t,{fs:11,fw:600,fill:l.c,mono:0}); });
+  [[last.sn,'var(--accent)'],[last.bn,'var(--bm)']].forEach(([v,c])=>{
+    svg.appendChild(el('circle',{cx:PR,cy:YA(v),r:3.4,fill:c,stroke:'var(--surface)','stroke-width':2}));
+  });
+  if(panels.rs){
+    put(PR+8, YB(last.rs)+3.5, `RS ${last.rs.toFixed(0)}`, {fs:11,fw:600,fill:'var(--rs)'});
+    svg.appendChild(el('circle',{cx:PR,cy:YB(last.rs),r:3.4,fill:'var(--rs)',
+      stroke:'var(--surface)','stroke-width':2}));
+  }
+
+  /* --- 이벤트 마커 (레인 배치로 충돌 회피) --- */
+  const lanes=new Array(LANES).fill(-1e9);
+  D.events.filter(e=>e.i>=s).forEach(e=>{
+    const x=X(e.i), col=IMPACT[e.impact], on=selected===e.n;
+    let ln=lanes.findIndex(v=>x-v>BR*2+2);
+    if(ln<0) ln=lanes.indexOf(Math.min(...lanes));
+    lanes[ln]=x;
+    const cy=LANE_Y+ln*LANE_H;
+    svg.appendChild(el('line',{x1:x,x2:x,y1:cy+BR,y2:XAXIS,stroke:col,
+      'stroke-width':on?1.8:1,'stroke-dasharray':e.impact==='미확인'?'2 3':'3 3',
+      opacity:on?.95:.38}));
+    const grp=el('g',{class:'evm','data-n':e.n,style:'cursor:pointer'});
+    grp.appendChild(el('circle',{cx:x,cy,r:on?BR+1.6:BR,fill:col,
+      stroke:'var(--surface)','stroke-width':on?2.2:1.5}));
+    const t=el('text',{x,y:cy+3.2,'font-size':8.8,'text-anchor':'middle',fill:'#fff',
+      'font-weight':700,'font-family':'Pretendard Variable, Pretendard, sans-serif','pointer-events':'none'});
+    t.textContent=e.n; grp.appendChild(t);
+    grp.addEventListener('click',()=>select(e.n,true));
+    svg.appendChild(grp);
+  });
+
+  /* --- 크로스헤어 --- */
+  const ch=el('g',{id:'cross',opacity:0,'pointer-events':'none'});
+  ch.appendChild(el('line',{id:'chl',y1:A0-8,y2:XAXIS,stroke:'var(--ink-3)','stroke-width':1}));
+  ch.appendChild(el('circle',{id:'chA',r:4,fill:'var(--accent)',stroke:'var(--surface)','stroke-width':1.8}));
+  ch.appendChild(el('circle',{id:'chB',r:3.6,fill:'var(--bm)',stroke:'var(--surface)','stroke-width':1.8}));
+  if(panels.rs) ch.appendChild(el('circle',{id:'chR',r:3.6,fill:'var(--rs)',stroke:'var(--surface)','stroke-width':1.8}));
+  if(panels.turn) ch.appendChild(el('circle',{id:'chV',r:3.6,fill:'var(--flow-ma)',stroke:'var(--surface)','stroke-width':1.8}));
+  svg.appendChild(ch);
+  svg.appendChild(el('rect',{id:'hit',x:PL,y:A0-10,width:PR-PL,height:XAXIS-A0+10,
+    fill:'transparent',style:'cursor:crosshair'}));
+  bindHover();
+}
+
+/* ============ hover ============ */
+function bindHover(){
+  const svg=$('#chart'), hit=$('#hit'), tip=$('#tip'), cross=$('#cross');
+  const move=ev=>{
+    const r=svg.getBoundingClientRect();
+    const vx=(ev.clientX-r.left)/r.width*W;
+    const s=slice();
+    let k=Math.round((vx-PL)/(PR-PL)*(D.dates.length-1-s));
+    k=Math.max(0,Math.min(SER.length-1,k));
+    const d=SER[k], x=X(d.i);
+    cross.setAttribute('opacity','1');
+    $('#chl').setAttribute('x1',x); $('#chl').setAttribute('x2',x);
+    $('#chA').setAttribute('cx',x); $('#chA').setAttribute('cy',YA(d.sn));
+    $('#chB').setAttribute('cx',x); $('#chB').setAttribute('cy',YA(d.bn));
+    if(panels.rs){ $('#chR').setAttribute('cx',x); $('#chR').setAttribute('cy',YB(d.rs)); }
+    if(panels.turn){ $('#chV').setAttribute('cx',x); $('#chV').setAttribute('cy',YC(D.turn[d.i])); }
+    const ex=d.sn-d.bn;
+    tip.innerHTML=`<div class="d">${D.dates[d.i]}</div>
+      <div class="r"><em>${M.name}</em><b class="num">${fmt(D.close[d.i])}원</b></div>
+      <div class="r"><em>정규화</em><b class="num" style="color:var(--accent)">${d.sn.toFixed(1)}</b></div>
+      <div class="r"><em>${M.benchmark_label}</em><b class="num" style="color:var(--bm)">${d.bn.toFixed(1)}</b></div>
+      <div class="r"><em>초과</em><b class="num ${cls(ex)}">${pct(ex)}p</b></div>
+      ${panels.rs?`<div class="r"><em>상대강도 RS</em><b class="num" style="color:var(--rs)">${d.rs.toFixed(1)}</b></div>`:''}
+      ${panels.turn?`<div class="r"><em>회전율(유동시총)</em><b class="num" style="color:var(--flow-ma)">${D.turn[d.i].toFixed(2)}%</b></div>
+      <div class="r"><em>유동시총</em><b class="num">${fmt(D.fcap[d.i])}억</b></div>`:''}
+      ${panels.flow&&D.cumInd?`<div class="r"><em>개인 누적</em><b class="num" style="color:var(--indiv)">${fmt(Math.round(D.cumInd[d.i]-D.cumInd[SER[0].i]))}억</b></div>`:''}
+      ${panels.flow&&D.cumFrgn?`<div class="r"><em>외국인 누적</em><b class="num" style="color:var(--frgn)">${fmt(Math.round(D.cumFrgn[d.i]-D.cumFrgn[SER[0].i]))}억</b></div>
+      <div class="r"><em>기관 누적</em><b class="num" style="color:var(--inst)">${fmt(Math.round(D.cumInst[d.i]-D.cumInst[SER[0].i]))}억</b></div>`:''}`;
+    const wrap=$('#chartWrap').getBoundingClientRect();
+    const px=(x/W)*r.width + (r.left-wrap.left);
+    tip.style.opacity='1';
+    tip.style.left=Math.min(Math.max(px+14,4), wrap.width-tip.offsetWidth-4)+'px';
+    tip.style.top='16px';
+  };
+  hit.addEventListener('mousemove',move);
+  hit.addEventListener('mouseleave',()=>{tip.style.opacity='0';cross.setAttribute('opacity','0');});
+}
+
+/* ============ tables ============ */
+$('#perBmTh').textContent = M.benchmark_label;
+if(S.phases && S.phases.length){
+  $('#phaseCard').hidden = false;
+  $('#phBmTh').textContent = M.benchmark_label;
+  $('#phTbl tbody').innerHTML = S.phases.map(p=>`<tr>
+    <td><b>${p.label}</b>${p.note?`<div class="ev-d">${p.note}</div>`:''}</td>
+    <td class="num" style="white-space:nowrap">${p.from}<br>&rarr; ${p.to}</td>
+    <td class="n num">${p.days}</td>
+    <td class="n num ${cls(p.sr)}">${pct(p.sr)}</td>
+    <td class="n num ${cls(p.br)}">${pct(p.br)}</td>
+    <td class="n num ${cls(p.ex)}"><b>${(p.ex>=0?'+':'')+p.ex.toFixed(1)}%p</b></td>
+    <td class="n num">${p.rsEnd.toFixed(1)}</td>
+    <td class="n num"><b>${p.turn!==null&&p.turn!==undefined?p.turn.toFixed(2)+'%':'—'}</b></td>
+    <td class="n num">${fmt(p.avgVal)}억</td>
+    <td class="n num ${p.valVsPrev?cls(p.valVsPrev-1):''}">${p.valVsPrev?p.valVsPrev.toFixed(2)+'x':'—'}</td>
+    <td class="n num ${p.frgnNet!==undefined?cls(p.frgnNet):''}">${p.frgnNet!==undefined?(p.frgnNet>=0?'+':'')+fmt(p.frgnNet)+'억':'—'}</td>
+    <td class="n num ${p.instNet!==undefined?cls(p.instNet):''}">${p.instNet!==undefined?(p.instNet>=0?'+':'')+fmt(p.instNet)+'억':'—'}</td>
+    <td class="n num ${p.indNet!==undefined?cls(p.indNet):''}">${p.indNet!==undefined?(p.indNet>=0?'+':'')+fmt(p.indNet)+'억':'—'}</td></tr>`).join('');
+}
+$('#perTbl tbody').innerHTML = D.periods.map(p=>`<tr>
+  <td><b>${p.label}</b></td><td class="num">${p.date}</td>
+  <td class="n num">${fmt(p.close)}</td>
+  <td class="n num ${cls(p.sr)}">${pct(p.sr)}</td>
+  <td class="n num ${cls(p.br)}">${pct(p.br)}</td>
+  <td class="n num ${cls(p.ex)}"><b>${(p.ex>=0?'+':'')+p.ex.toFixed(1)}%p</b></td>
+  <td class="n num">${p.rs.toFixed(1)}</td></tr>`).join('');
+
+$('#evTbl tbody').innerHTML = D.events.map(e=>`<tr data-n="${e.n}">
+  <td class="n"><span class="ev-n" style="background:${IMPACT[e.impact]}">${e.n}</span></td>
+  <td class="num" style="white-space:nowrap">${e.date}${e.snapped?
+    `<div style="font-size:10.5px;color:var(--ink-3)">→ ${e.tradingDate} 반영</div>`:''}</td>
+  <td><span class="tag ${e.phase}">${e.phase}</span>
+      <div class="phase" style="margin-top:4px">${e.category}</div></td>
+  <td><div class="ev-t">${e.title}</div>${e.detail?`<div class="ev-d">${e.detail}</div>`:''}
+      ${e.verified==='미확인'?'<div class="ev-d" style="color:var(--ink-3)">※ 사유 미확인 — 공시 확인 필요</div>':''}</td>
+  <td class="n num">${fmt(e.close)}</td>
+  <td class="n num ${cls(e.chg)}"><b>${pct(e.chg)}</b></td>
+  <td class="n num ${cls(e.bmChg)}">${pct(e.bmChg)}</td>
+  <td class="n num ${cls(e.excess)}"><b>${(e.excess>=0?'+':'')+e.excess.toFixed(1)}%p</b></td>
+  <td class="n num">${fmt(e.val)}억</td>
+  <td class="n num ${e.valMult>=2?'up':''}"><b>${e.valMult}x</b></td></tr>`).join('');
+
+function select(n,fromChart){
+  selected = selected===n ? null : n;
+  document.querySelectorAll('#evTbl tbody tr').forEach(tr=>
+    tr.setAttribute('aria-selected', String(+tr.dataset.n===selected)));
+  draw();
+  if(fromChart && selected){
+    const tr=document.querySelector(`#evTbl tbody tr[data-n="${selected}"]`);
+    tr?.scrollIntoView({block:'center',behavior:'smooth'});
+  }
+}
+document.querySelectorAll('#evTbl tbody tr').forEach(tr=>
+  tr.addEventListener('click',()=>select(+tr.dataset.n,false)));
+
+/* ============ proceeds & rules ============ */
+if(!(M.use_of_proceeds||[]).length){ $('#proceeds').closest('.card').hidden = true; }
+/* ---- 자금 유입 ---- */
+const F = S.flow, evByDate = Object.fromEntries(D.events.map(e=>[e.tradingDate, e]));
+$('#flowSum').innerHTML = [
+  {k:'유통비율', v:`${S.shares?S.shares.floatRatio:'-'}%`,
+   n:S.shares?`유통 ${(S.shares.floatShares/1e6).toFixed(1)}백만주 / 상장 ${(S.shares.listed/1e6).toFixed(1)}백만주`:''},
+  {k:'평균 회전율 (유동시총)', v:F.avgTurn!=null?`${F.avgTurn.toFixed(2)}%/일`:'-',
+   hero:1, n:'총시총이 아니라 유동시총 기준'},
+  {k:'최근 20일 회전율', v:F.recentTurn!=null?`${F.recentTurn.toFixed(2)}%/일`:'-',
+   tone:F.recentTurn-F.avgTurn, n:'전체 평균 대비'},
+  {k:'전체 평균 일거래대금', v:`${fmt(F.avgVal)}억`},
+  {k:'최대 거래대금', v:`${fmt(F.peakVal)}억`, n:F.peakDate},
+  {k:'상위 15일 중 상승일', v:F.topUpRatio, n:'돈이 몰린 날은 오르는가'},
+  {k:'최근 20일 평균', v:`${fmt(F.recentVal)}억`, n:`전체 평균의 ${F.recentMult}배`,
+   tone:F.recentMult-1},
+].concat(F.frgnTotal!==null&&F.frgnTotal!==undefined?[
+  {k:'기준일 이후 외국인', v:`${F.frgnTotal>=0?'+':''}${fmt(F.frgnTotal)}억`, tone:F.frgnTotal},
+  {k:'기준일 이후 기관', v:`${F.instTotal>=0?'+':''}${fmt(F.instTotal)}억`, tone:F.instTotal},
+]:[]).concat(F.hasIndiv?[{k:'기준일 이후 개인', v:`${F.indTotal>=0?'+':''}${fmt(F.indTotal)}억`, tone:F.indTotal, n:F.flowSource}]:[]).map(o=>`<div class="fbox${o.hero?' hero':''}"><div class="k">${o.k}</div>
+  <div class="v ${o.tone!==undefined?cls(o.tone):''}">${o.v}</div>
+  <div class="n">${o.n||''}</div></div>`).join('');
+$('#flowTbl tbody').innerHTML = F.topDays.map((d,i)=>{
+  const ev = evByDate[d.date];
+  return `<tr${ev?` data-n="${ev.n}"`:''}>
+    <td class="n num">${i+1}</td><td class="num">${d.date}</td>
+    <td class="n num"><b>${fmt(d.val)}억</b></td>
+    <td class="n num ${d.mult>=3?'up':''}">${d.mult}x</td>
+    <td class="n num ${cls(d.chg)}"><b>${pct(d.chg)}</b></td>
+    <td>${ev?`<span class="ev-n" style="background:${IMPACT[ev.impact]};margin-right:6px">${ev.n}</span>${ev.title}`
+      :'<span style="color:var(--ink-3)">기록된 이벤트 없음 — 사유 확인 필요</span>'}</td></tr>`;
+}).join('');
+document.querySelectorAll('#flowTbl tbody tr[data-n]').forEach(tr=>
+  tr.addEventListener('click',()=>select(+tr.dataset.n,false)));
+
+/* ---- 기관 세부 ---- */
+if(S.phases && S.phases.length && S.phases[0].orgnSub){
+  $('#orgnCard').hidden = false;
+  const subs = Object.keys(S.phases[0].orgnSub);
+  $('#orgnTbl thead').innerHTML = '<tr><th>국면</th><th class="n">초과수익</th>'
+    + '<th class="n">기관계</th>'
+    + subs.map(k=>'<th class="n">'+k+'</th>').join('') + '</tr>';
+  $('#orgnTbl tbody').innerHTML = S.phases.map(p=>{
+    const cells = subs.map(k=>{
+      const v = p.orgnSub[k];
+      return '<td class="n num ' + (Math.abs(v)>=500?cls(v):'') + '">'
+        + (v>=0?'+':'') + fmt(v) + '</td>';
+    }).join('');
+    return '<tr><td><b>' + p.label + '</b></td>'
+      + '<td class="n num ' + cls(p.ex) + '">' + pct(p.ex) + 'p</td>'
+      + '<td class="n num ' + cls(p.instNet) + '"><b>' + (p.instNet>=0?'+':'')
+      + fmt(p.instNet) + '</b></td>' + cells + '</tr>';
+  }).join('');
+  $('#orgnCard').insertAdjacentHTML('beforeend',
+    '<div class="card-bd" style="padding-top:0;font-size:12px;color:var(--ink-3)">'
+    + '단위: 억원 순매수 · 굵은 색은 ±500억 이상</div>');
+}
+
+if(M.proceeds_title) $('#proceedsTitle').textContent = M.proceeds_title;
+if(M.proceeds_hint) $('#proceedsHint').textContent = M.proceeds_hint;
+$('#proceeds').innerHTML = (M.use_of_proceeds||[]).map(p=>{
+  const col = p.verdict==='긍정' ? 'var(--up)' : p.verdict==='부정' ? 'var(--down)' : 'var(--flat)';
+  return `<div class="pcard">
+    <div class="top"><span class="pcode" style="background:${col}">${p.code}</span>
+      <h3>${p.item}</h3><span class="pamt num">${p.amount}</span></div>
+    <div class="bar"><i style="width:${p.share}%;background:${col}"></i></div>
+    <div style="font-size:11.5px;color:var(--ink-3);margin-bottom:8px">
+      ${p.code_label} · 조달액의 <b class="num" style="color:${col}">${p.share}%</b></div>
+    <p>${p.nature}</p>
+    <div class="pfate">이후 <b>${p.fate}</b></div></div>`;
+}).join('');
+
+$('#rules').innerHTML = M.rules.map(r=>`<div class="rule">
+  <div class="rn">${r.n}</div><div><h3>${r.title}</h3><p>${r.body}</p></div></div>`).join('');
+
+$('#caveats').innerHTML = M.caveats.map(c=>`<li>${c}</li>`).join('');
+$('#foot').innerHTML =
+  `주가·지수: 네이버 금융 수정주가 일별 종가 (${S.startDate} ~ ${S.lastDate}, ${D.dates.length}거래일) ·
+   이벤트 출처: DART 공시 및 언론 보도 · 자동 생성: <span class="num">tools/build_dashboard.py</span><br>
+   학습·기록용 자료이며 투자 권유나 자문이 아닙니다.`;
+
+draw();
+$('#segBase').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  baseMode=b.dataset.v;
+  [...e.currentTarget.children].forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+  draw();
+});
+$('#segRange').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  rangeMode=b.dataset.v;
+  [...e.currentTarget.children].forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+  draw();
+});
+$('#metricControls').addEventListener('change',e=>{
+  const input=e.target.closest('input[data-panel]'); if(!input) return;
+  panels[input.dataset.panel] = input.checked;
+  renderLegend();
+  draw();
+});
+window.addEventListener('resize',()=>draw());
+</script>
+</body>
+</html>
