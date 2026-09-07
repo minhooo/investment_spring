@@ -1,0 +1,457 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>에쓰오일 · 브렌트유 연동 검증</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  color-scheme: light;
+  --bg:#faf9f6; --surface:#ffffff; --surface-2:#f4f2ee; --surface-3:#edeae3;
+  --line:#e4e1da; --line-strong:#cdc9bf;
+  --ink:#17160f; --ink-2:#5c5a50; --ink-3:#8b887c;
+  --accent:#4a3aa7; --accent-soft:#4a3aa71a;
+  --bm:#9a978c; --oil:#c2557f; --crack:#1baf7a; --crack-soft:#1baf7a1f;
+  --stock:#4a3aa7; --fit:#eda100;
+  --up:#d33a3a; --down:#2a6fd6; --flat:#8b887c;
+  --ok:#1baf7a; --no:#d33a3a;
+  --shadow:0 1px 2px #17160f0a, 0 4px 14px #17160f0a;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  color-scheme: dark;
+  --bg:#131419; --surface:#1a1c22; --surface-2:#212429; --surface-3:#282c33;
+  --line:#2d313a; --line-strong:#434956;
+  --ink:#f0efe9; --ink-2:#b3b1a7; --ink-3:#85837a;
+  --accent:#9085e9; --accent-soft:#9085e926;
+  --bm:#7c8290; --oil:#e08bb0; --crack:#34c692; --crack-soft:#34c69226;
+  --stock:#9085e9; --fit:#eda100;
+  --up:#ef6a6a; --down:#5f9df2; --flat:#85837a;
+  --ok:#34c692; --no:#ef6a6a;
+  --shadow:0 1px 2px #0006, 0 4px 16px #0005;
+}}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#131419; --surface:#1a1c22; --surface-2:#212429; --surface-3:#282c33;
+  --line:#2d313a; --line-strong:#434956;
+  --ink:#f0efe9; --ink-2:#b3b1a7; --ink-3:#85837a;
+  --accent:#9085e9; --accent-soft:#9085e926;
+  --bm:#7c8290; --oil:#e08bb0; --crack:#34c692; --crack-soft:#34c69226;
+  --stock:#9085e9; --fit:#eda100;
+  --up:#ef6a6a; --down:#5f9df2; --flat:#85837a;
+  --ok:#34c692; --no:#ef6a6a;
+  --shadow:0 1px 2px #0006, 0 4px 16px #0005;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"IBM Plex Sans KR",-apple-system,"Malgun Gothic",sans-serif;
+  font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased;
+  word-break:keep-all;overflow-wrap:break-word}
+.spring-bar{background:var(--surface);border-bottom:1px solid var(--line);font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,system-ui,"Malgun Gothic",sans-serif}.spring-bar-in{max-width:1180px;margin:auto;padding:13px 22px;display:flex;align-items:center;gap:28px;flex-wrap:wrap}.spring-brand{font-size:18px;font-weight:700;color:var(--ink);text-decoration:none;white-space:nowrap}.spring-bar nav{display:flex;gap:4px;flex-wrap:wrap}.spring-bar nav a{color:var(--ink-2);text-decoration:none;padding:8px 10px;border-radius:8px;font-size:14px}.spring-bar nav a:hover,.spring-bar nav a[aria-current=page]{background:var(--surface-2);color:var(--ink);font-weight:600}.spring-search{margin-left:auto;display:flex;gap:7px;min-width:min(310px,100%)}.spring-search input,.spring-search button{font:inherit;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);padding:8px 10px}.spring-search input{width:100%;min-width:0}.spring-search button{cursor:pointer}.spring-bar a:focus-visible,.spring-search :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.num{font-family:"IBM Plex Mono","SFMono-Regular",monospace;font-variant-numeric:tabular-nums}
+.wrap{max-width:1180px;margin:0 auto;padding:36px 22px 72px}
+a{color:var(--accent)}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-bottom:14px}
+h1{font-size:clamp(25px,3.3vw,36px);line-height:1.22;font-weight:700;margin:0 0 8px;letter-spacing:-.02em;text-wrap:balance}
+.sub{font-size:15px;color:var(--ink-2);max-width:66ch;margin:0 0 18px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:26px}
+.chip{font-size:11.5px;padding:4px 9px;border-radius:4px;font-weight:500;background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+.chip b{color:var(--ink);font-weight:600}
+.chip.key{background:var(--accent-soft);border-color:transparent;color:var(--accent)}
+
+.verdict{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);
+  border-radius:8px;padding:18px 20px;margin-bottom:22px;box-shadow:var(--shadow)}
+.verdict .vh{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.verdict h2{font-size:20px;margin:6px 0 8px;letter-spacing:-.01em}
+.verdict p{margin:0;color:var(--ink-2);max-width:78ch}
+
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:26px}
+.kpi{background:var(--surface);padding:15px 16px 14px}
+.kpi .k{font-size:11px;color:var(--ink-3);font-weight:500}
+.kpi .v{font-size:25px;font-weight:600;letter-spacing:-.02em;margin-top:5px;line-height:1.1}
+.kpi .n{font-size:11.5px;color:var(--ink-3);margin-top:4px}
+.kpi.hero{background:var(--surface-3)}
+.kpi.hero .v{color:var(--accent)}
+.up{color:var(--up)}.down{color:var(--down)}.flat{color:var(--flat)}
+.ok{color:var(--ok)}.no{color:var(--no)}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);margin-bottom:26px}
+.card-hd{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:baseline;justify-content:space-between;
+  padding:16px 18px 12px;border-bottom:1px solid var(--line)}
+.card-hd h2{font-size:15px;font-weight:600;margin:0;letter-spacing:-.01em}
+.card-hd .hint{font-size:12px;color:var(--ink-3);max-width:62ch}
+.card-bd{padding:16px 18px 18px}
+.legend{display:flex;flex-wrap:wrap;gap:16px;padding:10px 18px 4px;font-size:12px;color:var(--ink-2)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend button{font:inherit;font-size:12px;background:none;border:0;color:var(--ink-2);cursor:pointer;
+  display:inline-flex;align-items:center;gap:7px;padding:2px 4px;border-radius:4px}
+.legend button[aria-pressed="false"]{opacity:.35}
+.legend button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.swatch{width:16px;height:2.5px;border-radius:2px;display:inline-block}
+.chart-scroll{overflow-x:auto;padding:0 4px 4px}
+svg.chart{display:block;width:100%;min-width:760px;height:auto}
+.seg{display:inline-flex;background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:2px}
+.seg button{font:inherit;font-size:12px;font-weight:500;padding:4px 11px;border:0;background:transparent;
+  color:var(--ink-2);border-radius:4px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px #0000001a;font-weight:600}
+
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left;white-space:normal}
+th{font-size:11.5px;color:var(--ink-3);font-weight:600;background:var(--surface-2)}
+tbody tr:hover{background:var(--surface-2)}
+td.note{font-size:12px;color:var(--ink-2);white-space:normal;min-width:220px;text-align:left}
+.tbl-scroll{overflow-x:auto}
+.pdot{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:7px;vertical-align:1px}
+
+.bars{display:grid;gap:14px}
+.bar-row{display:grid;grid-template-columns:130px 1fr 92px;gap:12px;align-items:center;font-size:13px}
+.bar-track{background:var(--surface-2);border-radius:4px;height:22px;position:relative;overflow:hidden;border:1px solid var(--line)}
+.bar-fill{height:100%;border-radius:3px}
+.bar-mid{position:absolute;top:0;bottom:0;left:50%;width:1px;background:var(--line-strong)}
+.bar-val{text-align:right;font-weight:600}
+
+ul.notes{margin:0;padding-left:18px;color:var(--ink-2);font-size:13px}
+ul.notes li{margin-bottom:7px}
+.foot{font-size:12px;color:var(--ink-3);margin-top:34px;border-top:1px solid var(--line);padding-top:16px}
+.tip{position:fixed;pointer-events:none;background:var(--surface);border:1px solid var(--line-strong);
+  border-radius:7px;padding:9px 11px;font-size:12px;box-shadow:var(--shadow);z-index:9;display:none;line-height:1.55}
+.tip b{font-weight:600}
+@media(max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.bar-row{grid-template-columns:104px 1fr 76px}}@media(max-width:740px){.spring-bar-in{padding:12px 16px;gap:12px}.spring-bar nav{order:3;width:100%}.spring-search{order:4;width:100%;flex-basis:100%;margin-left:0}.wrap{padding:28px 16px 55px}}
+</style></head><body>
+<header class="spring-bar"><div class="spring-bar-in"><a class="spring-brand" href="index.html#home">투자 샘터</a><nav aria-label="주요 메뉴"><!--__SITE_NAV__--></nav><form class="spring-search" id="headerSearch" role="search"><input name="q" type="search" aria-label="통합 검색" placeholder="종목·이슈·테마·경제 변수 검색"><button type="submit">검색</button></form></div></header>
+<div class="wrap">
+  <p class="eyebrow" id="eyebrow">Macro linkage verification</p>
+  <h1 id="title"></h1>
+  <p class="sub" id="question"></p>
+  <div class="chips" id="chips"></div>
+
+  <div class="verdict">
+    <div class="vh">판정</div>
+    <h2 id="headline"></h2>
+    <p id="thesis"></p>
+  </div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <section class="card">
+    <div class="card-hd">
+      <h2>1. 정규화 궤적 — 어디서 붙고 어디서 갈라지는가</h2>
+      <span class="hint">2021-01-04 = 100. 회색 배경은 국면 구분.</span>
+    </div>
+    <div class="legend" id="lg1"></div>
+    <div class="chart-scroll"><svg class="chart" id="c1" viewBox="0 0 980 400" preserveAspectRatio="none"></svg></div>
+    <div class="card-bd" style="padding-top:6px"><p class="hint" style="margin:0;font-size:12.5px;color:var(--ink-3)" id="c1note"></p></div>
+  </section>
+
+  <section class="card">
+    <div class="card-hd">
+      <h2>2. 원유값과 정제마진 — 달러 원계열</h2>
+      <span class="hint">브렌트($/bbl)와 디젤크랙($/bbl, ULSD×42−브렌트 합성). 정유사가 버는 것은 아래쪽이다.</span>
+    </div>
+    <div class="legend" id="lg2"></div>
+    <div class="chart-scroll"><svg class="chart" id="c2" viewBox="0 0 980 320" preserveAspectRatio="none"></svg></div>
+  </section>
+
+  <section class="card">
+    <div class="card-hd">
+      <h2>3. 롤링 120거래일 상관 — 연동은 유지되는가</h2>
+      <span class="hint">KOSPI 대비 초과수익 vs 브렌트 일간 변화. 0에 가까울수록 무관.</span>
+    </div>
+    <div class="legend" id="lg3"></div>
+    <div class="chart-scroll"><svg class="chart" id="c3" viewBox="0 0 980 260" preserveAspectRatio="none"></svg></div>
+  </section>
+
+  <section class="card">
+    <div class="card-hd">
+      <h2>4. 산점도 — 브렌트 하루 변화 vs 당일 초과수익</h2>
+      <span class="hint">점 하나가 거래일 하나. 굵은 선이 전체 회귀선(초과베타).</span>
+    </div>
+    <div class="legend" id="lg4"></div>
+    <div class="chart-scroll"><svg class="chart" id="c4" viewBox="0 0 980 400" preserveAspectRatio="none" style="min-width:640px"></svg></div>
+  </section>
+
+  <section class="card">
+    <div class="card-hd">
+      <h2>5. 충격일 이벤트 스터디 — 오를 때와 내릴 때가 다르다</h2>
+      <span class="hint">브렌트가 하루에 크게 움직인 날, 초과수익이 같은 부호로 나온 비율.</span>
+    </div>
+    <div class="card-bd"><div class="bars" id="shockbars"></div></div>
+    <div class="tbl-scroll"><table id="shocktbl"></table></div>
+  </section>
+
+  <section class="card">
+    <div class="card-hd"><h2>6. 국면별 분해</h2>
+      <span class="hint">레벨상관은 추세 공유만으로도 높아진다 — 판정은 초과수익 일간상관 기준.</span></div>
+    <div class="tbl-scroll"><table id="phasetbl"></table></div>
+  </section>
+
+  <section class="card">
+    <div class="card-hd"><h2>7. 이 검증이 말하지 않는 것</h2></div>
+    <div class="card-bd"><ul class="notes" id="caveats"></ul></div>
+  </section>
+
+  <p class="foot" id="foot"></p>
+</div>
+<div class="tip" id="tip"></div>
+<script>
+const D = /*__DATA__*/null;
+document.querySelector('#headerSearch').addEventListener('submit',e=>{e.preventDefault();location.href='index.html#search?q='+encodeURIComponent(e.currentTarget.q.value)});
+const $ = s => document.querySelector(s);
+const fmt = (v,d=1) => v==null||Number.isNaN(v) ? '—' : v.toFixed(d);
+const sgn = (v,d=1) => (v>=0?'+':'') + fmt(v,d);
+const cls = v => v>0?'up':v<0?'down':'flat';
+const esc = s => String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const PCOL = ['#6b7bd6','#c2557f','#eda100','#1baf7a','#d33a3a','#4a3aa7'];
+
+/* ---------- 헤더 ---------- */
+const m = D.meta, A = D.all, P = D.phases;
+document.title = `${m.name} · 브렌트유 연동 검증`;
+$('#title').textContent = `${m.name}는 브렌트유를 따라 움직였나`;
+$('#question').textContent = m.question;
+$('#headline').textContent = m.headline;
+$('#thesis').textContent = m.thesis;
+$('#chips').innerHTML = [
+  `<span class="chip"><b>${m.name}</b> ${m.code}</span>`,
+  `<span class="chip">${esc(m.sector)}</span>`,
+  `<span class="chip">벤치마크 <b>${m.benchmark_label}</b></span>`,
+  `<span class="chip">표본 <b>${D.dates[0]} ~ ${D.dates[D.dates.length-1]}</b> · ${D.dates.length}거래일</span>`,
+  `<span class="chip key">${esc(m.verdict)}</span>`].join('');
+
+/* ---------- KPI ---------- */
+const lastP = P[P.length-1];
+$('#kpis').innerHTML = [
+  {k:'초과수익 vs 브렌트 일간상관', v:fmt(A.dailyBrent,2), n:`t=${fmt(A.t,1)} · n=${A.n} — 통계적으로는 확실히 존재`, hero:true},
+  {k:'초과베타', v:fmt(A.beta,2), n:`브렌트 +10% → 초과수익 ${sgn(A.beta*10,1)}%p`},
+  {k:'평시일 상관', v:fmt(D.shocks[0].quiet.corr,2), n:`브렌트 변화 ±1% 이내인 ${D.shocks[0].quiet.n}일 — 사실상 무관`},
+  {k:'연동이 끊긴 국면', v:`${P.filter(p=>p.levelBrent<0.2).length} / ${P.length}`, n:'레벨상관 0.2 미만 국면 수'},
+  {k:'현재 디젤크랙', v:'$'+fmt(D.crack[D.crack.length-1],0), n:`표본 평균 $${fmt(D.crack.reduce((a,b)=>a+b,0)/D.crack.length,0)} · 최고치 경신 중`},
+].map(x=>`<div class="kpi${x.hero?' hero':''}"><div class="k">${x.k}</div><div class="v num">${x.v}</div><div class="n">${x.n}</div></div>`).join('');
+
+/* ---------- 차트 공통 ---------- */
+const N = D.dates.length;
+function xAt(i,x0,x1){ return x0 + (x1-x0)*i/(N-1); }
+function yScale(v,lo,hi,y0,y1){ return y1 - (v-lo)/(hi-lo)*(y1-y0); }
+function path(vals,x0,x1,lo,hi,y0,y1){
+  let d='',pen=false;
+  for(let i=0;i<vals.length;i++){
+    const v=vals[i];
+    if(v==null){pen=false;continue}
+    const x=xAt(i,x0,x1), y=yScale(v,lo,hi,y0,y1);
+    d += (pen?'L':'M') + x.toFixed(1) + ' ' + y.toFixed(1) + ' '; pen=true;
+  }
+  return d;
+}
+function yearTicks(){
+  const t=[]; let cur='';
+  D.dates.forEach((d,i)=>{ if(d.slice(0,4)!==cur){cur=d.slice(0,4); t.push([i,cur]);} });
+  return t;
+}
+function phaseBands(x0,x1,y0,y1){
+  return P.map((p,i)=>{
+    const xa=xAt(p.i0,x0,x1), xb=xAt(p.i1,x0,x1);
+    return `<rect x="${xa.toFixed(1)}" y="${y0}" width="${(xb-xa).toFixed(1)}" height="${y1-y0}"
+      fill="${i%2?'var(--surface-2)':'transparent'}" opacity=".7"></rect>
+      <text x="${(xa+3).toFixed(1)}" y="${y0+13}" font-size="10" fill="var(--ink-3)" font-weight="600">${esc(p.label.split(' ')[0])}</text>`;
+  }).join('');
+}
+function gridY(lo,hi,y0,y1,x0,x1,step,suffix=''){
+  let g='';
+  const start=Math.ceil(lo/step)*step;
+  for(let v=start;v<=hi;v+=step){
+    const y=yScale(v,lo,hi,y0,y1);
+    g+=`<line x1="${x0}" y1="${y.toFixed(1)}" x2="${x1}" y2="${y.toFixed(1)}" stroke="var(--line)" stroke-width="1"></line>
+        <text x="${x0-6}" y="${(y+3.5).toFixed(1)}" font-size="10" fill="var(--ink-3)" text-anchor="end">${Math.round(v)}${suffix}</text>`;
+  }
+  return g;
+}
+function xAxis(x0,x1,y){
+  return yearTicks().map(([i,y2])=>{
+    const x=xAt(i,x0,x1);
+    return `<line x1="${x.toFixed(1)}" y1="${y}" x2="${x.toFixed(1)}" y2="${y+4}" stroke="var(--line-strong)"></line>
+            <text x="${x.toFixed(1)}" y="${y+16}" font-size="10" fill="var(--ink-3)" text-anchor="middle">${y2}</text>`;
+  }).join('');
+}
+
+/* ---------- 1. 정규화 궤적 ---------- */
+const S1 = [
+  {id:'nClose', label:'에쓰오일', color:'var(--stock)', w:2.2, on:true},
+  {id:'nBrent', label:'브렌트유', color:'var(--oil)', w:1.8, on:true},
+  {id:'nBm', label:'KOSPI', color:'var(--bm)', w:1.4, on:true},
+  {id:'fit', label:'브렌트 베타로 재구성한 가상 주가', color:'var(--fit)', w:1.4, dash:'4 3', on:false},
+];
+function draw1(){
+  const x0=44,x1=968,y0=16,y1=352;
+  const active=S1.filter(s=>s.on);
+  let lo=1e9,hi=-1e9;
+  active.forEach(s=>D[s.id].forEach(v=>{if(v!=null){lo=Math.min(lo,v);hi=Math.max(hi,v)}}));
+  const pad=(hi-lo)*0.06; lo-=pad; hi+=pad;
+  const step = (hi-lo)>400?100:(hi-lo)>200?50:25;
+  let svg = phaseBands(x0,x1,y0,y1) + gridY(lo,hi,y0,y1,x0,x1,step);
+  active.forEach(s=>{
+    svg += `<path d="${path(D[s.id],x0,x1,lo,hi,y0,y1)}" fill="none" stroke="${s.color}" stroke-width="${s.w}"
+      ${s.dash?`stroke-dasharray="${s.dash}"`:''} stroke-linejoin="round"></path>`;
+  });
+  svg += xAxis(x0,x1,y1+2);
+  svg += `<line id="ch1" x1="0" y1="${y0}" x2="0" y2="${y1}" stroke="var(--ink-3)" stroke-width="1" opacity="0"></line>`;
+  svg += `<rect id="hit1" x="${x0}" y="${y0}" width="${x1-x0}" height="${y1-y0}" fill="transparent"></rect>`;
+  $('#c1').innerHTML = svg;
+  bindTip('#c1','#ch1','#hit1',x0,x1,i=>
+    `<b>${D.dates[i]}</b><br>에쓰오일 <b class="num">${D.close[i].toLocaleString()}</b>원 · 지수 ${fmt(D.nClose[i],0)}<br>
+     브렌트 <b class="num">$${fmt(D.brent[i],1)}</b> · 지수 ${fmt(D.nBrent[i],0)}<br>
+     디젤크랙 <b class="num">$${fmt(D.crack[i],1)}</b><br>KOSPI ${D.bm[i].toLocaleString()} · 지수 ${fmt(D.nBm[i],0)}`);
+}
+$('#lg1').innerHTML = S1.map((s,i)=>`<button data-s1="${i}" aria-pressed="${s.on}">
+  <span class="swatch" style="background:${s.color}"></span>${s.label}</button>`).join('');
+$('#lg1').addEventListener('click',e=>{
+  const b=e.target.closest('[data-s1]'); if(!b)return;
+  const s=S1[+b.dataset.s1]; s.on=!s.on; b.setAttribute('aria-pressed',s.on); draw1();
+});
+$('#c1note').textContent = `가상 주가 = KOSPI 수익률 + 전체표본 초과베타(${fmt(A.beta,2)}) × 브렌트 변화율을 매일 누적한 궤적. `
+  + `실제 주가가 이 선에서 멀어진 만큼이 브렌트로 설명되지 않는 부분이다.`;
+
+/* ---------- 2. 브렌트 · 크랙 ---------- */
+function draw2(){
+  const x0=44,x1=940,y0=14,y1=272;
+  const bl=Math.min(...D.brent), bh=Math.max(...D.brent);
+  const cl=Math.min(...D.crack), ch=Math.max(...D.crack);
+  const lo=Math.min(bl,cl)*0.9, hi=Math.max(bh,ch)*1.06;
+  let svg = phaseBands(x0,x1,y0,y1) + gridY(lo,hi,y0,y1,x0,x1,25,'');
+  // 크랙 면적
+  const cp = path(D.crack,x0,x1,lo,hi,y0,y1);
+  svg += `<path d="${cp} L${x1} ${y1} L${x0} ${y1} Z" fill="var(--crack-soft)"></path>`;
+  svg += `<path d="${cp}" fill="none" stroke="var(--crack)" stroke-width="1.9"></path>`;
+  svg += `<path d="${path(D.brent,x0,x1,lo,hi,y0,y1)}" fill="none" stroke="var(--oil)" stroke-width="1.9"></path>`;
+  svg += xAxis(x0,x1,y1+2);
+  svg += `<text x="${x1+6}" y="${(yScale(D.brent[N-1],lo,hi,y0,y1)+4).toFixed(1)}" font-size="10.5" fill="var(--oil)" font-weight="600">$${fmt(D.brent[N-1],0)}</text>`;
+  svg += `<text x="${x1+6}" y="${(yScale(D.crack[N-1],lo,hi,y0,y1)+4).toFixed(1)}" font-size="10.5" fill="var(--crack)" font-weight="600">$${fmt(D.crack[N-1],0)}</text>`;
+  svg += `<line id="ch2" x1="0" y1="${y0}" x2="0" y2="${y1}" stroke="var(--ink-3)" stroke-width="1" opacity="0"></line>`;
+  svg += `<rect id="hit2" x="${x0}" y="${y0}" width="${x1-x0}" height="${y1-y0}" fill="transparent"></rect>`;
+  $('#c2').innerHTML = svg;
+  bindTip('#c2','#ch2','#hit2',x0,x1,i=>
+    `<b>${D.dates[i]}</b><br>브렌트 <b class="num">$${fmt(D.brent[i],2)}</b><br>디젤크랙 <b class="num">$${fmt(D.crack[i],1)}</b><br>에쓰오일 ${D.close[i].toLocaleString()}원`);
+}
+$('#lg2').innerHTML = `<span><span class="swatch" style="background:var(--oil)"></span>브렌트유 현물 ($/bbl)</span>
+  <span><span class="swatch" style="background:var(--crack)"></span>디젤크랙 프록시 ($/bbl)</span>`;
+
+/* ---------- 3. 롤링 상관 ---------- */
+function draw3(){
+  const x0=44,x1=968,y0=14,y1=212;
+  const lo=-0.5,hi=0.7;
+  const zero=yScale(0,lo,hi,y0,y1);
+  let svg = phaseBands(x0,x1,y0,y1);
+  [-0.4,-0.2,0.2,0.4,0.6].forEach(v=>{
+    const y=yScale(v,lo,hi,y0,y1);
+    svg+=`<line x1="${x0}" y1="${y.toFixed(1)}" x2="${x1}" y2="${y.toFixed(1)}" stroke="var(--line)"></line>
+          <text x="${x0-6}" y="${(y+3.5).toFixed(1)}" font-size="10" fill="var(--ink-3)" text-anchor="end">${v.toFixed(1)}</text>`;
+  });
+  svg += `<line x1="${x0}" y1="${zero.toFixed(1)}" x2="${x1}" y2="${zero.toFixed(1)}" stroke="var(--line-strong)" stroke-width="1.4"></line>
+          <text x="${x0-6}" y="${(zero+3.5).toFixed(1)}" font-size="10" fill="var(--ink-2)" text-anchor="end">0</text>`;
+  svg += `<path d="${path(D.rollBrent,x0,x1,lo,hi,y0,y1)}" fill="none" stroke="var(--oil)" stroke-width="2"></path>`;
+  svg += `<path d="${path(D.rollCrack,x0,x1,lo,hi,y0,y1)}" fill="none" stroke="var(--crack)" stroke-width="1.5" stroke-dasharray="4 3"></path>`;
+  const ya=yScale(A.dailyBrent,lo,hi,y0,y1);
+  svg += `<line x1="${x0}" y1="${ya.toFixed(1)}" x2="${x1}" y2="${ya.toFixed(1)}" stroke="var(--accent)" stroke-width="1" stroke-dasharray="2 4"></line>
+          <text x="${x1-4}" y="${(ya-5).toFixed(1)}" font-size="10" fill="var(--accent)" text-anchor="end">전체평균 ${fmt(A.dailyBrent,2)}</text>`;
+  svg += xAxis(x0,x1,y1+2);
+  svg += `<line id="ch3" x1="0" y1="${y0}" x2="0" y2="${y1}" stroke="var(--ink-3)" stroke-width="1" opacity="0"></line>`;
+  svg += `<rect id="hit3" x="${x0}" y="${y0}" width="${x1-x0}" height="${y1-y0}" fill="transparent"></rect>`;
+  $('#c3').innerHTML = svg;
+  bindTip('#c3','#ch3','#hit3',x0,x1,i=>
+    `<b>${D.dates[i]}</b> 직전 ${D.rollWindow}거래일<br>브렌트 상관 <b class="num">${D.rollBrent[i]==null?'—':fmt(D.rollBrent[i],2)}</b><br>크랙 상관 <b class="num">${D.rollCrack[i]==null?'—':fmt(D.rollCrack[i],2)}</b>`);
+}
+$('#lg3').innerHTML = `<span><span class="swatch" style="background:var(--oil)"></span>초과수익 ~ 브렌트 일간변화</span>
+  <span><span class="swatch" style="background:var(--crack)"></span>초과수익 ~ 디젤크랙 일간변화</span>`;
+
+/* ---------- 4. 산점도 ---------- */
+function draw4(){
+  const x0=52,x1=940,y0=16,y1=352;
+  const xs=D.scatter.map(p=>p[0]), ys=D.scatter.map(p=>p[1]);
+  const xr=Math.max(...xs.map(Math.abs))*1.05, yr=Math.max(...ys.map(Math.abs))*1.05;
+  const px=v=>x0+(v+xr)/(2*xr)*(x1-x0);
+  const py=v=>y1-(v+yr)/(2*yr)*(y1-y0);
+  let svg='';
+  for(let v=-15;v<=15;v+=5){ if(Math.abs(v)>xr)continue;
+    svg+=`<line x1="${px(v).toFixed(1)}" y1="${y0}" x2="${px(v).toFixed(1)}" y2="${y1}" stroke="var(--line)"></line>
+          <text x="${px(v).toFixed(1)}" y="${y1+15}" font-size="10" fill="var(--ink-3)" text-anchor="middle">${v>0?'+':''}${v}%</text>`; }
+  for(let v=-30;v<=30;v+=10){ if(Math.abs(v)>yr)continue;
+    svg+=`<line x1="${x0}" y1="${py(v).toFixed(1)}" x2="${x1}" y2="${py(v).toFixed(1)}" stroke="var(--line)"></line>
+          <text x="${x0-6}" y="${(py(v)+3.5).toFixed(1)}" font-size="10" fill="var(--ink-3)" text-anchor="end">${v>0?'+':''}${v}%p</text>`; }
+  svg+=`<line x1="${px(0).toFixed(1)}" y1="${y0}" x2="${px(0).toFixed(1)}" y2="${y1}" stroke="var(--line-strong)"></line>
+        <line x1="${x0}" y1="${py(0).toFixed(1)}" x2="${x1}" y2="${py(0).toFixed(1)}" stroke="var(--line-strong)"></line>`;
+  D.scatter.forEach(p=>{
+    svg+=`<circle cx="${px(p[0]).toFixed(1)}" cy="${py(p[1]).toFixed(1)}" r="2.3" fill="${PCOL[p[2]%PCOL.length]}" opacity=".5"></circle>`;
+  });
+  svg+=`<line x1="${px(-xr).toFixed(1)}" y1="${py(-xr*A.beta).toFixed(1)}" x2="${px(xr).toFixed(1)}" y2="${py(xr*A.beta).toFixed(1)}"
+         stroke="var(--accent)" stroke-width="2.4"></line>`;
+  svg+=`<text x="${x1-6}" y="${y0+16}" font-size="11.5" fill="var(--accent)" text-anchor="end" font-weight="600">기울기 ${fmt(A.beta,2)} · 상관 ${fmt(A.dailyBrent,2)}</text>`;
+  svg+=`<text x="${((x0+x1)/2).toFixed(0)}" y="${y1+34}" font-size="11" fill="var(--ink-3)" text-anchor="middle">브렌트 하루 변화율 (직전 결제가 기준)</text>`;
+  $('#c4').innerHTML=svg;
+}
+$('#lg4').innerHTML = P.map((p,i)=>`<span><span class="swatch" style="background:${PCOL[i%PCOL.length]};height:8px;width:8px;border-radius:2px"></span>${esc(p.label)}</span>`).join('');
+
+/* ---------- 5. 충격일 ---------- */
+const sh = D.shocks[0];
+$('#shockbars').innerHTML = [
+  ['브렌트 급등일', sh.up, 'var(--up)'],
+  ['브렌트 급락일', sh.dn, 'var(--down)'],
+].map(([lab,v,c])=>`
+  <div class="bar-row">
+    <div>${lab}<div style="font-size:11px;color:var(--ink-3)">${v.n}회 · 평균 ${sgn(v.avgExcess,2)}%p</div></div>
+    <div class="bar-track"><div class="bar-fill" style="width:${v.rate.toFixed(1)}%;background:${c};opacity:.75"></div><div class="bar-mid"></div></div>
+    <div class="bar-val num">${fmt(v.rate,0)}%</div>
+  </div>`).join('') +
+  `<p style="margin:4px 0 0;font-size:12.5px;color:var(--ink-2)">
+   브렌트가 하루 ${fmt(sh.th,0)}% 넘게 움직인 날 기준. 세로선은 동전던지기(50%) 위치다.
+   <b>내릴 때는 ${fmt(sh.dn.rate,0)}% 따라 내려가지만 오를 때는 ${fmt(sh.up.rate,0)}%밖에 따라 오르지 않는다</b> —
+   원유값 상승은 정유사에게 비용이기도 하기 때문이다.</p>`;
+
+$('#shocktbl').innerHTML =
+  `<thead><tr><th>날짜</th><th>브렌트 변화</th><th>브렌트</th><th>디젤크랙</th><th>에쓰오일</th><th>주가</th><th>초과수익</th></tr></thead><tbody>` +
+  D.topShocks.map(s=>`<tr><td class="num">${s.date}</td><td class="num ${cls(s.brent)}">${sgn(s.brent)}%</td>
+    <td class="num">$${fmt(s.brentLevel,1)}</td><td class="num">$${fmt(s.crack,1)}</td>
+    <td class="num">${s.close.toLocaleString()}</td><td class="num ${cls(s.stock)}">${sgn(s.stock)}%</td>
+    <td class="num ${cls(s.excess)}"><b>${sgn(s.excess)}%p</b></td></tr>`).join('') + '</tbody>';
+
+/* ---------- 6. 국면표 ---------- */
+$('#phasetbl').innerHTML =
+  `<thead><tr><th>국면</th><th>기간</th><th>주가</th><th>KOSPI</th><th>초과</th><th>브렌트</th><th>디젤크랙</th>
+   <th>레벨상관<br>(브렌트)</th><th>레벨상관<br>(크랙)</th><th>일간상관<br>(초과~브렌트)</th></tr></thead><tbody>` +
+  P.map((p,i)=>`<tr>
+    <td><span class="pdot" style="background:${PCOL[i%PCOL.length]}"></span><b>${esc(p.label)}</b>
+      <div class="note" style="min-width:0">${esc(p.note)}</div></td>
+    <td class="num" style="font-size:11.5px">${p.start}<br>${p.end}</td>
+    <td class="num ${cls(p.stock)}">${sgn(p.stock)}%</td>
+    <td class="num ${cls(p.kospi)}">${sgn(p.kospi)}%</td>
+    <td class="num ${cls(p.excess)}"><b>${sgn(p.excess)}%p</b></td>
+    <td class="num">$${fmt(p.brentFrom,0)}→$${fmt(p.brentTo,0)}<br><span style="color:var(--ink-3)">${sgn(p.brent,0)}%</span></td>
+    <td class="num">$${fmt(p.crackFrom,0)}→$${fmt(p.crackTo,0)}</td>
+    <td class="num ${p.levelBrent>0.5?'ok':p.levelBrent<0.2?'no':''}">${fmt(p.levelBrent,2)}</td>
+    <td class="num ${p.levelCrack>0.5?'ok':p.levelCrack<0.2?'no':''}">${fmt(p.levelCrack,2)}</td>
+    <td class="num">${fmt(p.dailyBrent,2)}</td></tr>`).join('') + '</tbody>';
+
+/* ---------- 7. 주의 ---------- */
+$('#caveats').innerHTML = m.caveats.map(c=>`<li>${esc(c)}</li>`).join('');
+$('#foot').innerHTML = `데이터 — 주가·KOSPI: 네이버 금융 수정주가 · 브렌트유(DCOILBRENTEU)·ULSD(DDFUELUSGULF)·환율(DEXKOUS): FRED/EIA.
+  계산: <span class="num">tools/build_oil_link.py</span> · 생성 ${new Date().toISOString().slice(0,10)}.
+  기록·학습용 자료이며 투자 권유가 아니다.`;
+
+/* ---------- 툴팁 ---------- */
+const tip = $('#tip');
+function bindTip(svgSel, lineSel, hitSel, x0, x1, render){
+  const svg=$(svgSel), line=svg.querySelector(lineSel), hit=svg.querySelector(hitSel);
+  function move(e){
+    const r=svg.getBoundingClientRect();
+    const vx=(e.clientX-r.left)/r.width*980;
+    let i=Math.round((vx-x0)/(x1-x0)*(N-1));
+    i=Math.max(0,Math.min(N-1,i));
+    line.setAttribute('x1',xAt(i,x0,x1)); line.setAttribute('x2',xAt(i,x0,x1)); line.setAttribute('opacity','.55');
+    tip.innerHTML=render(i); tip.style.display='block';
+    const tw=tip.offsetWidth, th=tip.offsetHeight;
+    tip.style.left=Math.min(window.innerWidth-tw-10, e.clientX+14)+'px';
+    tip.style.top=Math.max(8, e.clientY-th-12)+'px';
+  }
+  hit.addEventListener('mousemove',move);
+  hit.addEventListener('mouseleave',()=>{line.setAttribute('opacity','0'); tip.style.display='none';});
+}
+
+draw1(); draw2(); draw3(); draw4();
+</script></body></html>

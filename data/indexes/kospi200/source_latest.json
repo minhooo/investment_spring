@@ -1,0 +1,19 @@
+{
+  "index_id": "kospi200",
+  "as_of": "2026-09-04",
+  "collected_at": "2026-09-06T14:57:32.202538+00:00",
+  "source": {
+    "name": "네이버 증권 KOSPI200 구성목록 · 키움증권 ka10001 보강",
+    "url": "https://finance.naver.com/sise/sise_index.naver?code=KPI200",
+    "kind": "constituent_list_plus_kiwoom_current_snapshot",
+    "market_data_source": "키움증권 REST ka10001 (현재가·시가총액·유통주식수·유통비율)"
+  },
+  "quality_flags": [
+    "non_krx_constituent_source",
+    "official_weight_unavailable",
+    "index_shares_unavailable",
+    "sector_source_unavailable",
+    "unexpected_constituent_count"
+  ],
+  "enrichment_failures": []
+}

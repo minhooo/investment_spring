@@ -1,0 +1,177 @@
+{
+  "schema_version": "1.0",
+  "review_id": "kospi200-2026-h1",
+  "index_id": "kospi200",
+  "title": "2026년 상반기 KOSPI 200 정기변경",
+  "review_type": "regular",
+  "observation_start": "2025-11-03",
+  "data_cutoff_at": "2026-04-30",
+  "announcement_at": "2026-05-22",
+  "rebalance_at": "2026-06-11",
+  "effective_at": "2026-06-12",
+  "status": "effective",
+  "architecture_decision": {
+    "kind": "review_first",
+    "summary": "정기변경 한 건을 기준 페이지로 두고 네 종목을 같은 컷오프와 규칙 아래 비교한다.",
+    "detail": "종목별 분석은 한 페이지 안의 독립 섹션과 영구 앵커로 제공한다. 공통 규칙·기준일·출처를 중복 저장하지 않으면서도 각 종목으로 직접 링크할 수 있다."
+  },
+  "methodology": {
+    "summary": "심사기간의 일평균 시가총액·거래대금과 산업군 내 순위·누적시가총액, 버퍼룰 및 대형주 특례를 함께 본다.",
+    "standard_entry": "증권사 방법론 해설 기준 신규 종목은 산업군 누적시가총액 85% 이내 및 구성종목 수 대비 시가총액 순위 90% 이내가 핵심 문턱이다.",
+    "liquidity": "일평균 거래대금 순위가 산업군 심사대상 종목 수의 85% 이내인지 확인한다.",
+    "large_cap_exception": "정기심사일 직전 15매매거래일 일평균 시가총액이 유가증권시장 50위 이내이면 특례 선정이 가능하다.",
+    "disclaimer": "한국거래소가 종목별 최종 판정 산식을 모두 공개한 것은 아니다. DB하이텍의 특례 및 OCI의 경계선 판정은 삼성증권의 사후 분석을 따른 추정이다."
+  },
+  "members": [
+    {
+      "ticker": "267270",
+      "name": "HD건설기계",
+      "sector": "산업재",
+      "path_type": "standard_merger",
+      "path_label": "표준 경로 · 합병 반영",
+      "signal_start": "2026-01-26",
+      "headline": "합병 변경상장 이후 커진 시가총액으로 산업재 문턱을 넘었다.",
+      "evidence": [
+        "2026년 1월 합병 변경상장 이후의 시가총액만 심사에 반영하는 방식으로 분석됐다.",
+        "삼성증권 3월 추정에서 산업재 누적시가총액 비중 84%, 구성종목 순위 56%로 두 핵심 문턱을 충족했다.",
+        "4월 업데이트에서도 산업재 1차 조건인 누적시가총액 85% 이내를 유지한 편입 예상 종목이었다."
+      ],
+      "research_estimate": {
+        "as_of": "2026-05-26",
+        "avg_trading_value_eok": 711,
+        "market_cap_eok": 79550,
+        "estimated_index_weight_pct": 0.12,
+        "estimated_rebalance_demand_eok": 1111,
+        "demand_to_avg_trading_value": 1.56,
+        "demand_to_market_cap_pct": 1.40
+      }
+    },
+    {
+      "ticker": "000990",
+      "name": "DB하이텍",
+      "sector": "정보기술",
+      "path_type": "large_cap_exception",
+      "path_label": "대형주 특례 추정",
+      "signal_start": "2025-11-03",
+      "headline": "IT 산업군 표준 문턱 대신 대형주 특례가 작동한 것으로 추정된다.",
+      "evidence": [
+        "삼성증권 사후 분석은 IT 산업군의 일반 편입 기준을 충족하지 못한 것으로 평가했다.",
+        "그럼에도 최종 편입돼 직전 15매매일 시총 상위 50위에 적용 가능한 대형주 특례 경로로 해석됐다.",
+        "심사구간 주가가 크게 상승했고 기관 누적 순매수가 동반돼 시총 신호가 빠르게 강화됐다."
+      ],
+      "research_estimate": {
+        "as_of": "2026-05-26",
+        "avg_trading_value_eok": 1245,
+        "market_cap_eok": 78787,
+        "estimated_index_weight_pct": 0.13,
+        "estimated_rebalance_demand_eok": 1154,
+        "demand_to_avg_trading_value": 0.93,
+        "demand_to_market_cap_pct": 1.46
+      }
+    },
+    {
+      "ticker": "483650",
+      "name": "달바글로벌",
+      "sector": "필수소비재",
+      "path_type": "standard_listing_eligibility",
+      "path_label": "표준 경로 · 평가기간 충족",
+      "signal_start": "2025-11-03",
+      "headline": "직전 심사의 상장기간 제약이 해소되자 이미 형성된 산업군 우위가 편입으로 이어졌다.",
+      "evidence": [
+        "2025년 5월 상장으로 2025년 12월 심사 때는 6개월 평가기간이 부족했으나 이번에는 전체 심사기간을 채웠다.",
+        "삼성증권 3월 추정에서 필수소비재 누적시가총액 비중 77%, 구성종목 순위 68%로 두 문턱을 모두 충족했다.",
+        "편입 후 유동주식 산정에는 보호예수 해제 물량의 실제 유통 여부를 보수적으로 볼 필요가 있다는 분석이 있었다."
+      ],
+      "research_estimate": {
+        "as_of": "2026-05-26",
+        "avg_trading_value_eok": 574,
+        "market_cap_eok": 27203,
+        "estimated_index_weight_pct": 0.05,
+        "estimated_rebalance_demand_eok": 466,
+        "demand_to_avg_trading_value": 0.81,
+        "demand_to_market_cap_pct": 1.71
+      }
+    },
+    {
+      "ticker": "456040",
+      "name": "OCI",
+      "sector": "소재",
+      "path_type": "boundary_discretion",
+      "path_label": "경계선 통과 · 판단 개입 추정",
+      "signal_start": "2025-11-03",
+      "headline": "3월에는 부족했던 평균 시총이 마지막 한 달에 개선되며 경계선에서 편입됐다.",
+      "evidence": [
+        "유진투자증권의 3월 17일 분석은 11월~3월 일평균 시총을 6,100억원으로 보고 약 7,000억원 이상이 필요하다고 추정했다.",
+        "심사 종료 직전 20거래일의 키움 관측 거래대금이 심사구간 평균보다 크게 늘어 마지막 달의 신호 강화가 확인된다.",
+        "최종 편입 뒤 삼성증권은 소재 산업군 기준의 경계선에 있었고 거래소가 적극적으로 편입한 것으로 평가했다."
+      ],
+      "research_estimate": {
+        "as_of": "2026-05-26",
+        "avg_trading_value_eok": 254,
+        "market_cap_eok": 11012,
+        "estimated_index_weight_pct": 0.01,
+        "estimated_rebalance_demand_eok": 134,
+        "demand_to_avg_trading_value": 0.53,
+        "demand_to_market_cap_pct": 1.22
+      }
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "krx-methodology-mirae-2026",
+      "publisher": "한국거래소 방법론 인용·미래에셋증권",
+      "title": "KOSPI 200 구성종목 선정방법",
+      "published_at": "2026-05",
+      "url": "https://securities.miraeasset.com/public/hks4000/1492483185941.pdf",
+      "role": "methodology"
+    },
+    {
+      "source_id": "krx-hd-merger-listing",
+      "publisher": "한국거래소 KIND",
+      "title": "HD건설기계 변경·추가상장",
+      "published_at": "2026-01-21",
+      "url": "https://kind.krx.co.kr/external/2026/01/21/000125/20260121000220/68151.htm",
+      "role": "corporate_action"
+    },
+    {
+      "source_id": "samsung-2026-03-27",
+      "publisher": "삼성증권",
+      "title": "6월 주가지수 정기변경 예상",
+      "published_at": "2026-03-27",
+      "url": "https://www.samsungpop.com/common.do?cmd=down&contentType=application/pdf&fileName=1040/2026032617070277K_02_02.pdf&inlineYn=Y&saveKey=research.pdf",
+      "role": "pre_announcement_analysis"
+    },
+    {
+      "source_id": "samsung-2026-04-24",
+      "publisher": "삼성증권",
+      "title": "6월 주가지수 정기변경 업데이트",
+      "published_at": "2026-04-24",
+      "url": "https://www.samsungpop.com/common.do?cmd=down&contentType=application/pdf&fileName=1040/2026042406284649K_02_01.pdf&inlineYn=Y&saveKey=research.pdf",
+      "role": "pre_announcement_analysis"
+    },
+    {
+      "source_id": "eugene-2026-03-23",
+      "publisher": "유진투자증권",
+      "title": "KOSPI200 6월 정기변경 예상",
+      "published_at": "2026-03-23",
+      "url": "https://stock.pstatic.net/stock-research/invest/63/20260323_invest_221943000.pdf",
+      "role": "pre_announcement_analysis"
+    },
+    {
+      "source_id": "samsung-2026-05-26",
+      "publisher": "삼성증권",
+      "title": "KOSPI200 / KOSDAQ150 정기변경 발표",
+      "published_at": "2026-05-26",
+      "url": "https://www.samsungpop.com/common.do?cmd=down&contentType=application/pdf&fileName=1040/2026052606540285K_02_03.pdf&inlineYn=Y&saveKey=research.pdf",
+      "role": "post_announcement_assessment"
+    },
+    {
+      "source_id": "yuanta-2026-05-26",
+      "publisher": "유안타증권",
+      "title": "KOSPI200/KOSDAQ150 정기변경 결과 발표",
+      "published_at": "2026-05-26",
+      "url": "https://file.myasset.com/sitemanager/upload/2026/0526/070106/20260526070106470_0_ko.pdf",
+      "role": "flow_estimate"
+    }
+  ]
+}

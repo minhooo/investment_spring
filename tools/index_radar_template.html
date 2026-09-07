@@ -1,0 +1,683 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>지수 레이더 | 투자 아이디어 샘터</title>
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #fff;
+        --card: #fff;
+        --muted: #f4f4f5;
+        --ink: #18181b;
+        --ink2: #71717a;
+        --line: #e4e4e7;
+        --accent: #18181b;
+        --accentfg: #fafafa;
+        --warn: #a16207;
+        --warnbg: #fffbeb;
+        --up: #d33a3a;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family:
+          "Pretendard Variable",
+          Pretendard,
+          -apple-system,
+          BlinkMacSystemFont,
+          system-ui,
+          "Malgun Gothic",
+          sans-serif;
+        line-height: 1.5;
+        font-variant-numeric: tabular-nums;
+      }
+      .topbar {
+        border-bottom: 1px solid var(--line);
+        background: var(--card);
+      }
+      .topbar-in {
+        max-width: 1180px;
+        margin: auto;
+        padding: 13px 22px;
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        flex-wrap: wrap;
+      }
+      .brand {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--ink);
+        text-decoration: none;
+        white-space: nowrap;
+      }
+      .nav {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+      }
+      .nav a {
+        color: var(--ink2);
+        text-decoration: none;
+        padding: 8px 10px;
+        border-radius: 8px;
+        font-size: 14px;
+      }
+      .nav a:hover,
+      .nav a[aria-current="page"] {
+        background: var(--muted);
+        color: var(--ink);
+        font-weight: 600;
+      }
+      .header-search {
+        margin-left: auto;
+        display: flex;
+        gap: 7px;
+        min-width: min(310px, 100%);
+      }
+      input,
+      button,
+      select {
+        font: inherit;
+      }
+      input,
+      select {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 9px 10px;
+        background: var(--card);
+        color: var(--ink);
+      }
+      .header-search input {
+        width: 100%;
+        min-width: 0;
+      }
+      .header-search button,
+      .button {
+        border: 1px solid var(--accent);
+        border-radius: 8px;
+        padding: 9px 12px;
+        background: var(--accent);
+        color: var(--accentfg);
+        cursor: pointer;
+      }
+      .topbar a:focus-visible,
+      input:focus-visible,
+      button:focus-visible,
+      select:focus-visible {
+        outline: 2px solid #52525b;
+        outline-offset: 2px;
+      }
+      .wrap {
+        max-width: 1180px;
+        margin: auto;
+        padding: 32px 22px 70px;
+      }
+      .crumb,
+      .eyebrow,
+      .meta {
+        font-size: 13px;
+        color: var(--ink2);
+      }
+      .crumb {
+        margin: 0 0 18px;
+      }
+      .crumb a {
+        color: inherit;
+      }
+      .eyebrow {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin: 0 0 8px;
+      }
+      h1 {
+        font-size: clamp(28px, 4vw, 42px);
+        letter-spacing: -0.04em;
+        line-height: 1.2;
+        margin: 0 0 10px;
+      }
+      .sub {
+        color: var(--ink2);
+        margin: 0;
+        max-width: 76ch;
+      }
+      .radar-tabs {
+        display: flex;
+        gap: 6px;
+        margin: 22px 0 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .radar-tabs a {
+        color: var(--ink2);
+        text-decoration: none;
+        padding: 10px 12px;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -1px;
+        font-size: 14px;
+      }
+      .radar-tabs a[aria-current="page"] {
+        color: var(--ink);
+        border-bottom-color: var(--ink);
+        font-weight: 700;
+      }
+      .control-card,
+      .notice,
+      .kpi,
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: var(--card);
+      }
+      .control-card {
+        display: flex;
+        gap: 18px;
+        align-items: end;
+        flex-wrap: wrap;
+        margin: 26px 0 14px;
+        padding: 16px;
+      }
+      .field {
+        display: grid;
+        gap: 5px;
+        font-size: 13px;
+        color: var(--ink2);
+        min-width: 190px;
+      }
+      .status {
+        font-size: 13px;
+        color: var(--ink2);
+        margin-left: auto;
+      }
+      .notice {
+        display: none;
+        padding: 12px 14px;
+        background: var(--warnbg);
+        border-color: #fde68a;
+        color: #854d0e;
+        font-size: 13px;
+        margin: 14px 0;
+      }
+      .notice.show {
+        display: block;
+      }
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 1px;
+        background: var(--line);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 20px 0 28px;
+      }
+      .kpi {
+        padding: 16px;
+      }
+      .kpi .k {
+        font-size: 12px;
+        color: var(--ink2);
+      }
+      .kpi .v {
+        font-size: clamp(22px, 3vw, 30px);
+        font-weight: 750;
+        letter-spacing: -0.04em;
+        margin: 5px 0 2px;
+      }
+      .kpi .n {
+        font-size: 12px;
+        color: var(--ink2);
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+        gap: 18px;
+        margin-bottom: 28px;
+      }
+      .panel {
+        padding: 18px;
+      }
+      .panel h2 {
+        font-size: 16px;
+        margin: 0 0 4px;
+      }
+      .panel p {
+        margin: 0 0 16px;
+        color: var(--ink2);
+        font-size: 13px;
+      }
+      .bars {
+        display: grid;
+        gap: 10px;
+      }
+      .bar-row {
+        display: grid;
+        grid-template-columns: minmax(92px, 1fr) minmax(90px, 2.2fr) 54px;
+        gap: 9px;
+        align-items: center;
+        font-size: 13px;
+      }
+      .bar-label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .bar-track {
+        height: 9px;
+        border-radius: 99px;
+        background: var(--muted);
+        overflow: hidden;
+      }
+      .bar-fill {
+        height: 100%;
+        background: var(--accent);
+        border-radius: inherit;
+      }
+      .bar-value {
+        text-align: right;
+      }
+      .filter-row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+        margin: 0 0 12px;
+      }
+      .filter-row input {
+        min-width: min(310px, 100%);
+        flex: 1;
+      }
+      .filter-row select {
+        min-width: 148px;
+      }
+      .table-wrap {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        overflow: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        min-width: 880px;
+      }
+      th,
+      td {
+        padding: 11px 12px;
+        border-bottom: 1px solid var(--line);
+        white-space: nowrap;
+        text-align: right;
+      }
+      th {
+        background: var(--muted);
+        color: var(--ink2);
+        font-size: 12px;
+        font-weight: 650;
+      }
+      th:first-child,
+      td:first-child,
+      th:nth-child(2),
+      td:nth-child(2),
+      th:nth-child(3),
+      td:nth-child(3) {
+        text-align: left;
+      }
+      tbody tr:last-child td {
+        border-bottom: 0;
+      }
+      .rank {
+        color: var(--ink2);
+      }
+      .name {
+        font-weight: 650;
+      }
+      .muted {
+        color: var(--ink2);
+      }
+      .foot {
+        margin-top: 18px;
+        color: var(--ink2);
+        font-size: 12px;
+      }
+      .empty {
+        padding: 36px;
+        text-align: center;
+        color: var(--ink2);
+      }
+      @media (max-width: 900px) {
+        .kpis {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 740px) {
+        .topbar-in {
+          padding: 12px 16px;
+          gap: 12px;
+        }
+        .nav {
+          order: 3;
+          width: 100%;
+        }
+        .header-search {
+          order: 4;
+          width: 100%;
+          flex-basis: 100%;
+          margin-left: 0;
+        }
+        .wrap {
+          padding: 26px 16px 55px;
+        }
+        .kpis {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .control-card {
+          align-items: stretch;
+        }
+        .status {
+          margin-left: 0;
+        }
+        .field {
+          width: 100%;
+        }
+      }
+      @media (max-width: 440px) {
+        .kpis {
+          grid-template-columns: 1fr;
+        }
+        .filter-row input,
+        .filter-row select {
+          width: 100%;
+        }
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          color-scheme: dark;
+          --bg: #09090b;
+          --card: #18181b;
+          --muted: #27272a;
+          --ink: #fafafa;
+          --ink2: #a1a1aa;
+          --line: #27272a;
+          --accent: #fafafa;
+          --accentfg: #18181b;
+          --warnbg: #422006;
+          --warn: #fcd34d;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-in">
+        <a class="brand" href="index.html#home">투자 샘터</a>
+        <nav class="nav" aria-label="주요 메뉴"><!--__SITE_NAV__--></nav>
+        <form class="header-search" id="headerSearch" role="search">
+          <input
+            name="q"
+            type="search"
+            aria-label="통합 검색"
+            placeholder="종목·이슈·테마·경제 변수 검색"
+          /><button type="submit">검색</button>
+        </form>
+      </div>
+    </header>
+    <main class="wrap">
+      <p class="crumb"><a href="index.html#home">홈</a> / 지수 레이더</p>
+      <p class="eyebrow">Index composition monitor</p>
+      <h1>지수 레이더</h1>
+      <p class="sub">
+        현재 구성과 키움 유통시총 기반 참고 비중, 과거 정기변경의 편입 경로를
+        함께 기록합니다. 후보 예측은 검증 데이터가 쌓인 뒤에만 공개합니다.
+      </p>
+      <nav class="radar-tabs" aria-label="지수 레이더 보기">
+        <a href="index-radar.html" aria-current="page">현재 구성</a>
+        <a href="index-radar-history.html">History</a>
+      </nav>
+      <section class="control-card" aria-label="지수 선택">
+        <label class="field"
+          >지수<select id="indexSelect">
+            <option value="kospi200">KOSPI 200</option>
+          </select></label
+        >
+        <div class="status" id="status" aria-live="polite">
+          데이터를 불러오는 중입니다.
+        </div>
+      </section>
+      <div class="notice" id="notice" role="status"></div>
+      <section class="kpis" id="kpis" aria-label="핵심 지표"></section>
+      <section class="grid">
+        <article class="panel">
+          <h2>유통시총 비중 상위 종목</h2>
+          <p>
+            키움 유통주식수·유통비율 기준 참고 비중이며 KRX 공식 지수 비중이
+            아닙니다.
+          </p>
+          <div class="bars" id="topBars"></div>
+        </article>
+        <article class="panel">
+          <h2>업종 정보 상태</h2>
+          <p>업종 원천이 연결되면 같은 기준일의 업종별 비중을 표시합니다.</p>
+          <div class="bars" id="sectorBars"></div>
+        </article>
+      </section>
+      <section aria-labelledby="tableTitle">
+        <h2 id="tableTitle" style="font-size: 20px; margin: 0 0 10px">
+          구성종목
+        </h2>
+        <div class="filter-row">
+          <input
+            id="query"
+            type="search"
+            aria-label="구성종목 검색"
+            placeholder="종목명 또는 코드 검색"
+          /><select id="sort" aria-label="정렬">
+            <option value="weight">유통시총 비중순</option>
+            <option value="name">종목명순</option>
+            <option value="price">현재가순</option>
+          </select>
+        </div>
+        <p class="meta" id="resultCount"></p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>순위</th>
+                <th>종목</th>
+                <th>코드</th>
+                <th>업종</th>
+                <th>현재가</th>
+                <th>공식 지수 비중</th>
+                <th>
+                  유통시총 비중<br /><span class="muted">(키움 유통비율)</span>
+                </th>
+                <th>시가총액</th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+          <div class="empty" id="empty" hidden>
+            조건에 맞는 종목이 없습니다.
+          </div>
+        </div>
+      </section>
+      <p class="foot" id="foot"></p>
+    </main>
+    <script>
+      const $ = (s) => document.querySelector(s),
+        esc = (s) =>
+          String(s).replace(
+            /[&<>"']/g,
+            (c) =>
+              ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;",
+              })[c],
+          );
+      let data = null;
+      const num = (n) => Number(n || 0),
+        fmt = (n) => new Intl.NumberFormat("ko-KR").format(Math.round(n)),
+        pct = (n) => `${n.toFixed(2)}%`;
+      function state() {
+        const p = new URLSearchParams(location.search);
+        return { q: p.get("q") || "", sort: p.get("sort") || "weight" };
+      }
+      function setState(patch) {
+        const p = new URLSearchParams(location.search);
+        Object.entries(patch).forEach(([k, v]) =>
+          v ? p.set(k, v) : p.delete(k),
+        );
+        history.replaceState(null, "", "?" + p.toString());
+        render();
+      }
+      function members() {
+        let rows = [...data.constituents],
+          s = state(),
+          q = s.q.toLowerCase();
+        if (q)
+          rows = rows.filter((r) =>
+            (r.name + r.ticker).toLowerCase().includes(q),
+          );
+        rows.sort((a, b) =>
+          s.sort === "name"
+            ? a.name.localeCompare(b.name, "ko")
+            : s.sort === "price"
+              ? num(b.price) - num(a.price)
+              : num(b.float_market_cap_eok) - num(a.float_market_cap_eok),
+        );
+        return rows;
+      }
+      function render() {
+        if (!data) return;
+        const s = state();
+        $("#query").value = s.q;
+        $("#sort").value = s.sort;
+        const all = data.constituents,
+          total = all.reduce((x, r) => x + num(r.float_market_cap_eok), 0),
+          rows = members(),
+          top = [...all]
+            .sort(
+              (a, b) =>
+                num(b.float_market_cap_eok) - num(a.float_market_cap_eok),
+            )
+            .slice(0, 10),
+          top10 =
+            (top.reduce((x, r) => x + num(r.float_market_cap_eok), 0) / total) *
+            100;
+        $("#kpis").innerHTML = [
+          ["구성종목", `${fmt(all.length)}개`, data.as_of],
+          [
+            "유통시가총액 합계",
+            `${(total / 10000).toLocaleString("ko-KR", { maximumFractionDigits: 0 })}조원`,
+            "키움 유통비율 기준",
+          ],
+          ["상위 10종목 비중", pct(top10), "유통시가총액 기준"],
+          ["최대 비중", pct(num(top[0].weight)), top[0].name],
+          [
+            "가격 커버리지",
+            `${fmt(all.filter((r) => num(r.price) > 0).length)}/${fmt(all.length)}`,
+            "키움 ka10001 현재가",
+          ],
+        ]
+          .map(
+            (x) =>
+              `<article class="kpi"><div class="k">${x[0]}</div><div class="v">${x[1]}</div><div class="n">${x[2]}</div></article>`,
+          )
+          .join("");
+        $("#topBars").innerHTML = top
+          .map(
+            (r) =>
+              `<div class="bar-row"><span class="bar-label">${esc(r.name)}</span><span class="bar-track"><span class="bar-fill" style="width:${(num(r.weight) / num(top[0].weight)) * 100}%"></span></span><span class="bar-value">${pct(num(r.weight))}</span></div>`,
+          )
+          .join("");
+        $("#sectorBars").innerHTML =
+          '<div class="bar-row"><span class="bar-label">업종 원천 미연결</span><span class="bar-track"><span class="bar-fill" style="width:100%;opacity:.35"></span></span><span class="bar-value">—</span></div>';
+        $("#rows").innerHTML = rows
+          .map(
+            (r, i) =>
+              `<tr><td class="rank">${fmt(i + 1)}</td><td class="name">${esc(r.name)}</td><td>${esc(r.ticker)}</td><td class="muted">${esc(r.sector || "—")}</td><td>${fmt(r.price)}원</td><td class="muted">—</td><td>${pct(num(r.weight))}</td><td>${fmt(r.market_cap_eok)}억원</td></tr>`,
+          )
+          .join("");
+        $("#empty").hidden = rows.length > 0;
+        $("#resultCount").textContent =
+          `${fmt(rows.length)}개 표시 · 공식 지수 비중은 KRX 원본이 연결되기 전까지 표시하지 않습니다.`;
+        $("#foot").innerHTML =
+          `기준일 ${esc(data.as_of)} · 수집 ${esc(data.collected_at_kst)} · 구성목록: <a href="${esc(data.source.url)}" target="_blank" rel="noreferrer">네이버 증권 KOSPI200</a> · 현재가·시가총액·유통비율: ${esc(data.source.market_data_source)} · 표의 유통시총 비중은 구성종목의 키움 유통시총 합계로 계산한 참고값이며 KOSPI 200 공식 비중이 아닙니다.`;
+      }
+      async function load() {
+        try {
+          const manifest = await fetch("index-radar-data/manifest.json", {
+            cache: "no-store",
+          }).then((r) => {
+            if (!r.ok) throw Error(r.status);
+            return r.json();
+          });
+          data = await fetch(manifest.indexes.kospi200.latest, {
+            cache: "no-store",
+          }).then((r) => {
+            if (!r.ok) throw Error(r.status);
+            return r.json();
+          });
+          $("#status").textContent =
+            `최신 수집 ${data.collected_at_kst} · EOD/정적 스냅샷`;
+          if (data.quality_flags.length) {
+            $("#notice").textContent =
+              "데이터 상태: " +
+              data.quality_flags
+                .map(
+                  (x) =>
+                    ({
+                      non_krx_constituent_source:
+                        "구성목록 KRX 원본 교차검증 대기",
+                      official_weight_unavailable: "공식 지수 비중 미연결",
+                      index_shares_unavailable: "KRX 지수주식수 미연결",
+                      sector_source_unavailable: "업종 원천 미연결",
+                      kiwoom_enrichment_partial: "키움 보강 일부 실패",
+                      unexpected_constituent_count:
+                        "원본 목록 종목 수 확인 필요",
+                    })[x] || x,
+                )
+                .join(" · ");
+            $("#notice").classList.add("show");
+          }
+          render();
+        } catch (e) {
+          $("#status").textContent = "데이터를 불러오지 못했습니다.";
+          $("#notice").textContent =
+            "지수 데이터 파일을 확인한 뒤 다시 시도하세요. " + e.message;
+          $("#notice").classList.add("show");
+        }
+      }
+      $("#query").addEventListener("input", (e) =>
+        setState({ q: e.target.value.trim() }),
+      );
+      $("#sort").addEventListener("change", (e) =>
+        setState({ sort: e.target.value }),
+      );
+      $("#headerSearch").addEventListener("submit", (e) => {
+        e.preventDefault();
+        location.href =
+          "index.html#search?q=" + encodeURIComponent(e.currentTarget.q.value);
+      });
+      load();
+    </script>
+  </body>
+</html>

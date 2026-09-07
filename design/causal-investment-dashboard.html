@@ -1,0 +1,585 @@
+<div id="macro-causal-dashboard">
+  <style>
+    #macro-causal-dashboard {
+      --cid-bg: light-dark(#f4f6f8, #0d1117);
+      --cid-surface: light-dark(#ffffff, #151b23);
+      --cid-surface-2: light-dark(#eef2f6, #1c2530);
+      --cid-text: light-dark(#17202b, #eef3f8);
+      --cid-muted: light-dark(#617080, #9baaba);
+      --cid-line: light-dark(#cbd4de, #334152);
+      --cid-positive: light-dark(#16794b, #52d49b);
+      --cid-negative: light-dark(#bd3b48, #ff7885);
+      --cid-warning: light-dark(#9a6500, #f5c45b);
+      --cid-focus: light-dark(#315bd6, #86a7ff);
+      --cid-node: light-dark(#ffffff, #202a36);
+      color: var(--cid-text);
+      background: var(--cid-bg);
+      font-family: "Pretendard Variable", Pretendard, system-ui, sans-serif;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    #macro-causal-dashboard * { box-sizing: border-box; }
+    #macro-causal-dashboard button,
+    #macro-causal-dashboard select { font: inherit; }
+    #macro-causal-dashboard .cid-shell { min-height: 690px; }
+    #macro-causal-dashboard .cid-topbar {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      padding: 14px 18px;
+      background: var(--cid-surface);
+      border-bottom: 1px solid var(--cid-line);
+    }
+    #macro-causal-dashboard .cid-brand { font-weight: 500; white-space: nowrap; }
+    #macro-causal-dashboard .cid-search {
+      flex: 1;
+      min-width: 120px;
+      padding: 9px 12px;
+      color: var(--cid-muted);
+      background: var(--cid-surface-2);
+      border-radius: 8px;
+    }
+    #macro-causal-dashboard .cid-top-action {
+      border: 1px solid var(--cid-line);
+      background: transparent;
+      color: var(--cid-text);
+      padding: 8px 11px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #macro-causal-dashboard .cid-body {
+      display: grid;
+      grid-template-columns: 160px minmax(0, 1fr) 250px;
+      min-height: 636px;
+    }
+    #macro-causal-dashboard .cid-sidebar,
+    #macro-causal-dashboard .cid-detail { background: var(--cid-surface); }
+    #macro-causal-dashboard .cid-sidebar {
+      border-right: 1px solid var(--cid-line);
+      padding: 18px 12px;
+    }
+    #macro-causal-dashboard .cid-detail {
+      border-left: 1px solid var(--cid-line);
+      padding: 18px;
+    }
+    #macro-causal-dashboard .cid-eyebrow {
+      margin: 0 0 8px;
+      color: var(--cid-muted);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .04em;
+    }
+    #macro-causal-dashboard .cid-nav {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: var(--cid-muted);
+      text-align: left;
+      padding: 10px 9px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #macro-causal-dashboard .cid-nav[aria-current="page"] {
+      background: var(--cid-surface-2);
+      color: var(--cid-text);
+      font-weight: 500;
+    }
+    #macro-causal-dashboard .cid-nav[aria-pressed="true"] {
+      background: var(--cid-surface-2);
+      color: var(--cid-text);
+      font-weight: 500;
+    }
+    #macro-causal-dashboard .cid-main { min-width: 0; padding: 16px; }
+    #macro-causal-dashboard .cid-context {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+    #macro-causal-dashboard h1,
+    #macro-causal-dashboard h2,
+    #macro-causal-dashboard h3,
+    #macro-causal-dashboard p { margin-top: 0; }
+    #macro-causal-dashboard h1 { margin-bottom: 5px; font-size: 19px; font-weight: 500; }
+    #macro-causal-dashboard h2 { margin-bottom: 5px; font-size: 16px; font-weight: 500; }
+    #macro-causal-dashboard h3 { margin: 18px 0 7px; font-size: 13px; font-weight: 500; }
+    #macro-causal-dashboard .cid-sub { color: var(--cid-muted); font-size: 13px; }
+    #macro-causal-dashboard .cid-horizon {
+      display: flex;
+      gap: 5px;
+      background: var(--cid-surface);
+      padding: 4px;
+      border-radius: 9px;
+    }
+    #macro-causal-dashboard .cid-horizon button {
+      border: 0;
+      background: transparent;
+      color: var(--cid-muted);
+      padding: 6px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #macro-causal-dashboard .cid-horizon button[aria-pressed="true"] {
+      background: var(--cid-surface-2);
+      color: var(--cid-text);
+    }
+    #macro-causal-dashboard .cid-canvas {
+      background: var(--cid-surface);
+      border-radius: 12px;
+      overflow: hidden;
+      min-height: 488px;
+      position: relative;
+    }
+    #macro-causal-dashboard .cid-legend {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding: 11px 14px;
+      color: var(--cid-muted);
+      font-size: 12px;
+      border-bottom: 1px solid var(--cid-line);
+    }
+    #macro-causal-dashboard .cid-legend span { display: inline-flex; gap: 6px; align-items: center; }
+    #macro-causal-dashboard .cid-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cid-focus); }
+    #macro-causal-dashboard .cid-sign { font-weight: 500; }
+    #macro-causal-dashboard .cid-sign.pos { color: var(--cid-positive); }
+    #macro-causal-dashboard .cid-sign.neg { color: var(--cid-negative); }
+    #macro-causal-dashboard .cid-desktop-graph { width: 100%; height: 445px; display: block; }
+    #macro-causal-dashboard .cid-edge { fill: none; stroke: var(--cid-line); stroke-width: 2; marker-end: url(#cid-arrow); }
+    #macro-causal-dashboard .cid-edge.hot { stroke: var(--cid-negative); stroke-width: 2.5; }
+    #macro-causal-dashboard .cid-edge.policy { stroke-dasharray: 6 5; }
+    #macro-causal-dashboard .cid-node rect {
+      fill: var(--cid-node);
+      stroke: var(--cid-line);
+      stroke-width: 1.3;
+      rx: 9;
+    }
+    #macro-causal-dashboard .cid-node text { fill: var(--cid-text); font-size: 14px; pointer-events: none; }
+    #macro-causal-dashboard .cid-node .small { fill: var(--cid-muted); font-size: 12.5px; }
+    #macro-causal-dashboard .cid-node { cursor: pointer; }
+    #macro-causal-dashboard .cid-node:focus rect,
+    #macro-causal-dashboard .cid-node.selected rect { stroke: var(--cid-focus); stroke-width: 3; }
+    #macro-causal-dashboard .cid-link-label { fill: var(--cid-muted); font-size: 12.5px; }
+    #macro-causal-dashboard .cid-link-label.neg { fill: var(--cid-negative); }
+    #macro-causal-dashboard .cid-scenario-panel[hidden] { display: none; }
+    #macro-causal-dashboard .cid-rate-map { padding: 16px; }
+    #macro-causal-dashboard .cid-rate-root { display: flex; justify-content: center; }
+    #macro-causal-dashboard .cid-rate-node {
+      width: 100%;
+      min-height: 52px;
+      border: 1px solid var(--cid-line);
+      background: var(--cid-node);
+      color: var(--cid-text);
+      padding: 9px;
+      border-radius: 9px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    #macro-causal-dashboard .cid-rate-root .cid-rate-node { max-width: 230px; border-color: var(--cid-focus); }
+    #macro-causal-dashboard .cid-rate-node.selected { box-shadow: 0 0 0 2px var(--cid-focus); }
+    #macro-causal-dashboard .cid-rate-node span { display: block; margin-top: 3px; color: var(--cid-muted); font-size: 11px; }
+    #macro-causal-dashboard .cid-rate-arrow { min-height: 22px; text-align: center; color: var(--cid-negative); font-size: 12px; }
+    #macro-causal-dashboard .cid-rate-lanes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+    #macro-causal-dashboard .cid-rate-lane { padding: 10px; background: var(--cid-surface-2); border-radius: 10px; }
+    #macro-causal-dashboard .cid-rate-lane h3 { margin: 0 0 9px; text-align: center; color: var(--cid-muted); }
+    #macro-causal-dashboard .cid-rate-feedback { margin-top: 10px; }
+    #macro-causal-dashboard .cid-mobile-chain { display: none; padding: 12px; }
+    #macro-causal-dashboard .cid-mobile-node {
+      width: 100%;
+      border: 1px solid var(--cid-line);
+      background: var(--cid-node);
+      color: var(--cid-text);
+      padding: 12px;
+      border-radius: 9px;
+      text-align: left;
+      cursor: pointer;
+    }
+    #macro-causal-dashboard .cid-mobile-edge { text-align: center; color: var(--cid-negative); padding: 4px; }
+    #macro-causal-dashboard .cid-detail-head { display: flex; justify-content: space-between; gap: 8px; }
+    #macro-causal-dashboard .cid-badge {
+      display: inline-block;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: var(--cid-surface-2);
+      color: var(--cid-muted);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+    #macro-causal-dashboard .cid-detail p,
+    #macro-causal-dashboard .cid-detail li { color: var(--cid-muted); font-size: 12px; line-height: 1.55; }
+    #macro-causal-dashboard .cid-detail ul { padding-left: 18px; margin: 0; }
+    #macro-causal-dashboard .cid-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    #macro-causal-dashboard .cid-meta div { padding: 9px; background: var(--cid-surface-2); border-radius: 8px; }
+    #macro-causal-dashboard .cid-meta b { display: block; margin-top: 3px; font-size: 12px; font-weight: 500; }
+    #macro-causal-dashboard .cid-meta span { color: var(--cid-muted); font-size: 11px; }
+    #macro-causal-dashboard .cid-source {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      border: 0;
+      border-top: 1px solid var(--cid-line);
+      background: transparent;
+      color: var(--cid-text);
+      padding: 10px 0;
+      text-align: left;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    #macro-causal-dashboard .cid-source span { color: var(--cid-muted); }
+    #macro-causal-dashboard .cid-status { color: var(--cid-positive); }
+    @media (max-width: 900px) {
+      #macro-causal-dashboard .cid-body { grid-template-columns: 1fr 250px; }
+      #macro-causal-dashboard .cid-sidebar { display: none; }
+    }
+    @media (max-width: 820px) {
+      #macro-causal-dashboard .cid-body { display: block; }
+      #macro-causal-dashboard .cid-detail { border-left: 0; border-top: 1px solid var(--cid-line); }
+      #macro-causal-dashboard .cid-desktop-graph { display: none; }
+      #macro-causal-dashboard .cid-mobile-chain { display: block; }
+      #macro-causal-dashboard .cid-canvas { min-height: 0; }
+    }
+    @media (max-width: 680px) {
+      #macro-causal-dashboard .cid-topbar { flex-wrap: wrap; }
+      #macro-causal-dashboard .cid-search { order: 3; flex-basis: 100%; }
+      #macro-causal-dashboard .cid-body { display: block; }
+      #macro-causal-dashboard .cid-main { padding: 12px; }
+      #macro-causal-dashboard .cid-detail { border-left: 0; border-top: 1px solid var(--cid-line); }
+      #macro-causal-dashboard .cid-context { display: block; }
+      #macro-causal-dashboard .cid-horizon { margin-top: 10px; width: max-content; }
+      #macro-causal-dashboard .cid-desktop-graph { display: none; }
+      #macro-causal-dashboard .cid-mobile-chain { display: block; }
+      #macro-causal-dashboard .cid-canvas { min-height: 0; }
+      #macro-causal-dashboard .cid-rate-lanes { grid-template-columns: 1fr; }
+      #macro-causal-dashboard .cid-rate-lane { padding: 9px; }
+    }
+  </style>
+
+  <div class="cid-shell">
+    <header class="cid-topbar">
+      <div class="cid-brand">MacroWeave</div>
+      <div class="cid-search" role="search">변수·기업·테마 검색&nbsp;&nbsp; ⌘K</div>
+      <button class="cid-top-action" type="button">새 인과 추가</button>
+    </header>
+
+    <div class="cid-body">
+      <aside class="cid-sidebar" aria-label="주요 메뉴">
+        <p class="cid-eyebrow">WORKSPACE</p>
+        <button class="cid-nav" type="button" aria-current="page">인과 지도</button>
+        <button class="cid-nav" type="button">시나리오</button>
+        <button class="cid-nav" type="button">관심 종목</button>
+        <button class="cid-nav" type="button">근거 보관함</button>
+        <h3>저장된 뷰</h3>
+        <button class="cid-nav" type="button" data-scenario="energy" aria-pressed="true">에너지 → 반도체</button>
+        <button class="cid-nav" type="button" data-scenario="rates" aria-pressed="false">장기금리 → 자산가격</button>
+        <button class="cid-nav" type="button">원화 약세 경로</button>
+      </aside>
+
+      <main class="cid-main">
+        <div class="cid-context">
+          <div>
+            <h1 id="cid-view-title">에너지 가격 충격 → 한국 반도체</h1>
+            <div class="cid-sub" id="cid-view-sub">기본 충격: 국제 에너지 가격 +20% · 대한민국 · 중기</div>
+          </div>
+          <div class="cid-horizon" aria-label="분석 시계열">
+            <button type="button" data-horizon="단기" aria-pressed="false">단기</button>
+            <button type="button" data-horizon="중기" aria-pressed="true">중기</button>
+            <button type="button" data-horizon="장기" aria-pressed="false">장기</button>
+          </div>
+        </div>
+
+        <section class="cid-canvas" aria-label="인과 네트워크">
+          <div class="cid-legend">
+            <span><i class="cid-dot"></i> 선택 경로</span>
+            <span><b class="cid-sign pos">＋</b> 같은 방향</span>
+            <span><b class="cid-sign neg">−</b> 반대 방향</span>
+            <span>┄ 조건부·정책 시차</span>
+          </div>
+          <div class="cid-scenario-panel" data-scenario-panel="energy">
+          <svg class="cid-desktop-graph" viewBox="0 0 750 445" role="img" aria-labelledby="cid-svg-title cid-svg-desc">
+            <title id="cid-svg-title">에너지 가격 충격에서 한국 달러 유동성까지의 인과 경로</title>
+            <desc id="cid-svg-desc">국제 에너지 가격 상승이 발전 원가와 전기요금, AI 데이터센터 비용, 반도체 수요와 기업 실적, 경상수지를 거쳐 달러 수급에 영향을 주는 조건부 경로입니다.</desc>
+            <defs>
+              <marker id="cid-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke"></path>
+              </marker>
+            </defs>
+
+            <path class="cid-edge hot" d="M147,112 C178,112 180,112 212,112"></path>
+            <path class="cid-edge hot policy" d="M347,112 C378,112 380,112 412,112"></path>
+            <path class="cid-edge hot" d="M547,112 C578,112 580,112 612,112"></path>
+            <path class="cid-edge" d="M680,146 C680,180 505,174 505,210"></path>
+            <path class="cid-edge hot" d="M437,246 C405,246 405,246 373,246"></path>
+            <path class="cid-edge hot" d="M238,246 C205,246 205,246 173,246"></path>
+            <path class="cid-edge" d="M305,278 C305,310 275,312 275,344"></path>
+            <path class="cid-edge hot" d="M343,380 C375,380 375,380 407,380"></path>
+            <path class="cid-edge hot" d="M542,380 C575,380 575,380 607,380"></path>
+            <path class="cid-edge" d="M82,78 C82,26 680,26 680,78"></path>
+
+            <text class="cid-link-label" x="176" y="101">＋ 높음</text>
+            <text class="cid-link-label" x="374" y="101">＋ 정책 시차</text>
+            <text class="cid-link-label neg" x="574" y="101">− 중간</text>
+            <text class="cid-link-label neg" x="387" y="236">− 중간</text>
+            <text class="cid-link-label neg" x="190" y="236">− 중간</text>
+            <text class="cid-link-label neg" x="309" y="319">− 중간</text>
+            <text class="cid-link-label neg" x="373" y="370">− 중간</text>
+            <text class="cid-link-label neg" x="573" y="370">− 중간</text>
+            <text class="cid-link-label" x="281" y="38">인플레이션·금리 경로</text>
+
+            <g class="cid-node" data-node="energy" role="button" aria-label="국제 에너지 가격 상승" tabindex="0">
+              <rect x="12" y="78" width="135" height="68"></rect>
+              <text x="79" y="103" text-anchor="middle">국제 에너지 가격</text>
+              <text x="79" y="123" text-anchor="middle">천연가스·석탄·유가 ↑</text>
+              <text class="small" x="79" y="138" text-anchor="middle">외생 충격</text>
+            </g>
+            <g class="cid-node" data-node="generation" role="button" aria-label="발전 연료비와 도매 전력가격 상승" tabindex="0">
+              <rect x="212" y="78" width="135" height="68"></rect>
+              <text x="279" y="103" text-anchor="middle">발전 연료비·SMP</text>
+              <text x="279" y="123" text-anchor="middle">상승 압력</text>
+              <text class="small" x="279" y="138" text-anchor="middle">연료 믹스 민감</text>
+            </g>
+            <g class="cid-node" data-node="tariff" role="button" aria-label="산업용 전기요금 상승" tabindex="0">
+              <rect x="412" y="78" width="135" height="68"></rect>
+              <text x="479" y="103" text-anchor="middle">산업용 전기요금</text>
+              <text x="479" y="123" text-anchor="middle">상승</text>
+              <text class="small" x="479" y="138" text-anchor="middle">정책·시차 조건부</text>
+            </g>
+            <g class="cid-node selected" data-node="ai" role="button" aria-label="AI 데이터센터 채산성 하락" tabindex="0">
+              <rect x="612" y="78" width="135" height="68"></rect>
+              <text x="679" y="103" text-anchor="middle">AI 데이터센터</text>
+              <text x="679" y="123" text-anchor="middle">채산성·증설 여력 ↓</text>
+              <text class="small" x="679" y="138" text-anchor="middle">현재 선택됨</text>
+            </g>
+            <g class="cid-node" data-node="server" role="button" aria-label="AI 서버 투자 증가율 둔화" tabindex="0">
+              <rect x="437" y="210" width="135" height="68"></rect>
+              <text x="504" y="235" text-anchor="middle">AI 서버 투자</text>
+              <text x="504" y="255" text-anchor="middle">증가율 둔화</text>
+              <text class="small" x="504" y="270" text-anchor="middle">CAPEX 경로</text>
+            </g>
+            <g class="cid-node" data-node="memory" role="button" aria-label="메모리 반도체 수요와 가격 하락 압력" tabindex="0">
+              <rect x="238" y="210" width="135" height="68"></rect>
+              <text x="305" y="235" text-anchor="middle">HBM·DRAM·NAND</text>
+              <text x="305" y="255" text-anchor="middle">수요·가격 하락 압력</text>
+              <text class="small" x="305" y="270" text-anchor="middle">재고·공급 규율 민감</text>
+            </g>
+            <g class="cid-node" data-node="earnings" role="button" aria-label="삼성전자와 SK하이닉스 실적 하락 압력" tabindex="0">
+              <rect x="38" y="210" width="135" height="68"></rect>
+              <text x="105" y="235" text-anchor="middle">삼성전자·SK하이닉스</text>
+              <text x="105" y="255" text-anchor="middle">실적 하락 압력</text>
+              <text class="small" x="105" y="270" text-anchor="middle">기업·산업 노드</text>
+            </g>
+            <g class="cid-node" data-node="exports" role="button" aria-label="반도체 수출 감소" tabindex="0">
+              <rect x="208" y="344" width="135" height="68"></rect>
+              <text x="275" y="369" text-anchor="middle">반도체 수출</text>
+              <text x="275" y="389" text-anchor="middle">감소 압력</text>
+              <text class="small" x="275" y="404" text-anchor="middle">실적과 병렬 결과</text>
+            </g>
+            <g class="cid-node" data-node="current" role="button" aria-label="한국 경상수지 흑자 감소" tabindex="0">
+              <rect x="407" y="344" width="135" height="68"></rect>
+              <text x="474" y="369" text-anchor="middle">한국 경상수지 흑자</text>
+              <text x="474" y="389" text-anchor="middle">감소 압력</text>
+              <text class="small" x="474" y="404" text-anchor="middle">수입액 경로도 반영</text>
+            </g>
+            <g class="cid-node" data-node="dollar" role="button" aria-label="달러 순공급 감소와 원화 약세 압력" tabindex="0">
+              <rect x="607" y="344" width="135" height="68"></rect>
+              <text x="674" y="369" text-anchor="middle">달러 순공급 ↓</text>
+              <text x="674" y="389" text-anchor="middle">원화 약세 압력</text>
+              <text class="small" x="674" y="404" text-anchor="middle">자본수지와 함께 판단</text>
+            </g>
+          </svg>
+
+          <div class="cid-mobile-chain" aria-label="모바일 인과 경로">
+            <button class="cid-mobile-node" data-node="energy" type="button">국제 에너지 가격 ↑</button><div class="cid-mobile-edge">＋ ↓</div>
+            <button class="cid-mobile-node" data-node="generation" type="button">발전 연료비·SMP 상승 압력</button><div class="cid-mobile-edge">＋ 조건부 ↓</div>
+            <button class="cid-mobile-node" data-node="tariff" type="button">산업용 전기요금 ↑</button><div class="cid-mobile-edge">− ↓</div>
+            <button class="cid-mobile-node" data-node="ai" type="button">AI 데이터센터 채산성·증설 여력 ↓</button><div class="cid-mobile-edge">− ↓</div>
+            <button class="cid-mobile-node" data-node="memory" type="button">메모리 수요·가격 하락 압력</button><div class="cid-mobile-edge">− ↓</div>
+            <button class="cid-mobile-node" data-node="current" type="button">경상수지 흑자·달러 순공급 감소 압력</button>
+          </div>
+          </div>
+
+          <div class="cid-scenario-panel" data-scenario-panel="rates" hidden>
+            <div class="cid-rate-map" role="group" aria-label="장기국채금리 상승이 자산가격에 전달되는 경로">
+              <div class="cid-rate-root">
+                <button class="cid-rate-node" data-node="lt-rate" type="button">
+                  장기국채금리 상승
+                  <span>실질금리 · 기대인플레이션 · 기간프리미엄을 분리</span>
+                </button>
+              </div>
+              <div class="cid-rate-arrow">＋ ↓ 금융여건 긴축</div>
+              <div class="cid-rate-lanes">
+                <section class="cid-rate-lane" aria-label="주거용 부동산 경로">
+                  <h3>주거용 부동산</h3>
+                  <button class="cid-rate-node" data-node="mortgage-rate" type="button">주담대 금리·DSR 부담 ↑</button>
+                  <div class="cid-rate-arrow">− ↓ 1–6개월</div>
+                  <button class="cid-rate-node" data-node="affordability" type="button">구매 가능 금액·주택수요 ↓</button>
+                  <div class="cid-rate-arrow">− ↓ 거래량 선행</div>
+                  <button class="cid-rate-node" data-node="home-price" type="button">거래량 ↓ → 주택가격 하락 압력<span>공급·규제·지역별 차이 큼</span></button>
+                </section>
+                <section class="cid-rate-lane" aria-label="주식시장 경로">
+                  <h3>주식시장</h3>
+                  <button class="cid-rate-node" data-node="discount-rate" type="button">할인율·무위험 대안수익률 ↑</button>
+                  <div class="cid-rate-arrow">− ↓ 즉시–6개월</div>
+                  <button class="cid-rate-node" data-node="equity-multiple" type="button">PER·PBR 등 밸류에이션 배수 ↓</button>
+                  <div class="cid-rate-arrow">− ↓</div>
+                  <button class="cid-rate-node" data-node="stock-price" type="button">주가 하락 압력<span>장기 성장주·고밸류 종목 민감</span></button>
+                </section>
+                <section class="cid-rate-lane" aria-label="기업과 상업용 부동산 경로">
+                  <h3>기업·상업용 부동산</h3>
+                  <button class="cid-rate-node" data-node="refinancing" type="button">회사채·PF 차환비용 ↑</button>
+                  <div class="cid-rate-arrow">− ↓ 만기 도래 시</div>
+                  <button class="cid-rate-node" data-node="caprate" type="button">투자·이익 ↓ / 요구수익률·Cap rate ↑</button>
+                  <div class="cid-rate-arrow">− ↓ 6–36개월</div>
+                  <button class="cid-rate-node" data-node="cre-price" type="button">상업용 가격·PF 사업성 ↓<span>연체·매각 압력은 후행</span></button>
+                </section>
+              </div>
+              <div class="cid-rate-feedback">
+                <button class="cid-rate-node" data-node="credit-loop" type="button">담보가치·자산효과 ↓ → 대출태도 강화·소비·투자 ↓ → 이익·자산가격 추가 압력</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <aside class="cid-detail" aria-live="polite" aria-label="선택한 인과 상세">
+        <div class="cid-detail-head">
+          <div>
+            <p class="cid-eyebrow">선택한 노드</p>
+            <h2 id="cid-detail-title">AI 데이터센터 채산성</h2>
+          </div>
+          <span class="cid-badge" id="cid-confidence">신뢰도 중간</span>
+        </div>
+        <p id="cid-detail-summary">전력비 상승은 운영비를 높이지만, 실제 투자 축소 여부는 전력계약·지역·모델 효율·수요 성장에 좌우됩니다.</p>
+        <div class="cid-meta">
+          <div><span>예상 시차</span><b id="cid-lag">6–24개월</b></div>
+          <div><span>민감도</span><b id="cid-sensitivity">중간</b></div>
+        </div>
+        <h3>성립 조건</h3>
+        <ul id="cid-conditions">
+          <li>전기요금 상승분이 장기 전력계약으로 상쇄되지 않음</li>
+          <li>AI 서비스 매출 증가가 비용 증가보다 느림</li>
+        </ul>
+        <h3>반대 근거·한계</h3>
+        <ul id="cid-limits">
+          <li>대형 사업자는 전력비보다 GPU 조달과 수요 선점이 더 중요할 수 있음</li>
+          <li>효율 개선과 자체 전원 조달이 비용 충격을 완충할 수 있음</li>
+        </ul>
+        <h3>근거</h3>
+        <button class="cid-source" id="cid-source-1" type="button">IEA 전력·데이터센터 자료 <span>1차 자료</span></button>
+        <button class="cid-source" id="cid-source-2" type="button">기업 CAPEX 가이던스 <span>실적 발표</span></button>
+        <p class="cid-status">● 최근 검토: 예시 데이터</p>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const root = document.getElementById('macro-causal-dashboard');
+      const details = {
+        energy: ['국제 에너지 가격', '천연가스·석탄·유가는 동행하기도 하지만 공급망과 발전 믹스가 달라 별도 변수로 저장해야 합니다.', '즉시–6개월', '높음', ['충격의 지속 기간과 지역 벤치마크를 지정', '환율 효과와 원자재 가격 효과를 분리'], ['유가와 전력가격의 직접 연결은 국가별로 약할 수 있음', '원전·재생에너지 비중이 높으면 전가율이 낮아짐']],
+        generation: ['발전 연료비·SMP', 'LNG·석탄 가격과 환율은 발전 원가 및 도매 전력가격에 상승 압력을 줍니다.', '1–6개월', '높음', ['연료비 연동 구조가 작동', '발전 믹스와 재고가 크게 바뀌지 않음'], ['요금 규제 시 소비자 요금보다 발전·유틸리티 손실로 흡수', '장기계약과 헤지가 단기 충격을 완화']],
+        tariff: ['산업용 전기요금', '원가 상승이 최종 요금에 반영되는 정도와 시점은 정책 결정에 크게 좌우됩니다.', '3–18개월', '중간', ['정책당국이 원가 회수를 허용', '연료비 조정제 또는 별도 인상 시행'], ['동결 시 한국전력 재무 악화 경로로 분기', '산업별 할인과 계약 구조가 다름']],
+        ai: ['AI 데이터센터 채산성', '전력비 상승은 운영비를 높이지만, 실제 투자 축소 여부는 전력계약·지역·모델 효율·수요 성장에 좌우됩니다.', '6–24개월', '중간', ['전기요금 상승분이 장기 전력계약으로 상쇄되지 않음', 'AI 서비스 매출 증가가 비용 증가보다 느림'], ['대형 사업자는 전력비보다 GPU 조달과 수요 선점이 더 중요할 수 있음', '효율 개선과 자체 전원 조달이 비용 충격을 완충할 수 있음']],
+        server: ['AI 서버 투자', '채산성 악화가 신규 데이터센터와 가속기 주문의 증가율 둔화로 이어지는 경로입니다.', '9–24개월', '중간', ['전력 제약이 실제 투자 승인에 반영', '클라우드 수요가 비용 충격을 상쇄하지 못함'], ['이미 확정된 CAPEX는 단기에 유지될 수 있음', '지역 이전으로 총투자가 유지될 수 있음']],
+        memory: ['메모리 수요·가격', 'AI 서버 투자 둔화는 HBM과 서버 DRAM 수요에 부담이지만, 가격은 공급 규율과 재고에도 크게 좌우됩니다.', '9–30개월', '중간', ['서버 출하량 또는 탑재량 증가율이 둔화', '공급 감산이 수요 둔화보다 늦음'], ['HBM 공급 부족이 가격을 지지할 수 있음', '일반 DRAM·NAND와 HBM의 사이클은 다를 수 있음']],
+        earnings: ['삼성전자·SK하이닉스 실적', '메모리 가격과 출하량 변화가 매출·마진에 전이되지만 제품 믹스와 환율이 완충 또는 증폭합니다.', '12–30개월', '중간', ['메모리 부문 이익 민감도가 유지', '환율·원가 효과를 함께 반영'], ['원화 약세는 달러 매출 환산에 우호적', '파운드리·모바일 등 다른 사업이 상쇄 가능']],
+        exports: ['반도체 수출', '기업 실적과 수출은 관련되지만 수출액은 물량과 달러 가격을 분리해 봐야 합니다.', '12–30개월', '중간', ['한국 생산·수출 비중이 유지', '가격 하락이 물량 증가보다 큼'], ['해외 생산 확대 시 기업 실적과 한국 수출이 분리', '재고 재축적이 물량을 지지할 수 있음']],
+        current: ['한국 경상수지', '반도체 수출 감소와 에너지 수입액 증가는 상품수지를 동시에 악화시킬 수 있습니다.', '3–30개월', '중간–높음', ['서비스·본원소득수지의 상쇄가 제한적', '에너지 수입 물량이 크게 줄지 않음'], ['해외 투자소득이 상품수지 악화를 상쇄 가능', '내수 둔화가 수입을 줄여 흑자를 방어할 수 있음']],
+        dollar: ['달러 순공급·원화', '경상수지 흑자 축소는 달러 순유입을 줄이지만 환율은 자본수지·금리차·위험선호까지 함께 결정합니다.', '즉시–24개월', '중간', ['자본유입이 감소분을 상쇄하지 않음', '달러 강세 또는 위험회피가 동반'], ['외국인 증권자금 유입이 원화 약세를 막을 수 있음', '기업의 환헤지와 외환보유액 정책이 변동성을 완화']],
+        'lt-rate': ['장기국채금리', '장기금리는 예상 단기금리, 기대인플레이션, 실질금리와 기간프리미엄이 합쳐진 결과입니다. 상승 원인에 따라 자산가격 충격이 크게 달라집니다.', '즉시–36개월', '높음', ['명목금리뿐 아니라 실질금리 상승 여부를 확인', '일시적 급등보다 높은 수준이 지속'], ['성장 기대 상승에 따른 금리 상승은 기업이익·임대료 개선이 할인율 충격을 상쇄할 수 있음', '기대인플레이션만 오른 경우 실물자산의 명목가격이 방어될 수 있음']],
+        'mortgage-rate': ['주담대 금리·DSR 부담', '장기 시장금리 상승은 은행채·고정형 주담대 금리와 신규 차주의 원리금 부담에 전이되어 차입 가능액을 줄일 수 있습니다.', '1–12개월', '높음', ['은행 조달금리와 대출 가산금리가 함께 하락하지 않음', '대출 규제와 상환심사가 유지'], ['정책대출·금리보조가 전이를 차단할 수 있음', '고정금리 기존 차주는 재가격 시점까지 충격이 작음']],
+        affordability: ['구매 가능 금액·주택수요', '같은 소득과 DSR 한도에서 금리가 오르면 가능한 대출 원금이 줄고 잠재 매수자의 구매력이 약해집니다.', '1–12개월', '높음', ['소득과 대출규제가 크게 완화되지 않음', '매수자가 레버리지에 의존'], ['현금 부자 중심 시장은 민감도가 낮음', '전세·세제·분양 규제가 수요를 다른 방향으로 움직일 수 있음']],
+        'home-price': ['주택가격', '주택은 거래가 느리고 매도자가 가격을 버틸 수 있어 거래량이 먼저 감소하고 가격 조정은 후행하는 경우가 많습니다.', '6–36개월', '중간', ['금리 상승이 충분히 오래 지속', '입주물량 또는 매도 압력이 수요 감소와 겹침'], ['공급 부족·지역 집중·정책 완화가 가격을 지지할 수 있음', '명목가격은 횡보하고 실질가격만 하락할 수 있음']],
+        'discount-rate': ['주식 할인율·대안수익률', '무위험금리가 오르면 미래 현금흐름의 현재가치가 낮아지고 채권의 상대 매력이 커져 주식의 요구수익률이 상승할 수 있습니다.', '즉시–6개월', '높음', ['실질금리 또는 주식 요구수익률이 상승', '예상 이익이 동시에 상향되지 않음'], ['위험프리미엄이 축소되거나 이익 전망이 크게 개선되면 주가가 동반 상승할 수 있음', '금리 상승 원인이 강한 성장이라면 가치주·금융주는 상대적으로 견조할 수 있음']],
+        'equity-multiple': ['주식 밸류에이션 배수', '할인율 상승은 동일한 이익 전망에서도 PER·PBR과 장기 성장자산의 현재가치를 낮추는 방향으로 작용합니다.', '즉시–12개월', '중간–높음', ['이익 추정치가 유지되는 동안 할인율이 상승', '높은 밸류에이션과 먼 미래 현금흐름 비중'], ['낮은 밸류에이션·높은 현금흐름 종목은 충격이 작을 수 있음', '자사주 매입과 풍부한 유동성이 배수 하락을 늦출 수 있음']],
+        'stock-price': ['주가 하락 압력', '주가는 할인율 경로에 즉시 반응하고, 이후 금융비용과 경기 둔화가 이익 추정치를 낮추면 두 번째 하락 경로가 열립니다.', '즉시–24개월', '중간–높음', ['금리 상승이 일시적이지 않음', '이익 증가율이 할인율 상승을 상쇄하지 못함'], ['금리와 주가는 성장 기대 개선 국면에서 함께 오를 수 있음', '업종별 부채·듀레이션·가격결정력이 달라 지수 영향이 균일하지 않음']],
+        refinancing: ['회사채·PF 차환비용', '장기금리와 신용스프레드 상승은 만기가 돌아오는 기업·PF의 이자비용과 차환 실패 위험을 높입니다.', '3–36개월', '높음', ['차입 만기가 도래하거나 변동금리 비중이 높음', '신용스프레드까지 확대'], ['장기 고정금리 부채와 충분한 현금은 충격을 지연', '은행·정책기관의 만기연장이 부실 인식을 늦출 수 있음']],
+        caprate: ['기업투자·Cap rate', '자금조달비용 상승은 한계 투자 프로젝트를 취소시키고, 부동산 요구수익률 상승은 같은 임대수익에 적용되는 평가가치를 낮춥니다.', '6–24개월', '중간–높음', ['임대료·영업현금흐름이 금리만큼 빠르게 늘지 않음', '거래시장의 요구수익률이 실제 감정가에 반영'], ['공실 하락과 임대료 상승이 Cap rate 충격을 상쇄할 수 있음', '거래 부진 때문에 평가가치 조정이 늦게 나타날 수 있음']],
+        'cre-price': ['상업용 부동산·PF 사업성', '요구수익률 상승, 금융비용 증가와 차환 압박이 겹치면 상업용 부동산 가치와 PF 수익성이 약해지고 매각 압력이 커질 수 있습니다.', '9–48개월', '중간–높음', ['높은 LTV·낮은 자기자본·만기 집중', '임대수익 또는 분양수입이 계획을 하회'], ['우량 입지와 장기 임대차는 방어력이 높음', '채권단의 만기연장으로 가격 발견과 손실 인식이 지연될 수 있음']],
+        'credit-loop': ['담보·신용 피드백', '자산가격 하락은 담보가치와 순자산을 줄여 대출태도를 강화하고, 소비·투자와 이익을 약화시켜 다시 자산가격에 압력을 줄 수 있습니다.', '12–60개월', '중간', ['높은 레버리지와 담보대출 의존', '은행·비은행의 손실흡수력이 제한'], ['자본이 충분한 금융기관과 거시건전성 완화가 악순환을 차단할 수 있음', '가계·기업의 디레버리징이 이미 진행된 경우 증폭이 작음']]
+      };
+
+      function selectNode(key) {
+        const d = details[key];
+        if (!d) return;
+        root.querySelectorAll('[data-node]').forEach(el => el.classList.toggle('selected', el.dataset.node === key));
+        root.querySelector('#cid-detail-title').textContent = d[0];
+        root.querySelector('#cid-detail-summary').textContent = d[1];
+        root.querySelector('#cid-lag').textContent = d[2];
+        root.querySelector('#cid-sensitivity').textContent = d[3];
+        root.querySelector('#cid-confidence').textContent = `신뢰도 ${d[3].includes('높음') ? '높음' : '중간'}`;
+        root.querySelector('#cid-conditions').innerHTML = d[4].map(x => `<li>${x}</li>`).join('');
+        root.querySelector('#cid-limits').innerHTML = d[5].map(x => `<li>${x}</li>`).join('');
+      }
+
+      function switchScenario(key) {
+        const isRates = key === 'rates';
+        root.querySelectorAll('[data-scenario-panel]').forEach(panel => {
+          panel.hidden = panel.dataset.scenarioPanel !== key;
+        });
+        root.querySelectorAll('[data-scenario]').forEach(button => {
+          button.setAttribute('aria-pressed', String(button.dataset.scenario === key));
+        });
+        root.querySelector('#cid-view-title').textContent = isRates
+          ? '장기국채금리 상승 → 부동산·주식'
+          : '에너지 가격 충격 → 한국 반도체';
+        root.querySelector('#cid-view-sub').textContent = isRates
+          ? '기본 충격: 장기 실질금리 상승 · 대한민국 · 장기'
+          : '기본 충격: 국제 에너지 가격 +20% · 대한민국 · 중기';
+        root.querySelectorAll('[data-horizon]').forEach(button => {
+          button.setAttribute('aria-pressed', String(button.dataset.horizon === (isRates ? '장기' : '중기')));
+        });
+        root.querySelector('#cid-source-1').innerHTML = isRates
+          ? '한국은행 통화신용정책보고서 <span>1차 자료</span>'
+          : 'IEA 전력·데이터센터 자료 <span>1차 자료</span>';
+        root.querySelector('#cid-source-2').innerHTML = isRates
+          ? 'Fed 통화정책 파급경로 연구 <span>연구·설명자료</span>'
+          : '기업 CAPEX 가이던스 <span>실적 발표</span>';
+        selectNode(isRates ? 'lt-rate' : 'ai');
+      }
+
+      root.querySelectorAll('[data-node]').forEach(el => {
+        el.addEventListener('click', () => selectNode(el.dataset.node));
+        el.addEventListener('keydown', event => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            selectNode(el.dataset.node);
+          }
+        });
+      });
+      root.querySelectorAll('[data-horizon]').forEach(button => {
+        button.addEventListener('click', () => {
+          root.querySelectorAll('[data-horizon]').forEach(b => b.setAttribute('aria-pressed', String(b === button)));
+        });
+      });
+      root.querySelectorAll('[data-scenario]').forEach(button => {
+        button.addEventListener('click', () => switchScenario(button.dataset.scenario));
+      });
+
+      const mockStyle = { density: 'balanced', showSidebar: true };
+      function applyMockStyle() {
+        const compact = mockStyle.density === 'compact';
+        root.querySelectorAll('.cid-rate-lane').forEach(lane => { lane.style.padding = compact ? '7px' : ''; });
+        const lanes = root.querySelector('.cid-rate-lanes');
+        if (lanes) lanes.style.gap = compact ? '6px' : '';
+        const sidebar = root.querySelector('.cid-sidebar');
+        sidebar.style.display = mockStyle.showSidebar ? '' : 'none';
+        root.querySelector('.cid-body').style.gridTemplateColumns = mockStyle.showSidebar ? '' : 'minmax(0, 1fr) 250px';
+      }
+      applyMockStyle();
+      if (globalThis.Tweak) {
+        const tweak = new Tweak({ container: root, onChange: applyMockStyle });
+        tweak.addSelect(mockStyle, 'density', { label: 'Graph density', options: [{ label: 'Balanced', value: 'balanced' }, { label: 'Compact', value: 'compact' }], reference: 'graph.density' });
+        tweak.addToggle(mockStyle, 'showSidebar', { label: 'Show navigation', reference: 'shell.sidebar' });
+      }
+    })();
+  </script>
+</div>

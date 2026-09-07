@@ -1,0 +1,10 @@
+.env
+__pycache__/
+data/.cache/
+.vercel/
+
+.vercel
+.env*
+
+# 작업용 스크래치 (어디에서도 참조되지 않음)
+scratch_*.html

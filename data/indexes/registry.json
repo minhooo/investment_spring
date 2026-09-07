@@ -1,0 +1,4 @@
+{
+  "schema_version": "1.0",
+  "indexes": [{"index_id": "kospi200", "name": "KOSPI 200", "provider": "KRX", "currency": "KRW", "timezone": "Asia/Seoul", "status": "active", "official_source_url": "https://data.krx.co.kr/contents/MDC/MDI/mdiLoader/index.cmd?menuId=MDCSTAT00601"}]
+}

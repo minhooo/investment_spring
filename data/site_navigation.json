@@ -1,0 +1,8 @@
+{
+  "items": [
+    {"key": "home", "label": "홈", "href": "index.html#home"},
+    {"key": "cases", "label": "사례 탐색", "href": "index.html#cases"},
+    {"key": "macro", "label": "거시 인과지도", "href": "macro.html"},
+    {"key": "radar", "label": "지수 레이더", "href": "index-radar.html"}
+  ]
+}

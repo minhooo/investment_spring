@@ -1,0 +1,280 @@
+{
+  "cases": [
+    {
+      "case_id": "1",
+      "title": "혼합형 유상증자와 비관련 인수 철회",
+      "summary": "공시 안에 섞여 있던 악재가 제거되면 어떤 변화가 생겼을까?",
+      "event_date": "2024-11-08",
+      "event_label": "공시",
+      "issue_ids": [
+        "rights",
+        "index-inclusion"
+      ],
+      "theme_ids": [
+        "ai-infra"
+      ],
+      "featured_pattern_ids": [
+        "악재분해",
+        "철회반등"
+      ],
+      "aliases": [
+        "PCB"
+      ]
+    },
+    {
+      "case_id": "2",
+      "title": "본업 증설형 유상증자와 수요 회복의 시차",
+      "summary": "자금용도가 타당해도 수요가 늦어지면 어떻게 달라질까?",
+      "event_date": "2025-03-14",
+      "event_label": "공시",
+      "theme_ids": [
+        "battery-ess",
+        "ai-infra"
+      ],
+      "featured_pattern_ids": [
+        "사이클역행증자",
+        "수요지연"
+      ],
+      "aliases": [
+        "SDI",
+        "ESS"
+      ]
+    },
+    {
+      "case_id": "3",
+      "title": "코스피200 특례편입과 기대 소진",
+      "summary": "편입 기대와 편입 이후의 주가를 이끈 자금은 같았을까?",
+      "event_date": "2023-12-08",
+      "event_label": "발표",
+      "theme_ids": [
+        "battery-ess"
+      ],
+      "featured_pattern_ids": [
+        "선반영과열",
+        "재료소진"
+      ],
+      "aliases": [
+        "코스피200",
+        "특례편입"
+      ]
+    },
+    {
+      "case_id": "4",
+      "title": "MSCI 편입과 별도의 사업 모멘텀",
+      "summary": "지수편입 뉴스를 지워도 기업을 살펴볼 이유가 남았을까?",
+      "event_date": "2024-05-15",
+      "event_label": "발표",
+      "theme_ids": [
+        "bio"
+      ],
+      "featured_pattern_ids": [
+        "선반영없음",
+        "덤편입"
+      ],
+      "aliases": [
+        "MSCI",
+        "정기리뷰"
+      ]
+    },
+    {
+      "case_id": "5",
+      "title": "증자 진행 신호와 이후 성과의 엇갈림",
+      "summary": "증자가 순조롭게 진행된 것과 사업의 수요가 도착한 것은 어떻게 달랐을까?",
+      "event_date": "2025-05-13",
+      "event_label": "공시",
+      "theme_ids": [
+        "battery-ess",
+        "ai-infra"
+      ],
+      "featured_pattern_ids": [
+        "혼합용도",
+        "수요지연"
+      ],
+      "aliases": [
+        "양극재",
+        "음극재",
+        "ESS"
+      ]
+    },
+    {
+      "case_id": "6",
+      "title": "시설자금 100%와 기대의 선반영",
+      "summary": "순수 시설투자는 초대형 희석을 언제부터 이겼고, 실제 실적은 어디까지 확인됐을까?",
+      "event_date": "2025-05-26",
+      "event_label": "공시",
+      "theme_ids": [
+        "energy-power"
+      ],
+      "featured_pattern_ids": [
+        "발행가상향",
+        "기대선반영"
+      ],
+      "aliases": [
+        "LS마린",
+        "해저케이블",
+        "해상풍력",
+        "CLV",
+        "포설선",
+        "HVDC",
+        "에너지고속도로"
+      ]
+    },
+    {
+      "case_id": "7",
+      "title": "낮은 희석률이 지켜주지 못한 것",
+      "summary": "희석 6.84%에 발행가는 할증이었고 자금은 100% 집행됐는데, 왜 결과는 아카이브 최악이었을까?",
+      "event_date": "2025-03-26",
+      "event_label": "공시",
+      "theme_ids": [
+        "battery-ess"
+      ],
+      "featured_pattern_ids": [
+        "실질분류",
+        "대주주불참"
+      ],
+      "aliases": [
+        "에코프로머티",
+        "전구체",
+        "니켈",
+        "MHP",
+        "RCPS",
+        "상환전환우선주",
+        "제3자배정",
+        "Green Eco Nickel",
+        "인도네시아"
+      ]
+    },
+    {
+      "case_id": "8",
+      "title": "채무상환형 유상증자와 두 개의 업황",
+      "summary": "주주자본으로 만기벽을 낮춘 뒤, 정유 회복과 배터리 캐즘은 어떻게 따로 움직였을까?",
+      "event_date": "2025-07-30",
+      "event_label": "공시",
+      "theme_ids": [
+        "energy-power",
+        "battery-ess"
+      ],
+      "featured_pattern_ids": [
+        "채무상환",
+        "반복증자"
+      ],
+      "aliases": [
+        "SK이노",
+        "SK온",
+        "SK On",
+        "정유",
+        "유가",
+        "정제마진",
+        "배터리 캐즘",
+        "PRS",
+        "주가수익스왑",
+        "채무상환"
+      ]
+    },
+    {
+      "case_id": "9",
+      "title": "시설투자 기대와 상대강도의 유효기간",
+      "summary": "수주에 연결된 증설은 언제 추가 상승 기회가 되고, 언제 시장 수익률에 뒤처졌을까?",
+      "event_date": "2025-03-20",
+      "event_label": "공시",
+      "issue_ids": [
+        "rights"
+      ],
+      "theme_ids": [
+        "defense-aerospace"
+      ],
+      "featured_pattern_ids": [
+        "수주연계증설",
+        "상대강도반납"
+      ],
+      "aliases": [
+        "한화에어로",
+        "K9",
+        "천무",
+        "MCS",
+        "방산",
+        "항공우주",
+        "시설투자"
+      ]
+    }
+  ],
+  "macro": [
+    {
+      "id": "energy",
+      "title": "에너지 가격 충격 → 한국 반도체",
+      "summary": "전력비 변화가 AI 투자와 반도체로 전달되는 조건",
+      "theme_ids": [
+        "ai-infra",
+        "energy-power"
+      ],
+      "aliases": [
+        "에너지",
+        "전력",
+        "전기요금",
+        "반도체",
+        "AI 데이터센터",
+        "삼성전자",
+        "SK하이닉스"
+      ],
+      "node_ids": [
+        "energy",
+        "generation",
+        "tariff",
+        "ai",
+        "server",
+        "memory",
+        "earnings",
+        "exports",
+        "current",
+        "dollar"
+      ]
+    },
+    {
+      "id": "rates",
+      "title": "장기국채금리 상승 → 부동산·주식",
+      "summary": "대출 부담과 할인율을 통해 자산가격에 전달되는 조건",
+      "theme_ids": [
+        "rates-assets"
+      ],
+      "aliases": [
+        "금리",
+        "장기금리",
+        "부동산",
+        "주식",
+        "할인율",
+        "주담대",
+        "DSR"
+      ],
+      "node_ids": [
+        "lt-rate",
+        "mortgage-rate",
+        "affordability",
+        "home-price",
+        "discount-rate",
+        "equity-multiple",
+        "stock-price",
+        "refinancing",
+        "caprate",
+        "cre-price",
+        "credit-loop"
+      ]
+    }
+  ],
+  "shortcuts": [
+    {
+      "label": "유상증자 후 왜 결과가 갈렸을까?",
+      "hint": "유상증자와 연결된 사례",
+      "target": "cases?issue=rights"
+    },
+    {
+      "label": "지수편입 이후에도 살 이유가 남았을까?",
+      "hint": "지수편입과 연결된 사례",
+      "target": "cases?issue=index-inclusion"
+    },
+    {
+      "label": "수요가 늦게 도착하면 무슨 일이 생길까?",
+      "hint": "수요 지연 패턴 사례",
+      "target": "cases?pattern=%EC%88%98%EC%9A%94%EC%A7%80%EC%97%B0"
+    }
+  ]
+}

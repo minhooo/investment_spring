@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title id="pageTitle">인적분할 사례 | 투자 샘터</title>
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <style>
+    :root{color-scheme:light;--background:#fff;--foreground:#18181b;--card:#fff;--muted:#f4f4f5;--muted-foreground:#71717a;--border:#e4e4e7;--strong:#27272a;--accent:#6d5bd0;--accent-soft:#f0edff;--holding:#6d5bd0;--operating:#dc2626;--bundle:#15803d;--benchmark:#71717a;--up:#dc2626;--down:#2563eb;--shadow:0 1px 2px #0000000a,0 8px 24px #0000000a}
+    @media(prefers-color-scheme:dark){:root{color-scheme:dark;--background:#09090b;--foreground:#fafafa;--card:#18181b;--muted:#27272a;--muted-foreground:#a1a1aa;--border:#27272a;--strong:#e4e4e7;--accent:#a99cf6;--accent-soft:#302b4d;--holding:#a99cf6;--operating:#fb7185;--bundle:#4ade80;--benchmark:#a1a1aa;--up:#fb7185;--down:#60a5fa;--shadow:0 1px 2px #0006,0 8px 24px #0005}}
+    *{box-sizing:border-box}body{margin:0;background:var(--background);color:var(--foreground);font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,system-ui,"Malgun Gothic",sans-serif;font-size:16px;line-height:1.62;word-break:keep-all;overflow-wrap:anywhere}button,input{font:inherit}a{color:inherit}.num{font-variant-numeric:tabular-nums}
+    .topbar{border-bottom:1px solid var(--border);background:var(--card)}.topbar-in{max-width:1180px;margin:auto;padding:13px 22px;display:flex;align-items:center;gap:28px;flex-wrap:wrap}.brand{font-size:18px;font-weight:700;text-decoration:none;white-space:nowrap}.nav{display:flex;gap:4px;flex-wrap:wrap}.nav a{color:var(--muted-foreground);text-decoration:none;padding:8px 10px;border-radius:8px;font-size:14px}.nav a[aria-current=page],.nav a:hover{background:var(--muted);color:var(--foreground);font-weight:600}.header-search{margin-left:auto;display:flex;gap:7px;min-width:min(310px,100%)}.header-search input,.header-search button{border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--foreground);padding:8px 10px}.header-search input{width:100%;min-width:0}.header-search button{cursor:pointer}.header-search :focus-visible,.nav a:focus-visible,.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+    .wrap{max-width:1180px;margin:auto;padding:32px 22px 72px}.crumb{margin:0 0 18px;color:var(--muted-foreground);font-size:13px}.crumb a{text-decoration:none}.eyebrow{margin:0 0 8px;color:var(--muted-foreground);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}.hero{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(280px,.55fr);gap:24px;align-items:end;margin-bottom:28px}.hero h1{font-size:clamp(28px,4vw,42px);line-height:1.2;letter-spacing:-.035em;margin:0 0 12px}.hero .sub{color:var(--muted-foreground);margin:0;max-width:72ch}.hypothesis{border:1px solid var(--border);border-radius:10px;background:var(--muted);padding:16px}.hypothesis .label{font-size:12px;color:var(--muted-foreground);font-weight:700}.hypothesis p{font-size:14px;margin:5px 0 0}
+    .verdict{border:1px solid var(--border);border-left:4px solid var(--bundle);border-radius:10px;background:var(--card);padding:20px 22px;box-shadow:var(--shadow);margin-bottom:22px}.verdict-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.verdict h2{font-size:21px;line-height:1.35;margin:0}.status{display:inline-flex;border-radius:999px;background:#15803d18;color:var(--bundle);padding:3px 9px;font-size:12px;font-weight:700}.verdict p{margin:8px 0 0;color:var(--muted-foreground);max-width:88ch}
+    .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:28px}.kpi{background:var(--card);padding:17px}.kpi .k{font-size:12px;color:var(--muted-foreground)}.kpi .v{font-size:clamp(22px,3vw,30px);font-weight:750;line-height:1.15;margin:6px 0 3px;letter-spacing:-.03em}.kpi .n{font-size:12px;color:var(--muted-foreground)}.up{color:var(--up)}.down{color:var(--down)}.holding{color:var(--holding)}.operating{color:var(--operating)}.bundle{color:var(--bundle)}
+    .card{border:1px solid var(--border);border-radius:10px;background:var(--card);box-shadow:var(--shadow);margin-bottom:24px;overflow:hidden}.card-hd{display:flex;gap:14px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;padding:17px 20px;border-bottom:1px solid var(--border)}.card-hd h2{font-size:18px;line-height:1.4;margin:0}.card-hd p{font-size:13px;color:var(--muted-foreground);margin:3px 0 0;max-width:72ch}.card-bd{padding:18px 20px 21px}.seg{display:inline-flex;padding:2px;border:1px solid var(--border);border-radius:8px;background:var(--muted)}.seg button{border:0;background:transparent;color:var(--muted-foreground);border-radius:6px;padding:6px 10px;font-size:13px;cursor:pointer}.seg button[aria-pressed=true]{background:var(--card);color:var(--foreground);font-weight:700;box-shadow:0 1px 2px #0002}.legend{display:flex;gap:15px;flex-wrap:wrap;font-size:12px;color:var(--muted-foreground);margin:0 0 10px}.legend span{display:inline-flex;align-items:center;gap:6px}.swatch{width:16px;height:3px;border-radius:2px}.chart-scroll,.table-scroll{overflow-x:auto}.chart{display:block;width:100%;min-width:760px;height:auto}.chart text{font-family:inherit}.chart-note{font-size:12px;color:var(--muted-foreground);margin:10px 0 0}
+    table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:10px 11px;border-bottom:1px solid var(--border);text-align:right;white-space:nowrap}th{background:var(--muted);color:var(--muted-foreground);font-size:12px;font-weight:650}th:first-child,td:first-child{text-align:left}tbody tr:last-child td{border-bottom:0}td strong{font-weight:700}.stage-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.stage{border:1px solid var(--border);border-radius:9px;padding:15px}.stage h3{font-size:14px;margin:0 0 10px}.stage dl{display:grid;grid-template-columns:1fr auto;gap:5px 10px;margin:0}.stage dt{font-size:12px;color:var(--muted-foreground)}.stage dd{margin:0;text-align:right;font-size:13px}.stage .sum{border-top:1px solid var(--border);padding-top:7px;margin-top:2px;font-weight:700}
+    .two-col{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px}.takeaways{margin:0;padding-left:20px}.takeaways li{margin:0 0 10px}.takeaways strong{font-weight:750}.formula{background:var(--muted);border-radius:8px;padding:13px 15px;font-size:13px;margin-top:13px}.timeline{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0}.event{position:relative;border-top:2px solid var(--border);padding:15px 15px 0 0}.event:before{content:"";position:absolute;width:9px;height:9px;border-radius:50%;background:var(--accent);top:-5.5px;left:0}.event time{font-size:12px;color:var(--muted-foreground)}.event strong{display:block;font-size:14px;margin-top:3px}.event span{display:block;font-size:12px;color:var(--muted-foreground);margin-top:3px}.sources{margin:0;padding-left:20px}.sources li{margin-bottom:10px}.sources a{font-weight:650}.sources span{display:block;font-size:12px;color:var(--muted-foreground)}.foot{border-top:1px solid var(--border);margin-top:34px;padding-top:18px;color:var(--muted-foreground);font-size:12px}
+    .tip{position:fixed;display:none;pointer-events:none;z-index:20;border:1px solid var(--border);border-radius:8px;background:var(--card);box-shadow:var(--shadow);padding:9px 11px;font-size:12px;line-height:1.55}
+    @media(max-width:900px){.hero,.two-col{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.timeline{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 0}.stage-grid{grid-template-columns:1fr}}
+    @media(max-width:740px){.topbar-in{padding:12px 16px;gap:12px}.nav{order:3;width:100%}.header-search{order:2;min-width:0;flex:1}.wrap{padding:26px 16px 55px}.hero{gap:16px}.card-hd,.card-bd{padding-left:16px;padding-right:16px}}
+    @media(max-width:440px){.header-search{order:4;width:100%;flex-basis:100%;margin-left:0}.kpis{grid-template-columns:1fr}.timeline{grid-template-columns:1fr;gap:20px}.event{padding-right:0}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-in">
+      <a class="brand" href="index.html#home">투자 샘터</a>
+      <nav class="nav" aria-label="주요 메뉴"><!--__SITE_NAV__--></nav>
+      <form class="header-search" id="headerSearch" role="search"><input name="q" type="search" aria-label="통합 검색" placeholder="종목·이슈·테마·경제 변수 검색"><button type="submit">검색</button></form>
+    </div>
+  </header>
+  <main class="wrap">
+    <p class="crumb"><a href="index.html#cases">사례 탐색으로 돌아가기</a> / 인적분할</p>
+    <section class="hero">
+      <div><p class="eyebrow" id="eyebrow"></p><h1 id="pageH1"></h1><p class="sub" id="pageSub"></p></div>
+      <aside class="hypothesis"><span class="label">검증 가정</span><p id="hypothesis"></p></aside>
+    </section>
+
+    <section class="verdict"><div class="verdict-head"><span class="status" id="status"></span><h2 id="verdictHead"></h2></div><p id="verdictDetail"></p></section>
+    <section class="kpis" id="kpis" aria-label="핵심 지표"></section>
+
+    <section class="card">
+      <div class="card-hd"><div><h2>가격발견 경로</h2><p id="stageIntro"></p></div></div>
+      <div class="card-bd"><div class="stage-grid" id="stages"></div><p class="chart-note" id="stageNote"></p></div>
+    </section>
+
+    <section class="card">
+      <div class="card-hd"><div><h2>쌍대 비교 주가 궤적</h2><p id="chartDescription"></p></div><div class="seg" aria-label="수익률 기준"><button type="button" data-mode="evaluation" aria-pressed="true" id="modeEval"></button><button type="button" data-mode="firstClose" aria-pressed="false">첫 종가 = 100</button></div></div>
+      <div class="card-bd"><div class="legend" id="legend"></div><div class="chart-scroll"><svg class="chart" id="chart" viewBox="0 0 1040 410" role="img" aria-label="인적분할 후 쌍대 비교 주가 지수 차트"></svg></div><p class="chart-note" id="chartNote"></p></div>
+    </section>
+
+    <section class="card">
+      <div class="card-hd"><div><h2>검증 시점별 성과</h2><p id="checkpointIntro"></p></div></div>
+      <div class="table-scroll"><table><thead id="checkpointHead"></thead><tbody id="checkpointRows"></tbody></table></div>
+    </section>
+
+    <section class="two-col">
+      <article class="card"><div class="card-hd"><div><h2>이 사례가 말하는 것</h2><p id="takeawayIntro"></p></div></div><div class="card-bd"><ol class="takeaways" id="takeaways"></ol></div></article>
+      <article class="card"><div class="card-hd"><div><h2>검증 규칙</h2><p>다음 인적분할 사례에도 같은 자를 적용한다.</p></div></div><div class="card-bd"><ul class="takeaways" id="rules"></ul><div class="formula num" id="formula"></div></div></article>
+    </section>
+
+    <section class="card"><div class="card-hd"><div><h2>주요 일정</h2><p>공시 시점과 실제 거래 재개 시점을 분리했다.</p></div></div><div class="card-bd"><div class="timeline" id="timeline"></div></div></section>
+    <section class="card"><div class="card-hd"><div><h2>출처와 한계</h2><p>분할비율·일정·상장주식수는 공시 원문을 따르고, 일별 종가는 원주가를 사용한다.</p></div></div><div class="card-bd"><ul class="sources" id="sources"></ul><p class="chart-note" id="limitNote"></p></div></section>
+    <p class="foot" id="foot"></p>
+  </main>
+  <div class="tip" id="tip"></div>
+  <script>
+    const D=/*__DATA__*/null,M=D.meta,S=M.split,$=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const jong=w=>{const c=w.charCodeAt(w.length-1);if(c>=0xac00&&c<=0xd7a3)return (c-0xac00)%28!==0;return 'lmnr'.includes(w[w.length-1].toLowerCase())},J=(w,a,b)=>w+(jong(w)?a:b);
+    const pct=v=>(v>0?'+':'')+v.toFixed(1)+'%',won=v=>Math.round(v).toLocaleString()+'원',cls=v=>v>0?'up':v<0?'down':'';
+    const L=M.labels,HN=L.holding,ON=L.operating,BM=L.benchmark,BL=L.baseline;
+    $('#hypothesis').textContent=M.hypothesis;$('#status').textContent=M.verdict;$('#verdictDetail').textContent=M.verdict_detail;
+    document.title=L.page_title;$('#pageTitle').textContent=L.page_title;$('#eyebrow').textContent=L.eyebrow;$('#pageH1').innerHTML=L.h1;$('#pageSub').textContent=L.sub;$('#verdictHead').textContent=L.verdict_head;
+    $('#stageIntro').textContent=`${J(BL,'은','는')} 분할 전 가치의 출발점이고, 시초가와 종가는 시장이 다시 붙인 가격이다.`;
+    $('#stageNote').textContent=L.stage_note;$('#modeEval').textContent=`${BL} = 100`;
+    $('#legend').innerHTML=[[HN,'holding'],[ON,'operating'],['기존 주주 합산가치','bundle'],[BM,'benchmark']].map(x=>`<span><i class="swatch" style="background:var(--${x[1]})"></i>${esc(x[0])}</span>`).join('');
+    $('#checkpointIntro').textContent=`${BL} 기준은 분할 반응을, 첫 종가 기준은 재상장일에 실제 매수한 후의 성과를 보여준다.`;
+    $('#checkpointHead').innerHTML=`<tr><th>시점</th><th>일자</th><th>${esc(HN)}<br>${esc(BL)} 대비</th><th>${esc(ON)}<br>${esc(BL)} 대비</th><th>합산가치<br>${esc(BL)} 대비</th><th>합산가치<br>첫 종가 대비</th><th>${esc(BM)}<br>첫 종가 대비</th><th>합산 초과수익</th></tr>`;
+    $('#takeawayIntro').textContent=`${M.name} 한 건으로 확인한 가설의 적용 범위`;
+    $('#takeaways').innerHTML=(M.takeaways||[]).map(x=>`<li>${x}</li>`).join('');
+    $('#rules').innerHTML=(M.rules||[]).map(x=>`<li>${x}</li>`).join('');
+    $('#formula').innerHTML=L.formula;$('#limitNote').textContent=L.baseline_note;$('#foot').textContent=L.footer;
+    const d0=D.checkpoints[0],dL=D.checkpoints[D.checkpoints.length-1],d250=dL;
+    $('#kpis').innerHTML=[
+      [`${HN}(${L.holding_role}) · ${BL}→첫 종가`,pct(d0.holdingFromEvaluation),`${won(S.holding_evaluation_price)} → ${won(d0.holdingClose)}`,'holding'],
+      [`${ON}(${L.operating_role}) · ${BL}→첫 종가`,pct(d0.operatingFromEvaluation),`${won(S.operating_evaluation_price)} → ${won(d0.operatingClose)}`,'operating'],
+      ['기존 주주 합산가치 · 첫날',pct(d0.bundleFromEvaluation),'분할비율 가중','bundle'],
+      [`첫 종가 → D+${dL.day}`,`${pct(dL.operatingFromFirstClose)} / ${pct(dL.holdingFromFirstClose)}`,`${esc(ON)} / ${esc(HN)}`,'operating']
+    ].map(x=>`<div class="kpi"><div class="k">${x[0]}</div><div class="v num ${x[3]}">${x[1]}</div><div class="n">${x[2]}</div></div>`).join('');
+    $('#stages').innerHTML=D.stages.map(x=>`<article class="stage"><h3>${x.label}</h3><dl><dt>${esc(HN)}</dt><dd class="num ${cls(x.holdingReturn)}">${won(x.holding)} · ${pct(x.holdingReturn)}</dd><dt>${esc(ON)}</dt><dd class="num ${cls(x.operatingReturn)}">${won(x.operating)} · ${pct(x.operatingReturn)}</dd><dt class="sum">기존 주주 합산가치</dt><dd class="sum num ${cls(x.bundleReturn)}">${won(x.bundle)} · ${pct(x.bundleReturn)}</dd></dl></article>`).join('');
+    $('#checkpointRows').innerHTML=D.checkpoints.map(x=>`<tr><td><strong>D+${x.day}</strong></td><td class="num">${x.date}</td><td class="num ${cls(x.holdingFromEvaluation)}">${pct(x.holdingFromEvaluation)}</td><td class="num ${cls(x.operatingFromEvaluation)}">${pct(x.operatingFromEvaluation)}</td><td class="num ${cls(x.bundleFromEvaluation)}">${pct(x.bundleFromEvaluation)}</td><td class="num ${cls(x.bundleFromFirstClose)}">${pct(x.bundleFromFirstClose)}</td><td class="num ${cls(x.kosdaqFromFirstClose)}">${pct(x.kosdaqFromFirstClose)}</td><td class="num ${cls(x.bundleExcessFromFirstClose)}">${pct(x.bundleExcessFromFirstClose)}p</td></tr>`).join('');
+    const events=M.timeline||[[S.announcement_date,'분할 결정','인적분할 공시'],[S.suspension_start,'매매 정지',''],[S.split_date,'분할기일',''],[S.relist_date,'변경상장·재상장','두 종목 매매 재개']];
+    $('#timeline').innerHTML=events.map(x=>`<div class="event"><time class="num">${x[0]}</time><strong>${x[1]}</strong><span>${x[2]}</span></div>`).join('');
+    $('#sources').innerHTML=M.sources.map(x=>`<li><a href="${esc(x.url)}" target="_blank" rel="noreferrer">${esc(x.label)}</a><span>${esc(x.note)}</span></li>`).join('');
+
+    let mode='evaluation';const colors={holding:'var(--holding)',operating:'var(--operating)',bundle:'var(--bundle)',kosdaq:'var(--benchmark)'};
+    function draw(){
+      const data=mode==='evaluation'?D.evaluationIndex:D.firstCloseIndex,series=[['holding',HN],['operating',ON],['bundle','합산가치'],['kosdaq',BM]];
+      const all=series.flatMap(([k])=>data[k]),lo=Math.min(...all),hi=Math.max(...all),pad=(hi-lo)*.07||10,min=lo-pad,max=hi+pad,x0=58,x1=1015,y0=18,y1=360,n=D.dates.length;
+      const x=i=>x0+(x1-x0)*i/(n-1),y=v=>y1-(v-min)/(max-min)*(y1-y0),path=a=>a.map((v,i)=>(i?'L':'M')+x(i).toFixed(1)+' '+y(v).toFixed(1)).join(' ');
+      const step=max-min>300?100:max-min>180?50:25,start=Math.ceil(min/step)*step;let svg='';
+      for(let v=start;v<=max;v+=step){svg+=`<line x1="${x0}" y1="${y(v)}" x2="${x1}" y2="${y(v)}" stroke="var(--border)"/><text x="${x0-8}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="var(--muted-foreground)">${Math.round(v)}</text>`}
+      [0,60,120,250,n-1].filter((v,i,a)=>v<n&&a.indexOf(v)===i).forEach(i=>{svg+=`<line x1="${x(i)}" y1="${y0}" x2="${x(i)}" y2="${y1}" stroke="var(--border)" stroke-dasharray="2 4"/><text x="${x(i)}" y="${y1+22}" text-anchor="middle" font-size="11" fill="var(--muted-foreground)">${D.dates[i].slice(0,7)}</text>`});
+      svg+=`<line x1="${x0}" y1="${y(100)}" x2="${x1}" y2="${y(100)}" stroke="var(--strong)" stroke-dasharray="4 4" opacity=".45"/>`;
+      series.forEach(([k])=>svg+=`<path d="${path(data[k])}" fill="none" stroke="${colors[k]}" stroke-width="${k==='bundle'?2.8:2}" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>`);
+      svg+=`<line id="cross" x1="0" y1="${y0}" x2="0" y2="${y1}" stroke="var(--strong)" opacity="0"/><rect id="hit" x="${x0}" y="${y0}" width="${x1-x0}" height="${y1-y0}" fill="transparent"/>`;$('#chart').innerHTML=svg;
+      $('#chartDescription').textContent=mode==='evaluation'?`${J(BL,'을','를')} 100으로 놓고 가격발견의 방향을 본다.`:'재상장일 종가를 100으로 놓고 실제 매수 이후의 투자성과를 본다.';
+      $('#chartNote').textContent=mode==='evaluation'?`주의: ${J(BM,'은','는')} 재상장일 종가=100이다. 두 주식은 ${BL}=100으로 분할 즉시 재평가를 포함한다.`:`모든 계열을 ${S.relist_date} 종가=100으로 맞춰 이후 성과를 같은 기준으로 비교한다.`;
+      const hit=$('#hit'),cross=$('#cross'),tip=$('#tip');hit.addEventListener('mousemove',e=>{const r=$('#chart').getBoundingClientRect(),i=Math.max(0,Math.min(n-1,Math.round((e.clientX-r.left)/r.width*(n-1)))),xx=x(i);cross.setAttribute('x1',xx);cross.setAttribute('x2',xx);cross.setAttribute('opacity','1');tip.innerHTML=`<strong class="num">${D.dates[i]}</strong><br>${esc(HN)} ${data.holding[i].toFixed(1)} · ${esc(ON)} ${data.operating[i].toFixed(1)}<br>합산 ${data.bundle[i].toFixed(1)} · ${esc(BM)} ${data.kosdaq[i].toFixed(1)}`;tip.style.display='block';tip.style.left=Math.min(innerWidth-220,e.clientX+12)+'px';tip.style.top=Math.max(8,e.clientY-72)+'px'});hit.addEventListener('mouseleave',()=>{cross.setAttribute('opacity','0');tip.style.display='none'});
+    }
+    document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.mode;document.querySelectorAll('[data-mode]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));draw()}));draw();
+    $('#headerSearch').addEventListener('submit',e=>{e.preventDefault();location.href='index.html#search?q='+encodeURIComponent(e.currentTarget.q.value)});
+  </script>
+</body>
+</html>
