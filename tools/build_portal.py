@@ -10,6 +10,7 @@ import json
 import os
 import re
 import sys
+import subprocess
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -226,6 +227,7 @@ def macro_styles():
     return '''<style>
       :root{color-scheme:light}
       body{margin:0;background:#fff;color:#18181b;font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,system-ui,"Malgun Gothic",sans-serif} .spring-bar{background:#fff;border-bottom:1px solid #e4e4e7}.spring-bar-in{max-width:1180px;margin:auto;padding:13px 22px;display:flex;align-items:center;gap:28px;flex-wrap:wrap}.spring-brand{font-weight:700;font-size:18px;color:#18181b;text-decoration:none}.spring-bar nav{display:flex;gap:4px;flex-wrap:wrap}.spring-bar nav a{color:#71717a;text-decoration:none;padding:8px 10px;border-radius:8px;font-size:14px}.spring-bar nav a[aria-current="page"]{background:#f4f4f5;color:#18181b;font-weight:600}.spring-search{margin-left:auto;display:flex;gap:7px;min-width:min(310px,100%)}.spring-search input,.spring-search button{font:inherit;border:1px solid #e4e4e7;border-radius:8px;padding:8px 10px;background:#fff}.spring-search input{min-width:0;width:100%}.spring-search button{cursor:pointer}.macro-wrap{max-width:1180px;margin:auto;padding:22px}.macro-crumb{font-size:13px;color:#71717a;margin:0 0 10px}.macro-heading{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:12px}.macro-heading h1{font-size:25px;margin:0}.macro-heading p{font-size:14px;color:#71717a;margin:4px 0 0}.scenario-picker{display:flex;gap:8px;flex-wrap:wrap}.scenario-picker button{font:inherit;border:1px solid #e4e4e7;border-radius:8px;background:#fff;padding:8px 12px;cursor:pointer}.scenario-picker button[aria-pressed="true"]{border-color:#18181b;color:#fafafa;background:#18181b}#macro-causal-dashboard{border:1px solid #e4e4e7!important;border-radius:10px!important}#macro-causal-dashboard .cid-topbar,#macro-causal-dashboard .cid-sidebar,#macro-causal-dashboard .cid-horizon{display:none!important}#macro-causal-dashboard .cid-body{grid-template-columns:minmax(0,1fr) 250px!important;min-height:0!important}#macro-causal-dashboard .cid-shell{min-height:0!important}@media(max-width:820px){.macro-wrap{padding:16px}.spring-bar-in{padding:12px 16px;gap:12px}.spring-bar nav{order:3;width:100%}.spring-search{order:4;width:100%;flex-basis:100%;margin-left:0}#macro-causal-dashboard .cid-body{display:block!important}}@media(prefers-color-scheme:dark){body{background:#09090b;color:#fafafa}.spring-bar{background:#18181b;border-color:#27272a}.spring-brand{color:#fafafa}.spring-bar nav a{color:#a1a1aa}.spring-bar nav a[aria-current="page"]{background:#27272a;color:#fafafa}.spring-search input,.spring-search button{background:#18181b;color:#fafafa;border-color:#3f3f46}}
+      @media(prefers-color-scheme:dark){.scenario-picker button{background:#18181b;color:#fafafa;border-color:#3f3f46}.scenario-picker button[aria-pressed="true"]{background:#fafafa;color:#18181b;border-color:#fafafa}}
       @media(prefers-color-scheme:dark){:root{color-scheme:dark}}
     </style>'''
 
@@ -242,6 +244,7 @@ def build_macro(navigation):
     scenarios = navigation["macro"]
     picker = "".join(f'<button type="button" data-scenario="{html.escape(s["id"])}" aria-pressed="{"true" if s["id"] == "energy" else "false"}">{html.escape(s["title"])}</button>' for s in scenarios)
     page = f'''<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>거시 인과지도 | 투자 아이디어 샘터</title><link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">{macro_styles()}</head><body>{portal_header("macro")}<main class="macro-wrap"><p class="macro-crumb">홈 / 거시 인과지도</p><div class="macro-heading"><div><h1>거시 인과지도</h1><p>관심 있는 변화의 출발점을 골라 조건과 시차를 따라가 보세요.</p></div><div class="scenario-picker" aria-label="예시 경로">{picker}</div></div><p class="macro-crumb">현재 지도는 예시 경로입니다. 실시간 분석이나 예측 결과를 뜻하지 않습니다.</p>{source}</main><script>document.querySelector('.spring-search').addEventListener('submit',function(e){{e.preventDefault();location.href='index.html#search?q='+encodeURIComponent(this.q.value)}});const macroParams=new URLSearchParams(location.search);const macroScenario=macroParams.get('scenario');if(macroScenario)document.querySelector(`.scenario-picker [data-scenario="${{macroScenario}}"]`)?.click();const macroNode=macroParams.get('node');if(macroNode)document.querySelector(`#macro-causal-dashboard [data-node="${{macroNode}}"]`)?.click();</script></body></html>'''
+    page = page.replace('<p class="macro-crumb">현재 지도는', '<p><a href="causal-network.html">통합 인과망 · 시계열 검증실 →</a></p><p class="macro-crumb">현재 지도는')
     return page
 
 
@@ -264,6 +267,10 @@ def main():
     check_web_safe_dist()
     print("완료: dist/index.html · dist/portal-data.js · dist/macro.html")
     print(f"  사례 {case_count}건 · 거시 경로 {len(navigation['macro'])}개 · 리비전 {revision}")
+    if '--skip-network' not in sys.argv:
+        network_python = ROOT / '.venv-network' / 'Scripts' / 'python.exe'
+        subprocess.run([str(network_python) if network_python.exists() else sys.executable,
+                        str(ROOT / 'tools' / 'build_causal_network.py')], check=True)
 
 
 if __name__ == "__main__":

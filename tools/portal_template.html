@@ -54,7 +54,7 @@
         <div class="selected-filters" id="selectedFilters"></div><div class="result-count" id="caseResultCount" aria-live="polite"></div><div class="case-list" id="caseList"></div>
       </section>
       <section id="searchView" data-view="search" hidden><p class="eyebrow">Search</p><h1 id="searchTitle">통합 검색</h1><p class="search-summary" id="searchSummary" aria-live="polite"></p><section class="search-group" id="searchRadar" hidden><h2>지수 도구</h2><div class="macro-list"><article class="macro-card"><h2><a href="index-radar.html">지수 레이더</a></h2><p>KOSPI 200 구성종목과 시가총액 비중을 현재 기준으로 확인합니다.</p></article></div></section><section class="search-group"><h2>사례</h2><div class="case-list" id="searchCases"></div></section><section class="search-group"><h2>인과지도</h2><div class="macro-list" id="searchMacro"></div></section></section>
-      <section id="macroView" data-view="macro" hidden><p class="eyebrow">Macro causal maps</p><h1>거시 인과지도</h1><p class="sub">관심 있는 변화의 출발점을 골라 조건과 시차를 따라가 보세요.</p><p class="notice">현재 지도는 예시 경로입니다. 실시간 분석이나 예측 결과를 뜻하지 않습니다.</p><div class="macro-layout macro-list" id="macroList"></div></section>
+      <section id="macroView" data-view="macro" hidden><p class="eyebrow">Macro causal maps</p><h1>거시 인과지도</h1><p class="sub">관심 있는 변화의 출발점을 골라 조건과 시차를 따라가 보세요.</p><p><a class="btn" href="causal-network.html">통합 인과망 · 시계열 검증실 →</a></p><p class="notice">개별 지도는 조건부 가설입니다. 통합망에서는 소속 관계와 시계열 선행 예측력을 따로 확인할 수 있습니다.</p><div class="macro-layout macro-list" id="macroList"></div></section>
       <section id="notFoundView" data-view="notfound" hidden><p class="eyebrow">Not found</p><h1>찾을 수 없습니다</h1><p class="sub">주소의 조건을 확인하거나 탐색 목록으로 돌아가세요.</p><p><a class="btn" href="#cases">사례 탐색으로</a></p></section>
     </main>
     <footer class="footer"><p>투자 아이디어 샘터는 학습·기록용 개인 아카이브입니다.</p></footer>
@@ -76,7 +76,7 @@
     const macroCards=items=>items.length?items.map(m=>`<article class="macro-card"><div class="meta">예시 경로 · ${esc(m.theme_ids.map(themeLabel).join(' / '))}</div><h2><a href="macro.html?scenario=${encodeURIComponent(m.id)}">${esc(m.title)} →</a></h2><p>${esc(m.summary)}</p></article>`).join(''):'<div class="empty">등록된 인과지도가 없습니다.</div>';
     function fillControls(){
       const issueConnections=data.cases.reduce((total,c)=>total+(c.issue_ids||[c.issue_id]).length,0); $('#caseCountText').textContent=`${data.cases.length}개 사례 · ${issueConnections}개 이슈 연결`;
-      $('#macroCountText').textContent='에너지 → 반도체 · 금리 → 자산가격';
+      $('#macroCountText').textContent='에너지·메모리·LLM 전력·원전·전력망·ESS·AI 고용·소비·서비스 매출·중동 유가·물가·임금·금리의 조건부 경로';
       $('#homeThemes').innerHTML=data.taxonomy.themes.map(t=>`<a class="tag" href="${toHash('search',{theme:t.id})}">${esc(t.label)}</a>`).join('');
       $('#shortcuts').innerHTML=data.shortcuts.map(x=>`<a class="question" href="#${x.target}"><span>${esc(x.label)}</span><span>${esc(x.hint)} →</span></a>`).join('');
       $('#issueTabs').innerHTML=`<button class="tag" data-issue="" type="button">모든 사례</button>`+data.taxonomy.issues.map(i=>`<button class="tag" data-issue="${i.id}" type="button">${esc(i.label)} ${data.cases.filter(c=>(c.issue_ids||[c.issue_id]).includes(i.id)).length}</button>`).join('');
@@ -94,8 +94,11 @@
       $('#selectedFilters').innerHTML=chips.length?'선택한 조건: '+chips.map(([key,id,value])=>`<span class="filter-chip">${esc(value)} <button type="button" aria-label="${esc(value)} 조건 제거" ${key==='issue'?`data-remove-issue="${esc(id)}"`:`data-remove="${key}"`}>×</button></span>`).join(''):'선택한 조건 없음'; $('#caseResultCount').textContent=issueIds.length?`${rows.length}개 사례 · 선택 이슈 ${issueIds.length}개`:`${rows.length}개 사례 · ${rows.reduce((total,c)=>total+(c.issue_ids||[c.issue_id]).length,0)}개 이슈 연결`; $('#caseList').innerHTML=caseCards(rows);
     }
     function renderSearch(params){
+      const networkQuery=params.get('q')||'';
+      const networkMatch=!networkQuery||['인과망','통합망','신경망','시계열','검증실','알고리즘','네트워크'].some(word=>norm(networkQuery).includes(norm(word))||norm(word).includes(norm(networkQuery)));
       const q=params.get('q')||'',theme=params.get('theme')||''; const cases=data.cases.filter(c=>(!theme||c.theme_ids.includes(theme))&&matches(c,q)).sort((a,b)=>b.event_date.localeCompare(a.event_date)); const macros=data.macro.filter(m=>(!theme||m.theme_ids.includes(theme))&&matches(m,q));
       const radarMatch=!q||['지수','레이더','kospi','kospi200','코스피200','편입','index'].some(word=>norm(word).includes(norm(q))||norm(q).includes(norm(word))); $('#searchTitle').textContent=theme?themeLabel(theme):'통합 검색'; $('#searchSummary').textContent=(q?'“'+q+'” · ':'')+'사례 '+cases.length+'개 · 인과지도 '+macros.length+'개'+(radarMatch?' · 지수 도구 1개':''); $('#searchRadar').hidden=!radarMatch; $('#searchCases').innerHTML=caseCards(cases); $('#searchMacro').innerHTML=macroCards(macros); $('#headerQuery').value=q; $('#homeQuery').value=q;
+      if(networkMatch){$('#searchMacro').insertAdjacentHTML('afterbegin','<article class="macro-card"><h2><a href="causal-network.html">통합 인과망 · 시계열 검증실 →</a></h2><p>모든 사례와 거시 변수를 연결하고 선행 예측력·판단 기준을 검토합니다.</p></article>');$('#searchSummary').textContent+=' · 인과망 도구 1개';}
     }
     function render(){const {view,params}=hash(),known=['home','cases','search','macro'];const chosen=known.includes(view)?view:'notfound'; document.querySelectorAll('[data-view]').forEach(x=>x.hidden=x.dataset.view!==chosen);document.querySelectorAll('[data-nav]').forEach(x=>{if(x.dataset.nav===chosen)x.setAttribute('aria-current','page');else x.removeAttribute('aria-current')}); if(chosen==='cases')renderCases(params);if(chosen==='search')renderSearch(params);if(chosen==='macro')$('#macroList').innerHTML=macroCards(data.macro);}
     function navigateSearch(q){location.hash=toHash('search',{q:q.trim()});}

@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>통합 인과망 · 검증실 | 투자 샘터</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{color-scheme:light dark;--bg:#fff;--card:#fff;--muted:#f4f4f5;--ink:#18181b;--sub:#71717a;--line:#e4e4e7;--blue:#2563eb;--violet:#7c3aed;--green:#047857;--orange:#a16207}
+@media(prefers-color-scheme:dark){:root{--bg:#09090b;--card:#18181b;--muted:#27272a;--ink:#fafafa;--sub:#a1a1aa;--line:#3f3f46;--blue:#93c5fd;--violet:#c4b5fd;--green:#6ee7b7;--orange:#fcd34d}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,system-ui,"Malgun Gothic",sans-serif;line-height:1.55;font-variant-numeric:tabular-nums}a{color:var(--blue)}button,input,select,textarea{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 10px;max-width:100%}button{cursor:pointer}button:hover{background:var(--muted)}button[aria-pressed=true],.primary{background:var(--ink);color:var(--bg)}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--blue);outline-offset:3px}button:disabled{opacity:.5;cursor:default}
+.topbar{border-bottom:1px solid var(--line);background:var(--card)}.topbar-in{max-width:1180px;margin:auto;padding:13px 22px;display:flex;gap:20px;align-items:center;flex-wrap:wrap}.brand{font-size:18px;font-weight:700;text-decoration:none;color:var(--ink)}nav{display:flex;gap:4px;flex-wrap:wrap}nav a{padding:8px 10px;color:var(--sub);font-size:14px;text-decoration:none;border-radius:8px}nav a[aria-current=page]{background:var(--muted);color:var(--ink)}.site-search{margin-left:auto;display:flex;gap:6px;min-width:0}.site-search input{width:170px;min-width:0;font-size:14px}
+main{max-width:1180px;margin:auto;padding:24px 22px 48px}h1{font-size:clamp(28px,4vw,42px);line-height:1.2;letter-spacing:-.035em;margin:18px 0 12px}h2{font-size:21px;margin:0 0 10px}h3{font-size:16px;margin:18px 0 8px}.eyebrow{font-size:12px;color:var(--green);letter-spacing:.12em;font-weight:600}.sub{color:var(--sub);font-size:14px}.crumb{font-size:13px;display:flex;gap:18px;flex-wrap:wrap}.intro{max-width:810px;margin:0 0 18px;color:var(--sub)}.tabs{margin:18px 0;display:flex;flex-wrap:wrap;gap:8px}.tabs a{padding:8px 12px;border:1px solid var(--line);border-radius:8px;text-decoration:none}.tabs a[aria-current=page]{background:var(--ink);color:var(--bg)}
+.toolbar{padding:14px;display:flex;gap:12px;align-items:end;flex-wrap:wrap;background:var(--muted);border-radius:10px}.toolbar label{display:grid;gap:4px;font-size:13px;min-width:0}.toolbar .grow{flex:1;min-width:min(100%,230px)}.toolbar select{font-size:14px;min-width:0;width:100%}.layers{display:flex;gap:16px;flex-wrap:wrap;margin:12px 0}.layers label{font-size:14px;display:flex;align-items:center;gap:6px}.layers input{accent-color:var(--blue)}.legend{font-size:12px;color:var(--sub);padding:10px 14px;border-bottom:1px solid var(--line);display:flex;gap:14px;flex-wrap:wrap}.legend span{white-space:nowrap}.legend i{display:inline-block;width:18px;border-top:2px solid var(--violet);vertical-align:middle;margin-right:5px}.legend .emp{border-color:var(--green)}.legend .rel{border-color:var(--sub);border-top-style:dotted}
+.workbench{display:grid;grid-template-columns:minmax(0,1fr) 310px;border:1px solid var(--line);border-radius:10px;overflow:clip}.map-panel{min-width:0;background:var(--card)}#graph{height:550px;width:100%;position:relative}.map-footer{padding:10px 14px;font-size:12px;color:var(--sub);border-top:1px solid var(--line);display:flex;gap:12px;flex-wrap:wrap;align-items:center}.map-footer button{padding:5px 9px}.detail{padding:20px;border-left:1px solid var(--line);background:var(--card);min-width:0;overflow-wrap:anywhere}.detail p,.detail li{font-size:14px}.detail ul{padding-left:18px}.badge{display:inline-block;padding:3px 8px;border-radius:6px;background:var(--muted);font-size:12px;color:var(--sub)}.detail dl{display:grid;grid-template-columns:1fr 1fr;gap:5px;font-size:13px}.detail dd{margin:0;text-align:right}.rule-pass{color:var(--green)}.rule-fail{color:var(--orange)}.compact-list{display:grid;gap:6px;max-height:260px;overflow:auto}.compact-list button{text-align:left;font-size:13px}.empty{padding:20px;color:var(--sub)}
+.section{margin-top:30px;padding-top:24px;border-top:1px solid var(--line)}.stats{display:flex;gap:20px;flex-wrap:wrap;margin:16px 0;font-size:14px}.stats b{font-size:22px;font-weight:600;margin-right:5px}.criteria{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.criteria label{font-size:13px;display:grid;gap:5px}.criteria input{width:100%}.actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0;align-items:center}textarea{width:100%;min-height:65px;resize:vertical}.table-wrap{overflow:auto;max-height:520px}table{border-collapse:collapse;width:100%;font-size:13px}th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}thead{background:var(--muted)}th{font-weight:600}td button{font-size:13px;text-align:left;max-width:290px;white-space:normal}summary{cursor:pointer}details{margin:16px 0}.notice{border-left:3px solid var(--blue);padding:8px 12px;background:var(--muted);font-size:14px}#audit li{font-size:13px;overflow-wrap:anywhere}.method-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.method-grid p{font-size:14px;color:var(--sub)}.footer{font-size:12px;color:var(--sub);margin-top:24px;overflow-wrap:anywhere}[hidden]{display:none!important}
+@media(max-width:900px){.workbench{grid-template-columns:minmax(0,1fr) 270px}.topbar-in{gap:12px}.site-search{width:100%;margin:0}.site-search input{flex:1}}
+@media(max-width:740px){main{padding:20px 16px}.topbar-in{padding:12px 16px}.workbench{grid-template-columns:1fr}.detail{border-left:0;border-top:1px solid var(--line)}#graph{height:440px}.criteria{grid-template-columns:1fr 1fr}.method-grid{grid-template-columns:1fr}.toolbar{align-items:stretch}.toolbar .grow{flex-basis:100%}}
+@media(max-width:440px){nav{width:100%}nav a{padding:7px 8px}.site-search{width:100%}.criteria{grid-template-columns:1fr}.toolbar label{flex:1}.stats{gap:12px}.stats b{font-size:18px}}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar-in"><a class="brand" href="index.html#home">투자 샘터</a><nav aria-label="주요 메뉴"><!--__SITE_NAV__--></nav><form class="site-search"><input name="q" aria-label="통합 검색" placeholder="종목·이슈 검색"><button>검색</button></form></div></header>
+<main>
+<div class="crumb"><a href="index.html#macro">거시 경로 목록으로</a><a href="index.html#cases">사례 탐색으로</a></div>
+<h1>연결을 발견하고,<br>근거를 검증하는 인과망</h1>
+<p class="intro">경제 변수와 모든 사례를 한 지도에서 살펴보세요. 설명에 근거한 가설과 시계열의 선행 예측력을 구분하고, 판단의 근거까지 펼쳐볼 수 있습니다.</p>
+<div class="tabs"><a href="macro.html">개별 전달 경로</a><a href="causal-network.html" aria-current="page">통합 인과망 · 검증실</a></div>
+<div class="stats" id="stats"></div>
+<div class="toolbar">
+<label>보기<select id="view"><option value="overview">군집 개요</option><option value="focus">주변 연결</option><option value="all">전체 상세</option></select></label>
+<label class="grow">변수·사례 선택<select id="node-picker" aria-label="변수·사례 선택"></select></label>
+<label>주변 범위<select id="depth"><option value="1">1단계</option><option value="2">2단계</option></select></label>
+<button id="focus">주변 보기</button><button id="fit">화면 맞춤</button>
+</div>
+<div class="layers"><label><input type="checkbox" id="show-hypothesis" checked>인과 가설</label><label><input type="checkbox" id="show-membership" checked>소속·관측 연결</label><label><input type="checkbox" id="show-empirical" checked>통계 검토 후보</label><label><input type="checkbox" id="show-rejected">기준 미충족 결과도 표시</label></div>
+<div class="workbench"><section class="map-panel" aria-label="그래프 탐색"><div class="legend"><span><i></i>가설 →</span><span><i class="emp"></i>선행 예측 →</span><span><i class="rel"></i>소속·관측 (방향 없음)</span><span>가까운 배치 ≠ 인과 강도</span></div><div id="graph" role="img" aria-label="드래그·확대 가능한 통합 인과망. 키보드는 변수 선택과 아래 연결 목록을 이용하세요."></div><div class="map-footer"><span id="graph-status" aria-live="polite"></span><button id="zoom-in" aria-label="지도 확대">＋</button><button id="zoom-out" aria-label="지도 축소">−</button><button id="reset">군집으로 돌아가기</button></div></section><aside class="detail" id="detail" aria-live="polite"></aside></div>
+<details><summary>그래프에 보이는 연결을 목록으로 탐색</summary><div id="edge-list" class="compact-list"></div></details>
+<section class="section" id="validation"><span class="eyebrow">EVIDENCE, NOT A SCORE</span><h2>판단 기준과 재검토</h2><p class="sub">임의의 종합점수를 만들지 않습니다. 네 기준을 모두 통과한 관계만 ‘검토 후보’로 표시합니다. 기준 미충족은 관계가 없다는 증명이 아닙니다.</p><p id="run-info" class="notice"></p>
+<div class="criteria"><label>다중검정 보정 q 상한<input id="q" type="number" min="0.001" max="0.2" step="0.001"></label><label>예측오차 개선 최소 (%)<input id="gain" type="number" min="0" max="50" step="1"></label><label>개선 구간 비중 최소 (%)<input id="positive" type="number" min="50" max="100" step="5"></label><label>방향 안정성 최소 (%)<input id="stability" type="number" min="50" max="100" step="5"></label></div>
+<p class="sub">기준 변경은 이 브라우저의 탐색 초안입니다. 이미 확인한 결과에 맞춰 기준을 바꾸면 사후 최적화가 됩니다. 새로운 기간에서 재검증한 뒤 채택하세요.</p>
+<label for="reason">변경 이유</label><textarea id="reason" placeholder="예: 더 엄격한 기준에서 후보가 유지되는지 민감도 확인"></textarea>
+<div class="actions"><button id="apply" class="primary">초안 기준 비교</button><button id="restore">공식 기준 복원</button><button id="export-policy">기준 JSON 내보내기</button><button id="export-report">검증 보고서 내보내기</button></div><p id="feedback" aria-live="polite" class="sub"></p>
+<details><summary>이 브라우저의 기준 변경 이력</summary><ol id="audit"></ol></details>
+<div class="actions"><label for="result-filter">결과 범위</label><select id="result-filter"><option value="all">모든 검사 (실패·표본 부족 포함)</option><option value="candidate">검토 후보</option><option value="changed">기준 변경으로 판정이 달라진 관계</option></select><label for="result-search">종목 검색</label><input id="result-search" type="search" placeholder="예: 에쓰오일"></div>
+<p class="sub" id="result-count" aria-live="polite"></p><div class="table-wrap"><table><thead><tr><th>선행 변수 → 대상</th><th>관측 주수</th><th>보정 q</th><th>오차 개선</th><th>개선 구간</th><th>방향 안정</th><th>공식 → 초안</th></tr></thead><tbody id="results"></tbody></table></div>
+</section>
+<section class="section"><h2>방법과 한계</h2><div class="method-grid"><div><h3>무엇을 계산했나요?</h3><p id="model-method"></p><p id="oos-method"></p></div><div><h3>무엇을 뜻하지 않나요?</h3><p>선행 예측력은 구조적 인과의 증명이 아닙니다. 시장 시차를 통제해도 금리·업황·공시 등 누락 변수가 남습니다. 원본은 현재 수정본이며 당시 공개 시점·수정 이력을 복원하지 않았으므로 투자 백테스트 수익률로 해석하지 않습니다.</p><p>거시 변수 대부분은 아직 대응 시계열이 없습니다. 해당 연결은 ‘미검증 가설’로 남습니다. 단기 주간 모형은 수개월~수년의 전기요금·부동산 전달 경로를 검증하지 않습니다.</p></div></div>
+<details><summary>확장 방향: 2D·3D와 분석 알고리즘</summary><p>현재 지도는 Cytoscape.js의 2D Canvas 그래프입니다. CSS는 외곽 화면을 담당합니다. 군집 개요 → 선택 변수 주변 1·2단계 → 전체 상세 순서로 탐색해 복잡도를 줄입니다. 점의 거리나 중앙 위치는 영향력 점수가 아닙니다.</p><p>3D는 공간적 가림·깊이 판단·텍스트 읽기 비용이 커 기본 화면으로 채택하지 않았습니다. 데이터 규모와 실제 렌더링 시간을 측정한 뒤 WebGL 2D, 서버 부분 그래프 조회, 필요하면 보조 3D 화면을 추가합니다. 렌더링 엔진과 분석 모델은 독립적으로 교체할 수 있습니다.</p><p>월·분기 계열과 발표 시점이 확보되면 다변량 VAR·국면별 추정, 조건부 독립 기반 PCMCI를 검토합니다. 신경망·GNN은 충분한 표본과 독립 검증이 마련된 뒤 비교할 예측 모델이며 가중치가 곧 인과 강도는 아닙니다.</p></details>
+<p class="sub">방법 근거: <a href="https://www.statsmodels.org/stable/generated/statsmodels.tsa.stattools.grangercausalitytests.html" target="_blank" rel="noopener">시차 예측 검정</a> · <a href="https://www.statsmodels.org/stable/generated/statsmodels.stats.multitest.multipletests.html" target="_blank" rel="noopener">다중검정 보정</a> · <a href="https://js.cytoscape.org/" target="_blank" rel="noopener">Cytoscape.js</a> · <a href="https://arxiv.org/abs/1702.07007" target="_blank" rel="noopener">PCMCI 연구</a></p>
+</section><footer class="footer" id="footer"></footer>
+</main>
+<script>/*__CYTOSCAPE__*/</script>
+<script>
+(() => {
+'use strict';
+const D=/*__NETWORK_DATA__*/null;
+const $=id=>document.getElementById(id), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const N=new Map(D.nodes.map(n=>[n.id,n])), E=new Map(D.edges.map(e=>[e.id,e]));
+const names={theme:'분류',scenario:'거시 경로',variable:'경제 변수',case:'사례',security:'주가',series:'관측 시계열'};
+const labels={candidate:'검토 후보',not_supported:'기준 미충족',insufficient:'표본 부족',nonstationary:'정상성 미충족',error:'계산 제외',unmeasured:'미검증 가설'};
+const pct=x=>Number.isFinite(x)?(x*100).toFixed(1)+'%':'—', num=x=>Number.isFinite(x)?x.toFixed(4):'—';
+const name=id=>N.get(id)?.label||id, base=D.manifest.policy;
+let policy={...base}, audit=[], selected='scenario:rates', shown=[], cy=null;
+const storageKey='investment-causal-draft:'+D.run_id;
+try{const old=JSON.parse(localStorage.getItem(storageKey)||'null');if(old&&old.policy&&Array.isArray(old.audit)){policy={...base,...old.policy};audit=old.audit;}}catch{}
+function decision(r,p){if(r.status!=='tested')return r.status;return r.q_value<=p.fdr_q&&r.rmse_gain>=p.min_rmse_gain&&r.positive_folds>=p.min_positive_folds&&r.sign_stability>=p.min_sign_stability?'candidate':'not_supported';}
+function inputs(){ $('q').value=policy.fdr_q;$('gain').value=policy.min_rmse_gain*100;$('positive').value=policy.min_positive_folds*100;$('stability').value=policy.min_sign_stability*100; }
+function persist(){try{localStorage.setItem(storageKey,JSON.stringify({policy,audit}));}catch{$('feedback').textContent='브라우저 저장이 제한되었습니다. JSON 내보내기로 보관하세요.';}}
+function updateAudit(){$('audit').innerHTML=audit.length?audit.slice().reverse().map(a=>'<li>'+esc(a.at+' · '+a.reason)+'<br>'+esc(JSON.stringify(a.before))+' → '+esc(JSON.stringify(a.after))+'</li>').join(''):'<li>변경 이력이 없습니다.</li>';}
+function nodeDetail(id){selected=id;const n=N.get(id);if(!n)return;$('node-picker').value=id;const related=D.edges.filter(e=>e.source===id||e.target===id);
+$('detail').innerHTML='<span class="badge">'+esc(names[n.kind])+'</span><h2>'+esc(n.label)+'</h2><p>'+esc(n.description||'')+'</p>'+(n.lag?'<p class="sub">설명상의 시차: '+esc(n.lag)+' · 통계 추정값 아님</p>':'')+(n.conditions?'<h3>성립 조건</h3><ul>'+n.conditions.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':'')+(n.limits?'<h3>한계·반대 경로</h3><ul>'+n.limits.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':'')+(n.href?'<p><a href="'+esc(n.href)+'">기존 상세에서 근거 읽기 →</a></p>':'')+(n.data_source?'<p class="sub">자료: '+esc(n.data_source.source)+'<br>원본 최종일: '+esc(n.data_source.end)+'</p>':'')+'<h3>관련 연결 '+related.length+'개</h3><div class="compact-list">'+related.map(e=>'<button data-edge="'+esc(e.id)+'">'+esc(name(e.source))+(e.kind==='membership'||e.kind==='measurement'?' — ':' → ')+esc(name(e.target))+'</button>').join('')+'</div>';
+if(cy){cy.elements().removeClass('selected');cy.getElementById(id).addClass('selected');}}
+function edgeDetail(id){const e=E.get(id);if(!e)return;const isEmp=e.kind==='empirical';
+let html='<span class="badge">'+(isEmp?'시계열 선행 예측':e.kind==='hypothesis'?'미검증 인과 가설':'소속·관측 관계')+'</span><h2>'+esc(name(e.source))+'<br>'+(isEmp||e.kind==='hypothesis'?'→':'—')+' '+esc(name(e.target))+'</h2>';
+if(isEmp){html+='<p>'+esc(labels[decision(e,policy)])+' · '+esc(e.reason)+'</p>';
+if(e.status==='tested'){html+='<dl><dt>학습 종료</dt><dd>'+esc(e.train_end)+'</dd><dt>검증 기간</dt><dd>'+esc(e.test_start)+'<br>'+esc(e.end)+'</dd><dt>시차</dt><dd>'+e.lag_weeks+'주</dd><dt>훈련 검정 p / 보정 q</dt><dd>'+num(e.p_value)+' / '+num(e.q_value)+'</dd><dt>예측오차 개선</dt><dd>'+pct(e.rmse_gain)+'</dd><dt>시차계수 합</dt><dd>'+num(e.effect)+'</dd><dt>95% HAC 구간</dt><dd>'+e.effect_ci.map(num).join(' ~ ')+'</dd></dl><p class="sub">'+esc(e.effect_unit)+'</p><h3>기준별 판단</h3>';
+const checks=[['보정 q',e.q_value<=policy.fdr_q],['오차 개선',e.rmse_gain>=policy.min_rmse_gain],['개선 구간',e.positive_folds>=policy.min_positive_folds],['방향 안정성',e.sign_stability>=policy.min_sign_stability]];
+html+=checks.map(([l,ok])=>'<div class="'+(ok?'rule-pass':'rule-fail')+'">'+(ok?'✓ ':'· ')+l+' '+(ok?'충족':'미충족')+'</div>').join('');html+='<h3>순차 검증</h3>'+e.folds.map((f,i)=>'<p class="sub">'+(i+1)+'구간 · '+f.start+' ~ '+f.end+'<br>오차 개선 '+pct(f.rmse_gain)+' · 계수합 '+num(f.effect)+'</p>').join('');}
+}else{html+='<p>'+esc(e.mechanism||'분류·소속 관계이며 인과 방향과 강도를 나타내지 않습니다.')+'</p>';if(e.sign)html+='<p>방향: '+esc(e.sign==='conditional'?'조건에 따라 달라짐':e.sign==='+'?'변수 수준 기준 같은 방향 (+)':'변수 수준 기준 반대 방향 (−)')+'</p><p class="sub">실측 강도·검증 점수 없음. 양 끝 변수 상세의 조건을 함께 확인하세요.</p>';}
+html+='<div class="actions"><button data-node="'+esc(e.source)+'">출발 변수</button><button data-node="'+esc(e.target)+'">도착 변수</button></div>';$('detail').innerHTML=html;if(cy){cy.elements().removeClass('selected');cy.getElementById(id).addClass('selected');}}
+function allowed(e){if(e.kind==='empirical')return $('show-empirical').checked&&(decision(e,policy)==='candidate'||$('show-rejected').checked);if(e.kind==='hypothesis')return $('show-hypothesis').checked;return $('show-membership').checked;}
+function draw(){
+const url=new URL(location.href);url.searchParams.set('view',$('view').value);url.searchParams.set('node',selected);url.searchParams.set('depth',$('depth').value);history.replaceState(null,'',url);
+let nodes=D.nodes,edges=D.edges.filter(allowed);const view=$('view').value;
+if(view==='overview'){
+nodes=D.nodes.filter(n=>n.kind==='theme'||n.kind==='scenario').map(n=>({...n,childCount:D.edges.filter(e=>e.kind==='membership'&&e.source===n.id).length}));
+const ids=new Set(nodes.map(n=>n.id));edges=edges.filter(e=>ids.has(e.source)&&ids.has(e.target));
+if($('show-hypothesis').checked)D.edges.filter(e=>e.bridge).forEach(e=>{const a=N.get(e.source)?.group,b=N.get(e.target)?.group;if(a&&b&&a!==b){const aggregated={...e,id:'overview:'+e.id,source:'scenario:'+a,target:'scenario:'+b,mechanism:'군집 간 연결: '+name(e.source)+' → '+name(e.target)+'. '+e.mechanism};edges.push(aggregated);E.set(aggregated.id,aggregated);}});
+}
+if(view==='focus'){const ids=new Set([selected]);for(let k=0;k<Number($('depth').value);k++){const now=new Set(ids);edges.forEach(e=>{if(now.has(e.source)||now.has(e.target)){ids.add(e.source);ids.add(e.target);}});}nodes=D.nodes.filter(n=>ids.has(n.id));edges=edges.filter(e=>ids.has(e.source)&&ids.has(e.target));}
+shown=edges;
+$('edge-list').innerHTML=edges.length?edges.map(e=>'<button data-edge="'+esc(e.id)+'">'+esc(name(e.source))+(e.kind==='membership'||e.kind==='measurement'?' — ':' → ')+esc(name(e.target))+'</button>').join(''):'<p>이 보기에서 표시할 연결이 없습니다. 레이어 또는 주변 범위를 바꿔보세요.</p>';
+$('graph-status').textContent=nodes.length+'개 노드 · '+edges.length+'개 연결 · 드래그 이동 / 휠 확대';
+if(!globalThis.cytoscape){$('graph').innerHTML='<p class="empty">그래프를 불러오지 못했습니다. 아래 연결 목록으로 탐색할 수 있습니다.</p>';return;}
+const style=getComputedStyle(document.documentElement),c=token=>style.getPropertyValue(token).trim();
+const elements=[...nodes.map(n=>({data:{...n,display:(n.label.length>25?n.label.slice(0,25)+'…':n.label)+(n.childCount!==undefined?'\n('+n.childCount+'개 소속)':'')}})),...edges.map(e=>({data:{...e}}))];
+if(cy)cy.destroy();cy=cytoscape({container:$('graph'),elements,style:[
+{selector:'node',style:{'label':'data(display)','font-size':12,'font-family':'Pretendard, system-ui, sans-serif','color':c('--ink'),'text-wrap':'wrap','text-max-width':110,'text-valign':'bottom','text-margin-y':6,'width':24,'height':24,'background-color':c('--blue'),'min-zoomed-font-size':10}},
+{selector:'node[kind="theme"]',style:{'shape':'round-rectangle','width':50,'height':35,'background-color':c('--sub')}},
+{selector:'node[kind="scenario"]',style:{'shape':'round-rectangle','width':45,'height':32,'background-color':c('--violet')}},
+{selector:'node[kind="case"]',style:{'shape':'round-rectangle','background-color':c('--orange')}},
+{selector:'node[kind="series"],node[kind="security"]',style:{'background-color':c('--green')}},
+{selector:'edge',style:{'width':1,'line-color':c('--sub'),'curve-style':'bezier','opacity':.45}},
+{selector:'edge[kind="membership"],edge[kind="measurement"]',style:{'line-style':'dotted'}},
+{selector:'edge[kind="hypothesis"]',style:{'line-color':c('--violet'),'target-arrow-color':c('--violet'),'target-arrow-shape':'triangle','opacity':.75}},
+{selector:'edge[kind="empirical"]',style:{'line-color':c('--green'),'target-arrow-color':c('--green'),'target-arrow-shape':'triangle','opacity':.8,'width':2}},
+{selector:'.selected',style:{'border-width':3,'border-color':c('--ink'),'line-color':c('--ink'),'opacity':1}}
+],layout:{name:'cose',animate:false,randomize:false,nodeRepulsion:()=>12000,idealEdgeLength:()=>95,numIter:350,padding:38},wheelSensitivity:.22,minZoom:.15,maxZoom:3});
+cy.on('tap','node',ev=>{nodeDetail(ev.target.id());});cy.on('dbltap','node',ev=>{selected=ev.target.id();$('view').value='focus';draw();});cy.on('tap','edge',ev=>edgeDetail(ev.target.id()));
+}
+function table(){const search=$('result-search').value.toLowerCase(),filter=$('result-filter').value;const rs=D.results.filter(r=>(name(r.source)+' '+name(r.target)).toLowerCase().includes(search)).filter(r=>filter==='all'||(filter==='candidate'?decision(r,policy)==='candidate':decision(r,policy)!==decision(r,base)));
+rs.sort((a,b)=>(decision(b,policy)==='candidate')-(decision(a,policy)==='candidate')||(a.q_value??2)-(b.q_value??2));
+$('result-count').textContent='전체 '+D.results.length+'개 검사 중 '+rs.length+'개 표시 · 공식 후보 '+D.results.filter(r=>decision(r,base)==='candidate').length+'개 → 초안 후보 '+D.results.filter(r=>decision(r,policy)==='candidate').length+'개';
+$('results').innerHTML=rs.length?rs.map(r=>'<tr><td><button data-edge="'+esc(r.id)+'">'+esc(name(r.source))+' → '+esc(name(r.target))+'</button></td><td>'+r.n+'</td><td>'+num(r.q_value)+'</td><td>'+pct(r.rmse_gain)+'</td><td>'+pct(r.positive_folds)+'</td><td>'+pct(r.sign_stability)+'</td><td>'+esc(labels[decision(r,base)])+' → '+esc(labels[decision(r,policy)])+'</td></tr>').join(''):'<tr><td colspan="7">조건에 맞는 결과가 없습니다. 모든 검사에서 표본 부족과 미충족 이유를 확인하세요.</td></tr>';}
+function download(filename,value){const u=URL.createObjectURL(new Blob([JSON.stringify(value,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=u;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);}
+$('node-picker').innerHTML=D.nodes.slice().sort((a,b)=>a.label.localeCompare(b.label,'ko')).map(n=>'<option value="'+esc(n.id)+'">['+esc(names[n.kind])+'] '+esc(n.label)+'</option>').join('');
+$('focus').onclick=()=>{selected=$('node-picker').value;$('view').value='focus';draw();nodeDetail(selected);};$('view').onchange=draw;$('depth').onchange=draw;$('fit').onclick=()=>cy?.fit(undefined,35);$('reset').onclick=()=>{$('view').value='overview';draw();};$('zoom-in').onclick=()=>cy?.zoom(cy.zoom()*1.3);$('zoom-out').onclick=()=>cy?.zoom(cy.zoom()/1.3);
+['show-hypothesis','show-membership','show-empirical','show-rejected'].forEach(id=>$(id).onchange=draw);
+document.addEventListener('click',ev=>{const e=ev.target.closest('[data-edge]'),n=ev.target.closest('[data-node]');if(e){edgeDetail(e.dataset.edge);if(e.closest('#results'))$('detail').scrollIntoView({behavior:'smooth',block:'center'});}else if(n)nodeDetail(n.dataset.node);});
+$('apply').onclick=()=>{const reason=$('reason').value.trim();const next={...base,fdr_q:Number($('q').value),min_rmse_gain:Number($('gain').value)/100,min_positive_folds:Number($('positive').value)/100,min_sign_stability:Number($('stability').value)/100};
+if(!reason||!['q','gain','positive','stability'].every(id=>$(id).value!==''&&$(id).checkValidity())){$('feedback').textContent='유효 범위의 숫자와 변경 이유를 입력하세요.';return;}
+audit.push({at:new Date().toISOString(),reason,before:policy,after:next,run_id:D.run_id});policy=next;policy.version=base.version+'-draft-'+audit.length;policy.reason=reason;persist();updateAudit();table();draw();$('feedback').textContent='초안 판정을 비교했습니다. 원본 데이터·모형은 다시 학습하지 않았고 운영 기준도 변경하지 않았습니다.';};
+$('restore').onclick=()=>{audit.push({at:new Date().toISOString(),reason:'공식 기준 복원',before:policy,after:{...base},run_id:D.run_id});policy={...base};inputs();persist();updateAudit();table();draw();$('feedback').textContent='공식 기준으로 복원했습니다.';};
+$('export-policy').onclick=()=>download('causal-policy-draft.json',policy);$('export-report').onclick=()=>download('causal-report-'+D.run_id+'.json',{...D,draft_policy:policy,draft_decisions:D.results.map(r=>({id:r.id,decision:decision(r,policy)})),local_audit:audit});
+$('result-filter').onchange=table;$('result-search').oninput=table;document.querySelector('.site-search').onsubmit=function(e){e.preventDefault();location.href='index.html#search?q='+encodeURIComponent(this.q.value);};
+$('stats').innerHTML='<span><b>'+D.manifest.case_count+'</b>사례</span><span><b>'+D.manifest.macro_count+'</b>거시 경로</span><span><b>'+D.nodes.length+'</b>공유 노드</span><span><b>'+D.results.length+'</b>시차 검사</span>';
+$('run-info').textContent='실행 '+D.run_id+' · 기준 '+base.version+' · 자료 컷오프 '+D.manifest.as_of+' · 현재 수정본 탐색 분석';
+$('model-method').textContent='주간 로그수익률로 변환하고, 대상·시장의 과거 수익률에 선행 변수의 과거 값을 추가합니다. 고정 '+base.lags+'주 시차의 공동 유의성을 훈련 구간에서 HAC Wald 검정하고 검사 전체에 BH 다중검정 보정을 적용합니다. 공통 관측 최소 '+base.min_observations+'주.';
+$('oos-method').textContent='앞 '+Math.round(base.train_fraction*100)+'%를 첫 훈련 구간으로 두고 이후 '+base.folds+'개 구간을 순서대로 검증합니다. 구간 시작 전에 계수를 학습하며 한 주 앞 예측에는 끝난 과거 주 자료만 사용합니다. 예측 개선은 미래 구간 RMSE로 측정합니다.';
+$('footer').textContent='기준·자료·코드 해시와 라이브러리 버전은 보고서에 포함됩니다. 미래의 자동 갱신·재학습 서비스는 아직 없습니다. Cytoscape.js 3.33.1 · MIT License';
+inputs();updateAudit();const param=new URLSearchParams(location.search);if(N.has(param.get('node'))){selected=param.get('node');$('view').value='focus';}if(['overview','focus','all'].includes(param.get('view')))$('view').value=param.get('view');if(['1','2'].includes(param.get('depth')))$('depth').value=param.get('depth');nodeDetail(selected);draw();table();
+matchMedia('(prefers-color-scheme:dark)').addEventListener('change',draw);
+})();
+</script>
+</body></html>

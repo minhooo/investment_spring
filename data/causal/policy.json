@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0",
+  "description": "탐색용 기본 기준. 인과 확률이나 매매 신호가 아닌 검토 후보 필터.",
+  "frequency": "W-FRI",
+  "lags": 2,
+  "min_observations": 80,
+  "train_fraction": 0.6,
+  "folds": 4,
+  "stationarity_alpha": 0.05,
+  "fdr_q": 0.05,
+  "min_rmse_gain": 0.02,
+  "min_positive_folds": 0.75,
+  "min_sign_stability": 0.75,
+  "max_gap_days": 10,
+  "reason": "임의의 종합점수 대신 통계·미래 구간 성과·부호 안정성의 독립 기준을 공개한다."
+}

@@ -158,7 +158,20 @@ python tools/build_soulbrain_split.py
 python tools/build_all.py
 ```
 
-### 지수 레이더
+### 통합 인과망·시계열 검증실
+
+[통합망](https://investment-spring.vercel.app/causal-network.html)은 기존 거시 경로와 모든 사례를 공유 변수·테마로 연결하고, 조건부 인과 가설과 실제 시계열 선행 예측력을 구분한다. CSS 화면 안에서 2D Canvas 그래프가 군집·주변 1·2단계·전체 보기를 제공한다. 판단 기준은 종합점수가 아닌 공개된 네 기준이며 브라우저 초안·변경 이유·JSON 내보내기와 로컬 실행 스냅샷을 제공한다. [데이터·모형·검증 계약](design/CAUSAL_NETWORK_SPEC.md)에 현재 기능과 3D/PCMCI/장기 모형 확장 한계를, [인과망 확장 체크리스트](design/CAUSAL_NETWORK_CONTRIBUTING.md)에 새 가설·계열·기준을 안전하게 추가하는 절차를 기록한다.
+
+```powershell
+python -m venv .venv-network
+.venv-network/Scripts/python.exe -m pip install -r requirements-network.txt
+.venv-network/Scripts/python.exe tools/test_network_analysis.py
+.venv-network/Scripts/python.exe tools/build_causal_network.py
+```
+
+전체 빌드는 포털 생성 뒤 통합망을 자동 재생성한다. 원본 갱신을 감시하는 서비스는 없으며 운영 반영은 기존 `python tools/deploy_dashboard.py`로 한다. 초안 기준은 이 브라우저에만 저장되며 공개 기준을 바꾸거나 모형을 재학습하지 않는다.
+
+### 지수 레이더 사용법
 
 `지수 레이더`는 KOSPI 200 구성목록과 키움 유통시가총액 기반 참고 비중을 기준일·출처·품질 상태와 함께 보여준다. [History](https://investment-spring.vercel.app/index-radar-history.html)는 첫 리뷰인 `2026년 상반기 KOSPI 200 정기변경`의 편입 4종목을 한 페이지에서 비교하고 종목별 앵커로 깊게 본다. 화면·데이터 계약과 KRX 방법론 재현, 이력, 후보 신호 확장 원칙은 [INDEX_RADAR_SPEC.md](design/INDEX_RADAR_SPEC.md)에 있다. 현재 구성목록은 네이버 증권 보조 출처이고, 현재가·시가총액·유통주식수·유통비율은 키움증권 REST `ka10001`으로 보강한다. History 관측값은 키움 `ka10059`, 지수 비중·리밸런싱 수요는 증권사 추정으로 서로 구분한다. 이는 KRX 공식 비중·지수주식수 기반 비중을 대신하지 않는다.
 

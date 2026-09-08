@@ -33,8 +33,14 @@ HTML은 재검증 캐시를 사용하고 `portal-data.js`, `index-radar-data/**`
 
 ## 성공 판정과 복구
 
+통합 인과망 `causal-network.html`도 모든 HTML 해시 검증에 자동 포함된다. 전체 빌드와 개별 포털 빌드는 통합망을 후속 생성하며 `.venv-network/Scripts/python.exe`가 있으면 해당 환경을 사용한다. 처음에는 `requirements-network.txt`의 의존성을 그 환경에 설치한다. 로컬 실행 스냅샷 `data/causal/runs/`와 원본·패키지는 기존 `.vercelignore`에 의해 업로드되지 않는다. 통합망 HTML에는 공개용 분석 결과·조건·상대 원본 파일명·해시·실행 환경 버전만 인라인한다. 브라우저 초안의 공식 채택은 원본 `data/causal/policy.json`을 버전·이유와 함께 수정한 뒤 다시 빌드·배포한다. JSON 내보내기나 로컬 초안 저장만으로 운영 기준이 바뀌지 않는다.
+
 배포 명령이 성공한 뒤 고정 주소의 루트, 모든 HTML, `portal-data.js`, `index-radar-data/**`를 실제로 받아 로컬 파일과 SHA-256 또는 바이트를 비교한다. alias 전환 직후 이전 엣지 응답이 남는 경우에는 파일별로 짧게 재시도한 뒤 판단한다. 사례별 상세 파일이 존재하는지도 검사한다. 재시도 후에도 검증이 실패하면 성공으로 보고하지 않는다. 배포 자체가 성공하고 이후 검증에서 실패했다면 새 버전이 이미 공개됐을 수 있으므로 오류를 확인한다.
 
 이전 버전 복구는 Vercel 프로젝트의 Deployments에서 정상 배포를 선택해 운영 버전으로 복원하거나, 정상 원본을 복원한 후 배포 명령을 실행한다. 원본을 고치지 않고 Vercel에서 예전 배포를 단순 재배포하면 최신 로컬 변경이 올라가지 않는다.
 
 공식 참고: [CLI 운영 배포](https://vercel.com/docs/cli/deploy), [프로젝트 설정](https://vercel.com/docs/project-configuration/vercel-json).
+
+### 2026-09-08 통합 인과망 운영 확인
+
+`deploy_dashboard.py`로 운영 배포 `dpl_AGeUxykTfmuSSjfjnTZ5gD8mz6Qq`를 생성했고 고정 주소 30개 파일과 루트의 로컬 바이트 일치 검증이 통과했다. 통합망 분석 실행은 `c144f90aa4c5927f514f`다. 운영 1440/740px 밝은 모드·1024/360px 어두운 모드에서 그래프·상세·초안 기준 저장/복원·보고서 다운로드·통합 검색·거시 화면 복귀를 검증했고 가로 넘침과 JS 오류가 없었다. 테스트는 일회 실행이며 상시 감시 서비스가 아니다.
