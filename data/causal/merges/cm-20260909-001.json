@@ -1,0 +1,515 @@
+{
+  "batch_id": "cm-20260909-001",
+  "review_date": "2026-09-09",
+  "scope": "pending 후보와 인접 경로의 증분 검토; 전체 감사 아님",
+  "status": "complete",
+  "reviewed_count": 18,
+  "merged_count": 12,
+  "deferred_count": 6,
+  "rejected_card_count": 0,
+  "audit_count_preserved": 18,
+  "changes": {
+    "batch": "cm-20260909-001",
+    "new_nodes": {
+      "llm-power": [
+        "ai-vendor-credit-support",
+        "ai-project-financeability",
+        "ai-project-cashflow-mismatch",
+        "ai-project-default-risk",
+        "vendor-contingent-cash-outflow"
+      ],
+      "yen-carry": [
+        "jp-import-price-index",
+        "jp-headline-inflation"
+      ],
+      "rates": [
+        "treasury-liquidity-support-buyback",
+        "off-the-run-treasury-liquidity"
+      ]
+    },
+    "updated_nodes": [
+      "fixed-rate-bond-price",
+      "term-premium",
+      "expected-policy-path",
+      "long-bond-net-supply",
+      "structural-bond-demand",
+      "earnings",
+      "buyback-flow-intensity",
+      "issuer-price-support-pressure",
+      "buyback-post-use",
+      "us-cross-listing-access",
+      "ai-provider-profit",
+      "dc-construction"
+    ],
+    "new_paths": [
+      [
+        "usd-jpy-rate",
+        "jp-import-price-index",
+        "+"
+      ],
+      [
+        "jp-import-price-index",
+        "jp-headline-inflation",
+        "+"
+      ],
+      [
+        "treasury-liquidity-support-buyback",
+        "off-the-run-treasury-liquidity",
+        "+"
+      ],
+      [
+        "ai-vendor-credit-support",
+        "ai-project-financeability",
+        "+"
+      ],
+      [
+        "ai-project-financeability",
+        "dc-construction",
+        "+"
+      ],
+      [
+        "ai-project-cashflow-mismatch",
+        "ai-project-default-risk",
+        "+"
+      ],
+      [
+        "ai-project-default-risk",
+        "vendor-contingent-cash-outflow",
+        "conditional"
+      ],
+      [
+        "power-price",
+        "ai-project-cashflow-mismatch",
+        "+"
+      ]
+    ],
+    "new_bridges": [
+      [
+        "refinancing",
+        "ai-project-cashflow-mismatch",
+        "+",
+        "미국 AI 프로젝트가 실제 차환·변동금리 부채를 갖고 같은 기간의 이자 증가를 고객 현금회수·금리헤지·준비금으로 흡수하지 못할 때. 한국 PF와 직접 연결하는 선이 아님."
+      ]
+    ],
+    "notes": [
+      "usd-jpy-rate:jp-import-price-index",
+      "jp-import-price-index:jp-headline-inflation",
+      "treasury-liquidity-support-buyback:off-the-run-treasury-liquidity",
+      "ai-vendor-credit-support:ai-project-financeability",
+      "ai-project-financeability:dc-construction",
+      "ai-project-cashflow-mismatch:ai-project-default-risk",
+      "ai-project-default-risk:vendor-contingent-cash-outflow",
+      "power-price:ai-project-cashflow-mismatch",
+      "lt-rate:fixed-rate-bond-price",
+      "buyback-flow-intensity:issuer-price-support-pressure"
+    ]
+  },
+  "cards": [
+    {
+      "candidate_id": "ca-20260909-260820",
+      "candidate_path": "data/causal/candidates/20260820-usdkrw-futures-short-strategy.md",
+      "status": "deferred",
+      "adopted_or_reused_ids": [],
+      "disposition": "KRX 달러선물·NDF·FX스왑·현물의 만기/결제/단위가 달라 별도 한국 FX 부분망 필요. 국민연금·당국 실집행과 환율 수준 정의 후 검토. 계약 손익·인수도는 인과선 제외.",
+      "source_path": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/2026-08-20_환율 하락에 배팅하는 방법.md",
+      "source_exists": true,
+      "source_sha256": "a8ce8a52dd205cd7aef0a4289bdf1772ca8a3ab4bed12f200ed53c5dc76ddb09",
+      "candidate_before_sha256": "dcacf5c27af66da4fe9338dee580ddc55448fc5a31043892eb959f987e7fdff1",
+      "candidate_after_sha256": "5fba07cfc97f7644a8a1b9bcaa1126f08544103b9f77aa779dad3d53f16371ac"
+    },
+    {
+      "candidate_id": "ca-20260909-034",
+      "candidate_path": "data/causal/candidates/20260821-midterm-tariffs-equities.md",
+      "status": "merged",
+      "adopted_or_reused_ids": [
+        "buyback-post-use",
+        "buyback-flow-intensity"
+      ],
+      "disposition": "매입·후속 소각·배당을 분리하고 EPS 분모 중복 계산을 교정. 관세는 전력요금 tariff와 별개. 대미투자·공공보증·관세·중간선거 신규 경로는 보류.",
+      "source_path": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/2026-08-21_중간선거 이후 코스피,나스닥이 폭락할 가능성이 높은 이유.md",
+      "source_exists": true,
+      "source_sha256": "78c76c3226342718df6c95efc405bb7249a950359b482f82e6663dd011249d53",
+      "candidate_before_sha256": "da621aee0a713bbadd667b6f37a1422292049cea9ebcaaf2e187d297fe340af8",
+      "candidate_after_sha256": "d84cdf820a97d5251d2b30f3c0978f8c2a6cc5f9e7a48db295dc6835c7048baa"
+    },
+    {
+      "candidate_id": "ca-20260909-032",
+      "candidate_path": "data/causal/candidates/20260822-gold-bitcoin-rally-drivers.md",
+      "status": "deferred",
+      "adopted_or_reused_ids": [],
+      "disposition": "금·비트코인의 핵심 경로는 보류. 실질금리·준비자산 다변화·암호자산 위험선호를 분리해야 함. 바이백의 공통 부분은 002의 공식 ID 참조만 남기며 카드 전체를 병합으로 세지 않음.",
+      "source_path": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/새 폴더/2026-08-22_금값과 비트코인이 상승하는 이유.md",
+      "source_exists": true,
+      "source_sha256": "3730881fdb163b83b9842ee6bb13829532f0e99aff2b79247e95d4588934f02a",
+      "candidate_before_sha256": "af6b8b3666d3283d52b5bdb681a79df74620d0fbf67d49c470643a95c3d5523a",
+      "source_path_before_relocation": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/2026-08-22_금값과 비트코인이 상승하는 이유.md",
+      "candidate_after_sha256": "2d2f1bd4c4e568611e0db3aa5bd75e1fcba12c96e69406612030f85e4f97a9b9"
+    },
+    {
+      "candidate_id": "ca-20260909-023",
+      "candidate_path": "data/causal/candidates/20260823-current-most-promising-investment.md",
+      "status": "merged",
+      "adopted_or_reused_ids": [
+        "fixed-rate-bond-price",
+        "expected-policy-path",
+        "structural-bond-demand"
+      ],
+      "disposition": "듀레이션·볼록성 및 가격/분배/총수익·YTM의 차이를 기존 상세에 반영. TLT 원화수익·CIP/베이시스·미국 ZB 순DV01은 기존 한국 선물·주식 환산과 합치지 않고 보류.",
+      "source_path": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/새 폴더/2026-08-23_현재 가장 유망한 투자처.md",
+      "source_exists": true,
+      "source_sha256": "ab497373538315758b6e3f88e3c1777bbdad65f722cd46daf32fd72e3ae5c4e8",
+      "candidate_before_sha256": "6a2bd5509c9a8be73826406bf3d1073b9d1bb5ceabf4eddde91a0b931b818f2d",
+      "source_path_before_relocation": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/2026-08-23_현재 가장 유망한 투자처.md",
+      "candidate_after_sha256": "fd38007b7d275252f9a6771cb05c6d7b9586cea9468ec322a2e039694e88da8e"
+    },
+    {
+      "candidate_id": "ca-20260909-033",
+      "candidate_path": "data/causal/candidates/20260824-kospi-foreign-selling-buyback-liquidity.md",
+      "status": "merged",
+      "adopted_or_reused_ids": [
+        "buyback-flow-intensity",
+        "issuer-price-support-pressure",
+        "long-bond-net-supply",
+        "structural-bond-demand"
+      ],
+      "disposition": "기존 매입·유동성 조건 보강. 체결 투자자 순매매의 합은 0이므로 외국인 매도에서 다른 순매수를 뺀 잔여 불균형 정의는 수정·기각. 공격적 주문/호가를 정의한 뒤 새 미시구조 노드 검토. 예탁금·곡물·AI 신용물 추가 분기는 보류.",
+      "source_path": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/새 폴더/2026-08-24_코스피에서 외국인이 계속해서 매도할 가능성이 높은 이유.md",
+      "source_exists": true,
+      "source_sha256": "d2b689c7de056ea81d932c79f22b326050ef13b87cfb2cf7a31286fe1ae11825",
+      "candidate_before_sha256": "0c9b1e9250bff458e7077d11373716c4a639bb76c6f52d40db9e79684612d700",
+      "candidate_after_sha256": "c15a11a3296ffca7266fa26e9fac0a35164b188f6c3059dc852a325bcfd8532d"
+    },
+    {
+      "candidate_id": "ca-20260909-260824",
+      "candidate_path": "data/causal/candidates/20260824-long-treasury-investment-methods.md",
+      "status": "merged",
+      "adopted_or_reused_ids": [
+        "fixed-rate-bond-price",
+        "treasury-liquidity-support-buyback",
+        "off-the-run-treasury-liquidity"
+      ],
+      "disposition": "장기채 가격·바이백 유동성 경로를 기존·002와 재사용. TMF 일일재설정·CME 인도/롤·원화 총수익은 별도 상품/관측 정의로 보류.",
+      "source_path": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/새 폴더/2026-08-24_장기국채를 가장 효과적으로 투자하는 방법.md",
+      "source_exists": true,
+      "source_sha256": "ab22b68191973fb2603496c18792d89cbf574b9ab73603ba2c968c6189879e1b",
+      "candidate_before_sha256": "6c80f42f28f666d7ef2e30a7924d4175e74ee12566cd819a472cd45943762d5b",
+      "source_path_before_relocation": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/2026-08-24_장기국채를 가장 효과적으로 투자하는 방법.md",
+      "candidate_after_sha256": "b9fac4bcb96b6526d0eb4bba5a1537a8abe8639b2b198a59fb427c0accf0b6b1"
+    },
+    {
+      "candidate_id": "ca-20260909-025",
+      "candidate_path": "data/causal/candidates/20260825-yield-curve-treasury-futures.md",
+      "status": "merged",
+      "adopted_or_reused_ids": [
+        "expected-policy-path",
+        "term-premium",
+        "lt-rate",
+        "fixed-rate-bond-price"
+      ],
+      "disposition": "기존 금리 분해·고정채 가격선 재사용과 조건 보강. 회사채 스프레드 분해·미국 ZB CTD/인도·TLT 총수익은 별도 정의로 보류.",
+      "source_path": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/새 폴더/2026-08-25_장단기 금리차를 이용한 고수익 투자전략.md",
+      "source_exists": true,
+      "source_sha256": "bec8bb3395810652599e0d4df53c0667e367f739b4486078cb3c06e956dbbc02",
+      "candidate_before_sha256": "35fb10b08c7ca5d96a24543275163214a60caa9ec97b59e8753830bbc9f49684",
+      "source_path_before_relocation": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/2026-08-25_장단기 금리차를 이용한 고수익 투자전략.md",
+      "candidate_after_sha256": "b44249323ed1a59ea3f15d0da9e5349140d8ec33788a0957f137658d2d781a11"
+    },
+    {
+      "candidate_id": "ca-20260909-031",
+      "candidate_path": "data/causal/candidates/20260826-korea-housing-ai-circular-finance.md",
+      "status": "merged",
+      "adopted_or_reused_ids": [
+        "ai-vendor-credit-support",
+        "ai-project-financeability",
+        "ai-project-cashflow-mismatch",
+        "ai-project-default-risk",
+        "vendor-contingent-cash-outflow",
+        "refinancing",
+        "power-price"
+      ],
+      "disposition": "미국 AI 프로젝트 분기를 027과 중복 없이 병합. 한국 정책모기지·HF MBS·HUG 전체 상품손실은 기존 PF와 다르므로 보류. 한국 주택→미국 AI 직접선 없음.",
+      "source_path": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/새 폴더/2026-08-26_우리나라 부동산금융과 AI 순환금융이 유사한 이유.md",
+      "source_exists": true,
+      "source_sha256": "099d85744c304f9bc0929ba3fa87b5918d094e5bc0e2caa2a1ad7359a6688eb1",
+      "candidate_before_sha256": "87e8ba6134714e848e18276cf3e5d75b8bb2b66b4960294cf77d3ecff306c6e7",
+      "source_path_before_relocation": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/2026-08-26_우리나라 부동산금융과 AI 순환금융이 유사한 이유.md",
+      "candidate_after_sha256": "a1af7e9fca68482f2cb632574017833bce7975b8b2543c8975921c7a39880920"
+    },
+    {
+      "candidate_id": "ca-20260909-260826",
+      "candidate_path": "data/causal/candidates/20260826-kospi-volatility-option-strategy.md",
+      "status": "deferred",
+      "adopted_or_reused_ids": [],
+      "disposition": "V-KOSPI200·옵션 보험수요·마진은 한국 국채선물과 기초자산·계약이 다름. 별도 옵션 곡면·만기·실현변동성 정의 필요. 현금결제 산술은 인과선으로 등록하지 않음.",
+      "source_path": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/새 폴더/2026-08-26_코스피 변동성을 이용한 투자전략.md",
+      "source_exists": true,
+      "source_sha256": "39394287c9125e931ab4b7beadfcc680265ad4708377f551d2a7150a61277f01",
+      "candidate_before_sha256": "195d28b6d05c48c66815662a8b0aef210495d8d1bac39d0819f2b632fa3a81f5",
+      "source_path_before_relocation": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/2026-08-26_코스피 변동성을 이용한 투자전략.md",
+      "candidate_after_sha256": "20e1ecb56f3d35fde8797bd5ae11b3422ea7eac6716273b41c13dce1d11d7e26"
+    },
+    {
+      "candidate_id": "ca-20260909-030",
+      "candidate_path": "data/causal/candidates/20260827-ai-industry-financing-triggers.md",
+      "status": "merged",
+      "adopted_or_reused_ids": [
+        "ai-vendor-credit-support",
+        "ai-project-financeability",
+        "ai-provider-profit"
+      ],
+      "disposition": "027·031과 겹치는 프로젝트 계약상 신용보강 부분만 좁혀 채택. 지분투자·클라우드 크레딧·기업 runway·경쟁 동기는 별개로 보류. 필요자금과 조달능력도 분리.",
+      "source_path": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/새 폴더/2026-08-27_AI 산업을 붕괴시킬 트리거.md",
+      "source_exists": true,
+      "source_sha256": "a3dae4ec60897820e824f335e14c5f607ffbb141d252e1dc81eabbfb55977b48",
+      "candidate_before_sha256": "a7e4d2676803c734f4fb997253c7a9cf421fa60b8c0d2fb835eeb156a7edda13",
+      "source_path_before_relocation": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/2026-08-27_AI 산업을 붕괴시킬 트리거.md",
+      "candidate_after_sha256": "7f689998151ba99ce3674c4ce35d789140b8e2c36af74189e10899e5e5dc6bb2"
+    },
+    {
+      "candidate_id": "ca-20260909-027",
+      "candidate_path": "data/causal/candidates/20260827-nvidia-ai-financing-us-long-yield.md",
+      "status": "merged",
+      "adopted_or_reused_ids": [
+        "ai-vendor-credit-support",
+        "ai-project-financeability",
+        "dc-construction",
+        "ai-project-cashflow-mismatch",
+        "ai-project-default-risk",
+        "vendor-contingent-cash-outflow",
+        "long-bond-net-supply",
+        "structural-bond-demand"
+      ],
+      "disposition": "미국 프로젝트 금융·현금 부족·유효 보증 지급 5개 노드 채택. 독립 고객 현금회수는 조건으로 보존. 유동화·펀드 환매·기관 듀레이션·국채 대체의 신규 경로와 최종손실 노드는 보류.",
+      "source_path": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/새 폴더/2026-08-27_엔비디아로 인해서 미국 장기금리가 상승할 가능성.md",
+      "source_exists": true,
+      "source_sha256": "c4bd94fab4b220298bf824a4f9f0d074d04e31037ca5689ab8b92d7a31f91410",
+      "candidate_before_sha256": "6fde68881b183fd43f0fa4f6001d04d846593a2588a3d9e87918e91e1e0a191a",
+      "source_path_before_relocation": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/2026-08-27_엔비디아로 인해서 미국 장기금리가 상승할 가능성.md",
+      "candidate_after_sha256": "6a0e6889d90981e01be313353c078ea3e6bf530e79858aee7c87571bf70d58be"
+    },
+    {
+      "candidate_id": "ca-20260909-028",
+      "candidate_path": "data/causal/candidates/20260828-france-debt-reset.md",
+      "status": "deferred",
+      "adopted_or_reused_ids": [],
+      "disposition": "프랑스 OAT–Bund 신용·유동성·분절화 스프레드는 기존 일반 기간프리미엄과 합치지 않음. 국가별 경로와 정책수단의 현재 유효기간·적격성 확인 필요.",
+      "source_path": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/새 폴더/2026-08-28_프랑스가 부채리셋을 할 경우 시장에 미치는 영향력.md",
+      "source_exists": true,
+      "source_sha256": "0268f723edd8989092992a18bd6bd6472d52b26080b0cfd432708576f8a8e12c",
+      "candidate_before_sha256": "362f9c19c0d21bcf0dd71e4814fb85cbd0567ef51200aa7eb675fc64667b748f",
+      "source_path_before_relocation": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/2026-08-28_프랑스가 부채리셋을 할 경우 시장에 미치는 영향력.md",
+      "candidate_after_sha256": "5cc31efa5c7e00db05dab90f99109abffc01bb2c4d4ce4dcb290a9bd243cd8a7"
+    },
+    {
+      "candidate_id": "ca-20260909-002",
+      "candidate_path": "data/causal/candidates/20260829-us-treasury-buybacks-gold-bitcoin.md",
+      "status": "merged",
+      "adopted_or_reused_ids": [
+        "treasury-liquidity-support-buyback",
+        "off-the-run-treasury-liquidity"
+      ],
+      "disposition": "유동성 지원 바이백만 채택. 현금관리 바이백·TGA–준비금 회계·준비금 희소성·금/비트코인은 미편입.",
+      "source_path": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/새 폴더/2026-08-29_미 재무부 바이백이 비트코인,금값을 상승시키는 이유.md",
+      "source_exists": true,
+      "source_sha256": "87b66dca0c9d31f54b0fa23caa13a5974af155d8d93f1abfb30a3a9b944e96db",
+      "candidate_before_sha256": "21d477c18b133e5eff1ca35b3e1826716209e0da3bdfa8fde3cd019d9d25a709",
+      "source_path_before_relocation": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/2026-08-29_미 재무부 바이백이 비트코인,금값을 상승시키는 이유.md",
+      "candidate_after_sha256": "748302743f14e5be39569c510ef5424ea077c342fe07157d64d949c95eb19983"
+    },
+    {
+      "candidate_id": "ca-20260909-004",
+      "candidate_path": "data/causal/candidates/20260830-agricultural-prices-korea-inflation.md",
+      "status": "deferred",
+      "adopted_or_reused_ids": [],
+      "disposition": "밀·옥수수·대두 및 한국 식품·사료·축산물은 별도 품목·지역 노드가 필요. 기존 임금 전가·글로벌 물가와 합치지 않음. CPI 기여는 산술 관계로 보존.",
+      "source_path": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/새 폴더/2026-08-30_농산물 가격 급등으로 물가가 급등할 가능성과 농산물 투자 방법.md",
+      "source_exists": true,
+      "source_sha256": "9a7fd4723daaf990e52c5e6c8a2fcdbd325c01df1187ff7338b352ab59a0037c",
+      "candidate_before_sha256": "9f4280d03506d84732e299fe155d1f09837fbfae34f9343eb7be1f0b65100dff",
+      "source_path_before_relocation": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/2026-08-30_농산물 가격 급등으로 물가가 급등할 가능성과 농산물 투자 방법.md",
+      "candidate_after_sha256": "6adb40a4530fbc1a75c2c0123974cf30430a13cbd73a1e82946a5a98f3fefe89"
+    },
+    {
+      "candidate_id": "ca-20260909-029",
+      "candidate_path": "data/causal/candidates/20260831-kospi-fx-rate-outlook.md",
+      "status": "merged",
+      "adopted_or_reused_ids": [
+        "earnings",
+        "term-premium"
+      ],
+      "disposition": "반도체 실적의 순환노출·기능통화와 기대물가/위험보상 조건을 보강. USD/KRW 수준·한미 금리차·범용 수출기업 이익 노드는 보류. 후보 첫 행의 하락 충격 부호를 수준 부호로 가져오지 않음.",
+      "source_path": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/새 폴더/2026-08-31_코스피 상승은 제한되고 환율은 하락할 가능성이 높은 이유.md",
+      "source_exists": true,
+      "source_sha256": "73045f153a08eeea979829fbf1a46af2db2d001481d30917b7677d25b1ff84ef",
+      "candidate_before_sha256": "e95a26cee57fd0b05523c289e46144b1e51cc850775866bd93d3df4a47a8c0aa",
+      "source_path_before_relocation": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/2026-08-31_코스피 상승은 제한되고 환율은 하락할 가능성이 높은 이유.md",
+      "candidate_after_sha256": "0e3532b5465b41fde43b2dced98750c4e0769378fe54e0436e9f69e33b10fbce"
+    },
+    {
+      "candidate_id": "ca-20260909-003",
+      "candidate_path": "data/causal/candidates/20260831-new-asset-regime.md",
+      "status": "merged",
+      "adopted_or_reused_ids": [
+        "usd-jpy-rate",
+        "jp-import-price-index",
+        "jp-headline-inflation",
+        "long-bond-net-supply"
+      ],
+      "disposition": "일본 수입물가·종합 CPI를 별도 등록. QT·금리 기존 경로 재사용. 일본 정책금리 노드와 자동 연결하지 않음.",
+      "source_path": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/새 폴더/2026-08-31_주식,부동산시장에 새로운 패러다임을 이해해야 하는 이유.md",
+      "source_exists": true,
+      "source_sha256": "cdefb43c0f4c6684c788728ca17d0c043e722153d9768d2964c16f19d8223dbd",
+      "candidate_before_sha256": "0073ad1e14d5f2778d76c4abf5d764f0c48520ff6a306c0ffa5e5e9b9b6c8892",
+      "source_path_before_relocation": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/2026-08-31_주식,부동산시장에 새로운 패러다임을 이해해야 하는 이유.md",
+      "candidate_after_sha256": "47e5cee9ce17bfb408b338b21fe540941806d389a9b6cd7350ca5f4d334fc0dc"
+    },
+    {
+      "candidate_id": "ca-20260909-001",
+      "candidate_path": "data/causal/candidates/20260901-us-equity-long-run-return.md",
+      "status": "deferred",
+      "adopted_or_reused_ids": [],
+      "disposition": "r*·희망 저축/투자·미국 장기 기대수익률은 기존 착공·정책금리·한국 주가 배수와 지역·개념이 다름. 별도 모형·노드 정의 후 검토.",
+      "source_path": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/새 폴더/2026-09-01_미국주식에 대한 장기 기대수익률을 대폭 줄여야 하는 이유.md",
+      "source_exists": true,
+      "source_sha256": "489e6c866738f7537461cc555845b35364e0a27856cab34bc3b8ffa9d4597b54",
+      "candidate_before_sha256": "8ca8d3de3adf85b3535a2643465d9f1834c302f3b1658e06b75a57820f1f7e7f",
+      "source_path_before_relocation": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/2026-09-01_미국주식에 대한 장기 기대수익률을 대폭 줄여야 하는 이유.md",
+      "candidate_after_sha256": "63bbeb2120f4e0e38c7e0f061dff653dee26bcae83b79bdb845a3f324a05ef66"
+    },
+    {
+      "candidate_id": "ca-20260909-260903",
+      "candidate_path": "data/causal/candidates/20260903-samsung-us-cross-listing.md",
+      "status": "merged",
+      "adopted_or_reused_ids": [
+        "us-cross-listing-access"
+      ],
+      "disposition": "기존 접근성·공시·유동성·자본비용 선 재사용, 상장 유지비용·미확정 사건 한계 보강. 저축/투자/경상계정 산술·스테이블코인·해외 주식 배분은 보류.",
+      "source_path": "C:/Users/kcg51/Desktop/naver_premium_scrape/kkm_premium/raw/articles/새 폴더/2026-09-03_삼성전자가 미국에 상장하면 주가가 폭등하는 이유.md",
+      "source_exists": true,
+      "source_sha256": "2f5375d4b3509a3e1177502f37db2d39920fd409e7a11c02ea137d11913705a3",
+      "candidate_before_sha256": "d7db426026e9f8a485f247887f8a9b78569c9a752aa42b776c37c862e280fa16",
+      "candidate_after_sha256": "4032e11437afce869417d1a971e200abd7a9629d23824a31872c4ee100eae4bc"
+    }
+  ],
+  "evidence_rechecked": [
+    {
+      "url": "https://www.boj.or.jp/en/mopo/outlook/highlight/ten202607.htm",
+      "checked_at": "2026-09-09"
+    },
+    {
+      "url": "https://treasurydirect.gov/help-center/faqs/buyback-faqs/",
+      "checked_at": "2026-09-09"
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+      "checked_at": "2026-09-09"
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000222/crwv-20260331.htm",
+      "checked_at": "2026-09-09"
+    }
+  ],
+  "completed_at": "2026-09-09",
+  "validation": {
+    "analysis_unit_tests": 6,
+    "scope_and_visual_contract_tests": 2,
+    "scoped_preservation_check": "passed: all preexisting paths/bridges preserved; new IDs, conditions, limits, region, duplicate and dangling-note rejection checked",
+    "local_existing_browser_regression": "passed at 1440 light / 1024 dark / 740 light / 360 dark",
+    "local_new_branch_browser": "passed at 1440/1024/740/360, light and dark",
+    "production_browser": {
+      "base": "https://investment-spring.vercel.app",
+      "checks": [
+        {
+          "width": 1440,
+          "colorScheme": "light",
+          "newNodeDetails": 9,
+          "focusSpacing": true,
+          "layers": true,
+          "edgeNotes": true,
+          "overflow": false
+        },
+        {
+          "width": 1440,
+          "colorScheme": "dark",
+          "newNodeDetails": 9,
+          "focusSpacing": true,
+          "layers": true,
+          "edgeNotes": true,
+          "overflow": false
+        },
+        {
+          "width": 1024,
+          "colorScheme": "light",
+          "newNodeDetails": 9,
+          "focusSpacing": true,
+          "layers": true,
+          "edgeNotes": true,
+          "overflow": false
+        },
+        {
+          "width": 1024,
+          "colorScheme": "dark",
+          "newNodeDetails": 9,
+          "focusSpacing": true,
+          "layers": true,
+          "edgeNotes": true,
+          "overflow": false
+        },
+        {
+          "width": 740,
+          "colorScheme": "light",
+          "newNodeDetails": 9,
+          "focusSpacing": true,
+          "layers": true,
+          "edgeNotes": true,
+          "overflow": false
+        },
+        {
+          "width": 740,
+          "colorScheme": "dark",
+          "newNodeDetails": 9,
+          "focusSpacing": true,
+          "layers": true,
+          "edgeNotes": true,
+          "overflow": false
+        },
+        {
+          "width": 360,
+          "colorScheme": "light",
+          "newNodeDetails": 9,
+          "focusSpacing": true,
+          "layers": true,
+          "edgeNotes": true,
+          "overflow": false
+        },
+        {
+          "width": 360,
+          "colorScheme": "dark",
+          "newNodeDetails": 9,
+          "focusSpacing": true,
+          "layers": true,
+          "edgeNotes": true,
+          "overflow": false
+        }
+      ],
+      "search": true,
+      "jsErrors": []
+    },
+    "full_build": "passed",
+    "fixed_address_match": "31 files + root, passed",
+    "deployment_id": "dpl_8UXkw7oF7oLnKWJ8uwFBqNwv6KfS",
+    "production_url": "https://investment-spring.vercel.app/causal-network.html",
+    "run_id": "6f54b99d3415380066b2",
+    "portal_revision": "19bf0a5f65311394"
+  },
+  "final_input_hashes": {
+    "data/causal/relations.json": "22a927c5b7e49258e121728565817866aa5be0bcc494b355f5bb4299b4965dfb",
+    "data/causal/policy.json": "f703df8bccdaad1833930105e31be2f7e91ef45b8016a0997996561973c7fda9",
+    "data/navigation.json": "c99e3e2ae5665d9f0c98a1ca9a39f620cb08b44c2d73cfc0e85d26c5aa93dcd8",
+    "design/causal-investment-dashboard.html": "89b33d39ef2fe424a16f0f7d64859baf7821fb37243128dc6fdcafe725d67898",
+    "tools/build_causal_network.py": "12374d60322e2f08188c4296c5b460a3f5f167a4fc25ac4550dc4f0705471133",
+    "dist/macro.html": "11b9a6f86b65ee12665cc95abc066b8cc6dc79f6cc7473920ebf56570ded2ef7",
+    "dist/causal-network.html": "03e38d104efd4611c4d7106cbb25da96407d6d765e88738a4f0894cfb002660f",
+    "dist/portal-data.js": "bd7c52f6f530a20ca7c537ebe8af41b44d6b1e96acca6e6c8a0151ccd1666644"
+  }
+}
