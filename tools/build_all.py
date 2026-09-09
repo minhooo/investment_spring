@@ -37,11 +37,13 @@ def main():
     subprocess.run([sys.executable, str(ROOT / "tools" / "validate_index_data.py"), "--index", "kospi200"], check=True)
     subprocess.run([sys.executable, str(ROOT / "tools" / "build_index_radar.py")], check=True)
     subprocess.run([sys.executable, str(ROOT / "tools" / "build_index_radar_history.py")], check=True)
+    subprocess.run([sys.executable, str(ROOT / "tools" / "validate_financing_data.py")], check=True)
+    subprocess.run([sys.executable, str(ROOT / "tools" / "build_funding_radar.py")], check=True)
     subprocess.run([sys.executable, str(ROOT / "tools" / "build_portal.py"), '--skip-network'], check=True)
     network_python = ROOT / '.venv-network' / 'Scripts' / 'python.exe'
     subprocess.run([str(network_python) if network_python.exists() else sys.executable,
                     str(ROOT / 'tools' / 'build_causal_network.py')], check=True)
-    print(f"전체 빌드 완료: 표준 사례 {len(cases)}건 + 인적분할 2건·원유 검증 + 지수 레이더 현재·History + 통합 포털")
+    print(f"전체 빌드 완료: 표준 사례 {len(cases)}건 + 인적분할 2건·원유 검증 + 자금·지수 레이더 + 통합 포털")
 
 
 if __name__ == "__main__":
