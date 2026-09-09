@@ -11,7 +11,7 @@
 파생값(수익률·초과수익·상대강도·거래량배수)은 전부 여기서 계산하고
 템플릿은 그리기만 한다 — 계산 로직이 한 곳에만 있도록.
 """
-import sys, os, csv, json, io, subprocess
+import sys, os, csv, json, io, re, subprocess
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from dist_names import dist_page
@@ -19,6 +19,28 @@ from dist_names import dist_page
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def inline_text(value):
+    """헤더·요약에 쓰는 문구를 한 개의 논리적 문장으로 정리한다.
+
+    메타 JSON에 편집기 개행이 들어가더라도 화면에서 의도치 않은 강제 줄바꿈이
+    생기지 않게 한다. 화면 폭에 따른 일반적인 자동 줄바꿈은 CSS에 맡긴다.
+    """
+    return re.sub(r"\s+", " ", str(value or "")).strip()
+
+
+def normalize_header_copy(meta):
+    """일반 사례 상단과 칩에서 한 줄 문장으로 보여 주는 메타를 정규화한다."""
+    fields = (
+        "name", "market", "sector", "issue_type", "dday", "announce_date",
+        "dday_note", "type_code", "method", "amount_initial", "amount_final",
+        "score", "benchmark_label", "headline", "thesis",
+    )
+    for field in fields:
+        if field in meta:
+            meta[field] = inline_text(meta[field])
+    return meta
 
 
 def read_prices(key):
@@ -114,19 +136,21 @@ def portal_context(meta):
             href = href[5:]
         related.append({
             "name": row["종목명"],
-            "title": other.get("title", row["이슈유형"]),
+            "title": inline_text(other.get("title", row["이슈유형"])),
             "href": href,
-            "reason": f"같은 {row['이슈유형']} 사례",
+            "reason": inline_text(f"같은 {row['이슈유형']} 사례"),
         })
     return {
-        "summary": edit.get("summary", "사건과 이후의 시장 반응을 지수 대비로 확인합니다."),
+        "summary": inline_text(edit.get("summary", "사건과 이후의 시장 반응을 지수 대비로 확인합니다.")),
         "related": related,
     }
 
 
 def main():
     key = sys.argv[1]
-    meta = json.load(open(f"{ROOT}/data/meta/{key}.json", encoding="utf-8"))
+    meta = normalize_header_copy(
+        json.load(open(f"{ROOT}/data/meta/{key}.json", encoding="utf-8"))
+    )
     # 한 종목에 이슈가 둘 이상이면 시세·수급·유통주식은 공유하고 이벤트만 분리한다.
     # meta의 data_key 가 시세 계열 파일의 키, key 는 이벤트·산출물의 키다.
     dkey = meta.get("data_key", key)

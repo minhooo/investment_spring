@@ -22,6 +22,11 @@ DATA = ROOT / "data"
 DIST = ROOT / "dist"
 
 
+def inline_text(value):
+    """카드·상세 상단에 쓰는 문자열에서 편집기 개행을 공백 하나로 바꾼다."""
+    return re.sub(r"\s+", " ", str(value or "")).strip()
+
+
 def load_json(name):
     return json.loads((DATA / name).read_text(encoding="utf-8"))
 
@@ -93,14 +98,14 @@ def discovered_cases(taxonomy, known_pairs):
     known_issue_labels = {item["label"]: item["id"] for item in taxonomy["issues"]}
     for meta_path in sorted((DATA / "meta").glob("*.json")):
         meta = json.loads(meta_path.read_text(encoding="utf-8"))
-        code, name = str(meta.get("code", "")), str(meta.get("name", ""))
-        issue_type = str(meta.get("issue_type") or "기타 검증")
+        code, name = inline_text(meta.get("code", "")), inline_text(meta.get("name", ""))
+        issue_type = inline_text(meta.get("issue_type") or "기타 검증")
         if not code or not name or (code, issue_type) in known_pairs:
             continue
         dashboard = dashboard_for_meta(meta_path, meta)
         if not dashboard:
             continue
-        issue_label = str(meta.get("issue_type") or "기타 검증")
+        issue_label = inline_text(meta.get("issue_type") or "기타 검증")
         issue_id = known_issue_labels.get(issue_label)
         if not issue_id:
             issue_id = custom_issue_id(issue_label)
@@ -109,8 +114,8 @@ def discovered_cases(taxonomy, known_pairs):
         theme_ids = infer_theme_ids(meta, taxonomy)
         pattern_ids = [item for item in meta.get("pattern_ids", [])
                        if any(pattern["id"] == item for pattern in taxonomy["patterns"])]
-        title = str(meta.get("portal_title") or meta.get("headline") or meta.get("question") or issue_label)
-        summary = str(meta.get("portal_summary") or meta.get("question") or meta.get("thesis", ""))
+        title = inline_text(meta.get("portal_title") or meta.get("headline") or meta.get("question") or issue_label)
+        summary = inline_text(meta.get("portal_summary") or meta.get("question") or meta.get("thesis", ""))
         # 같은 종목의 자동 등록이 둘 이상이면 뒤에 오는 것에 이슈 접미사를 붙여 id 충돌을 막는다.
         slug = code if code not in seen_codes else f"{code}-{issue_id}"
         seen_codes.add(code)
@@ -120,10 +125,10 @@ def discovered_cases(taxonomy, known_pairs):
             "issue_id": issue_id, "issue_label": issue_label,
             "issue_ids": [issue_id], "issue_labels": [issue_label], "theme_ids": theme_ids,
             "pattern_ids": pattern_ids, "featured_pattern_ids": pattern_ids,
-            "event_date": str(meta.get("event_date") or latest_price_date(meta)),
-            "event_label": str(meta.get("event_label") or "검증"),
-            "performance_base_date": str(meta.get("base_date") or ""),
-            "aliases": list(meta.get("aliases", [])),
+            "event_date": inline_text(meta.get("event_date") or latest_price_date(meta)),
+            "event_label": inline_text(meta.get("event_label") or "검증"),
+            "performance_base_date": inline_text(meta.get("base_date") or ""),
+            "aliases": [inline_text(value) for value in meta.get("aliases", [])],
             "dashboard_href": dashboard.name, "source_case_path": source_case_for(code),
             "available": True,
         })
@@ -182,10 +187,10 @@ def build_index(taxonomy, navigation, cases):
             "id": f"case-{row['case_id']}",
             "case_id": row["case_id"],
             "kind": "case",
-            "name": row["종목명"],
-            "code": row["종목코드"],
-            "title": edit["title"],
-            "summary": edit["summary"],
+            "name": inline_text(row["종목명"]),
+            "code": inline_text(row["종목코드"]),
+            "title": inline_text(edit["title"]),
+            "summary": inline_text(edit["summary"]),
             "issue_id": issue_id,
             "issue_label": issue_labels[issue_id],
             "issue_ids": entry_issue_ids,
@@ -193,10 +198,10 @@ def build_index(taxonomy, navigation, cases):
             "theme_ids": edit["theme_ids"],
             "pattern_ids": patterns(row["핵심패턴태그"]),
             "featured_pattern_ids": edit["featured_pattern_ids"],
-            "event_date": edit["event_date"],
-            "event_label": edit["event_label"],
-            "performance_base_date": row["기준일"],
-            "aliases": edit.get("aliases", []),
+            "event_date": inline_text(edit["event_date"]),
+            "event_label": inline_text(edit["event_label"]),
+            "performance_base_date": inline_text(row["기준일"]),
+            "aliases": [inline_text(value) for value in edit.get("aliases", [])],
             "dashboard_href": dashboard,
             "source_case_path": case_path,
             "available": True,
