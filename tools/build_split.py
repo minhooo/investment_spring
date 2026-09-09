@@ -20,6 +20,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from dist_names import dist_page
+from site_shell import render_nav
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -134,7 +135,9 @@ def main():
 
     template = (ROOT / "tools" / "split_pair_template.html").read_text(encoding="utf-8")
     safe_json = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
-    output = template.replace("/*__DATA__*/null", safe_json)
+    output = template.replace("/*__DATA__*/null", safe_json).replace(
+        "<!--__SITE_NAV__-->", render_nav("cases")
+    )
     out_path = ROOT / "dist" / page
     out_path.parent.mkdir(exist_ok=True)
     out_path.write_text(output, encoding="utf-8")

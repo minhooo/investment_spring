@@ -4,6 +4,7 @@ import datetime as dt
 import json
 from pathlib import Path
 import sys
+import time
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from site_shell import render_nav
@@ -18,6 +19,18 @@ INVESTOR_FILES = {
     "483650": ROOT / "data" / "investors" / "483650_달바글로벌.csv",
     "456040": ROOT / "data" / "investors" / "456040_OCI.csv",
 }
+
+
+def write_text_retry(path, text, attempts=4):
+    """Retry brief Windows file-indexer/share races during consecutive full builds."""
+    for attempt in range(attempts):
+        try:
+            path.write_text(text, encoding="utf-8")
+            return
+        except OSError:
+            if attempt == attempts - 1:
+                raise
+            time.sleep(0.25 * (attempt + 1))
 
 
 def number(row, key):
@@ -108,13 +121,14 @@ def main():
     }
     out_dir = DIST / "index-radar-data" / "indexes" / "kospi200" / "reviews"
     out_dir.mkdir(parents=True, exist_ok=True)
-    (out_dir / f"{REVIEW_ID}.json").write_text(
-        json.dumps(review, ensure_ascii=False, separators=(",", ":")), encoding="utf-8"
+    write_text_retry(
+        out_dir / f"{REVIEW_ID}.json",
+        json.dumps(review, ensure_ascii=False, separators=(",", ":")),
     )
     template = (ROOT / "tools" / "index_radar_history_template.html").read_text(encoding="utf-8")
     page = template.replace("<!--__SITE_NAV__-->", render_nav("radar"))
     page = page.replace("__REVIEW_DATA__", json.dumps(review, ensure_ascii=False).replace("</", "<\\/"))
-    (DIST / "index-radar-history.html").write_text(page, encoding="utf-8")
+    write_text_retry(DIST / "index-radar-history.html", page)
     print(f"완료: dist/index-radar-history.html · {len(review['members'])}종목 · {review['review_id']}")
 
 

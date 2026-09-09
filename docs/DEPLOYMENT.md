@@ -21,7 +21,7 @@ python tools/build_all.py
 
 Node.js/npx와 Vercel 로그인이 필요하다. 처음 실행할 때 `skt-ir`의 `investment-spring` 프로젝트에 연결한다. 로그인 세션이 만료되면 `npx --yes vercel@59.11.7 login`으로 로그인한 뒤 다시 실행한다. 배포 스크립트는 연결된 프로젝트 이름이 다르면 중단한다.
 
-전체 빌드는 표준 사례, 솔브레인 인적분할, 에쓰오일 검증, 지수 레이더, 포털을 생성한다. 지수 레이더 원본은 먼저 `python tools/fetch_index_data.py --index kospi200 --as-of YYYY-MM-DD`로 갱신하고 `python tools/validate_index_data.py --index kospi200`으로 확인한다. 새 종류의 전용 빌더를 추가하면 `tools/build_all.py`에도 편입한다. 개별 빌더는 로컬 포털까지만 갱신하므로 온라인 반영은 배포 명령까지 실행해야 완료다.
+전체 빌드는 표준 사례, 솔브레인 인적분할, 에쓰오일 검증, 자금·지수 레이더, 포털을 생성한다. 자금 레이더 원본은 `python tools/validate_financing_data.py`로, 지수 레이더 원본은 `python tools/fetch_index_data.py --index kospi200 --as-of YYYY-MM-DD` 뒤 `python tools/validate_index_data.py --index kospi200`으로 확인한다. 새 종류의 전용 빌더를 추가하면 `tools/build_all.py`에도 편입한다. 개별 빌더는 로컬 포털까지만 갱신하므로 온라인 반영은 배포 명령까지 실행해야 완료다.
 
 포털의 3초 리비전 확인은 같은 고정 주소에 새 배포가 올라온 후 새 사례 데이터를 반영한다. PC의 원본 파일 변경을 자동 업로드하는 서비스나 Git 자동 배포는 구성하지 않았다. 템플릿·스크립트 자체가 바뀌었을 때는 열린 페이지를 새로고침한다. 배포 뒤에는 PC를 꺼도 마지막 배포 화면을 이용할 수 있다.
 
@@ -33,7 +33,7 @@ HTML은 재검증 캐시를 사용하고 `portal-data.js`, `index-radar-data/**`
 
 ## 성공 판정과 복구
 
-통합 인과망 `causal-network.html`도 모든 HTML 해시 검증에 자동 포함된다. 전체 빌드와 개별 포털 빌드는 통합망을 후속 생성하며 `.venv-network/Scripts/python.exe`가 있으면 해당 환경을 사용한다. 처음에는 `requirements-network.txt`의 의존성을 그 환경에 설치한다. 로컬 실행 스냅샷 `data/causal/runs/`와 원본·패키지는 기존 `.vercelignore`에 의해 업로드되지 않는다. 통합망 HTML에는 공개용 분석 결과·조건·상대 원본 파일명·해시·실행 환경 버전만 인라인한다. 브라우저 초안의 공식 채택은 원본 `data/causal/policy.json`을 버전·이유와 함께 수정한 뒤 다시 빌드·배포한다. JSON 내보내기나 로컬 초안 저장만으로 운영 기준이 바뀌지 않는다.
+통합 인과망 `causal-network.html`도 모든 HTML 해시 검증에 자동 포함된다. 전체 빌드와 개별 포털 빌드는 통합망을 후속 생성하며 `.venv-network/Scripts/python.exe`가 있으면 해당 환경을 사용한다. 처음에는 `requirements-network.txt`의 의존성을 그 환경에 설치한다. 통합망은 거시 인과지도 원문만 입력으로 쓰며 사례 탐색의 종목·이슈·테마·사례 데이터는 포함하지 않는다. 로컬 실행 스냅샷 `data/causal/runs/`와 원본·패키지는 기존 `.vercelignore`에 의해 업로드되지 않는다. 통합망 HTML에는 공개용 분석 결과·조건·상대 원본 파일명·해시·실행 환경 버전만 인라인한다. 브라우저 초안의 공식 채택은 원본 `data/causal/policy.json`을 버전·이유와 함께 수정한 뒤 다시 빌드·배포한다. JSON 내보내기나 로컬 초안 저장만으로 운영 기준이 바뀌지 않는다.
 
 배포 명령이 성공한 뒤 고정 주소의 루트, 모든 HTML, `portal-data.js`, `index-radar-data/**`를 실제로 받아 로컬 파일과 SHA-256 또는 바이트를 비교한다. alias 전환 직후 이전 엣지 응답이 남는 경우에는 파일별로 짧게 재시도한 뒤 판단한다. 사례별 상세 파일이 존재하는지도 검사한다. 재시도 후에도 검증이 실패하면 성공으로 보고하지 않는다. 배포 자체가 성공하고 이후 검증에서 실패했다면 새 버전이 이미 공개됐을 수 있으므로 오류를 확인한다.
 
