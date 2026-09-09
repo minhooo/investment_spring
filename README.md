@@ -149,7 +149,7 @@ python tools/build_soulbrain_split.py
 
 새 페이지·메뉴 제작과 디자인 변경 기준은 [디자인 및 페이지 확장 가이드](design/DESIGN_GUIDE.md)를 참고한다. 루트 `AGENTS.md`는 AI가 디자인 작업 시 이 가이드를 먼저 읽고 같은 작업에서 문서도 갱신하도록 지정한다.
 
-기본 진입점은 https://investment-spring.vercel.app 이며, 로컬에서는 `dist/index.html`을 연다. 홈에서 **사례 탐색**, **거시 인과지도**, [**지수 레이더**](https://investment-spring.vercel.app/index-radar.html)로 들어갈 수 있으며, 사례는 이슈·테마·패턴·키워드로 찾는다.
+기본 진입점은 https://investment-spring.vercel.app 이며, 로컬에서는 `dist/index.html`을 연다. 홈에서 **사례 탐색**, **거시 인과지도**, [**자금 레이더**](https://investment-spring.vercel.app/funding-radar.html), [**지수 레이더**](https://investment-spring.vercel.app/index-radar.html)로 들어갈 수 있으며, 사례는 이슈·테마·패턴·키워드로 찾는다.
 
 탐색 전용 분류는 `data/navigation.json`, 이름·검색 별칭은 `data/taxonomy.json`에서 관리한다. 원본 사례 정보는 계속 `data/cases.csv`와 `data/meta/`가 담당한다.
 
@@ -160,16 +160,21 @@ python tools/build_all.py
 
 ### 통합 인과망·시계열 검증실
 
-[통합망](https://investment-spring.vercel.app/causal-network.html)은 기존 거시 경로와 모든 사례를 공유 변수·테마로 연결하고, 조건부 인과 가설과 실제 시계열 선행 예측력을 구분한다. CSS 화면 안에서 2D Canvas 그래프가 군집·주변 1·2단계·전체 보기를 제공한다. 판단 기준은 종합점수가 아닌 공개된 네 기준이며 브라우저 초안·변경 이유·JSON 내보내기와 로컬 실행 스냅샷을 제공한다. [데이터·모형·검증 계약](design/CAUSAL_NETWORK_SPEC.md)에 현재 기능과 3D/PCMCI/장기 모형 확장 한계를, [인과망 확장 체크리스트](design/CAUSAL_NETWORK_CONTRIBUTING.md)에 새 가설·계열·기준을 안전하게 추가하는 절차를 기록한다.
+[통합망](https://investment-spring.vercel.app/causal-network.html)은 거시 인과지도에서 연구한 10개 전달 경로와 경제 변수만 연결한다. 사례 탐색의 종목·이슈·테마·사례 카드는 포함하지 않는다. 조건부 인과 가설과 이후 등록할 시계열 선행 예측력을 구분하며, 비교 가능한 거시 계열이 아직 등록되지 않은 관계는 검증 대기로 표시한다. [데이터·모형·검증 계약](design/CAUSAL_NETWORK_SPEC.md)에 현재 기능과 3D/PCMCI/장기 모형 확장 한계를, [인과망 확장 체크리스트](design/CAUSAL_NETWORK_CONTRIBUTING.md)에 새 가설·계열·기준을 안전하게 추가하는 절차를 기록한다.
 
 ```powershell
 python -m venv .venv-network
 .venv-network/Scripts/python.exe -m pip install -r requirements-network.txt
 .venv-network/Scripts/python.exe tools/test_network_analysis.py
+.venv-network/Scripts/python.exe tools/test_causal_network_scope.py
 .venv-network/Scripts/python.exe tools/build_causal_network.py
 ```
 
 전체 빌드는 포털 생성 뒤 통합망을 자동 재생성한다. 원본 갱신을 감시하는 서비스는 없으며 운영 반영은 기존 `python tools/deploy_dashboard.py`로 한다. 초안 기준은 이 브라우저에만 저장되며 공개 기준을 바꾸거나 모형을 재학습하지 않는다.
+
+### 자금 레이더 사용법
+
+`자금 레이더`는 OpenDART 주요사항보고서에 공시된 상장사의 유상증자·CB·BW·EB 발행결정을 보여준다. 조달수단·사용처·잠재 희석·전환/만기 일정을 분리해 확인하며, 실제 납입·집행·상환은 이 화면의 범위가 아니다. 원본을 갱신한 뒤 `python tools/validate_financing_data.py`, `python tools/build_funding_radar.py` 순서로 검증·생성한다.
 
 ### 지수 레이더 사용법
 
