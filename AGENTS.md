@@ -3,6 +3,8 @@
 ## 통합 인과망·검증실 확장 규칙
 
 - 통합 인과망에 노드·가설·계열·판정 기준·화면을 추가하거나 바꾸기 전에는 `design/CAUSAL_NETWORK_CONTRIBUTING.md`와 `design/CAUSAL_NETWORK_SPEC.md`를 모두 읽는다.
+- 업로드 자료나 새 원문에서 거시 인과를 추출하는 작업은 먼저 `design/CAUSAL_ANALYSIS_BATCH_WORKFLOW.md`를 읽고 따른다. 사용자가 즉시 정식 편입을 명시하지 않은 한 자료별 후보 카드와 `data/causal/CAUSAL_ANALYSIS_INTAKE_LOG.md`만 갱신하고 전역 인과망·화면·배포에 자동 병합하지 않는다.
+- 증분 병합은 로그의 대기 건수가 10건일 때 사용자에게 먼저 묻고, 미루면 15건·20건 및 이후 5건마다 다시 묻는다. 전체 감사 누계 100건에서도 사용자에게 전체 검사 여부를 묻는다. 승인 전에는 병합이나 전체 감사를 실행하지 않는다.
 - 새 연결은 `data/causal/relations.json`에 명시하고, 가설·소속/관측·시계열 선행 예측을 같은 의미의 선으로 합치지 않는다. 근거·조건·한계가 없는 연결은 화면에 추가하지 않는다.
 - 새 시계열 또는 정책 변경은 재현 가능한 원본 경로·계열 선택·실행 스냅샷·검증을 함께 남긴다. 결과가 없다고 임계값을 낮추거나 브라우저 초안을 공식 기준으로 승격하지 않는다.
 - 인과망 화면·탐색 동선·반응형이 바뀌면 아래 디자인 문서 동기화 규칙과 `design/DESIGN_GUIDE.md` 갱신도 적용한다.
@@ -25,6 +27,8 @@
 - `docs/DEPLOYMENT.md`: Vercel 고정 주소, 사례 추가 후 배포·검증 절차와 복구 방법.
 
 - `design/DESIGN_GUIDE.md`: 현재 디자인 기준 및 이후 페이지·메뉴 확장 기준의 단일 문서.
+- `design/CAUSAL_ANALYSIS_BATCH_WORKFLOW.md`: 대량 원문의 후보 추출, 10~20건 증분 병합 확인, 100건 전체 감사 운영 기준.
+- `data/causal/CAUSAL_ANALYSIS_INTAKE_LOG.md`: 거시 인과 후보 작업 수와 병합·감사 시점을 관리하는 단일 원장.
 - `design/investment-spring-design.md`: 최초 통합 설계 기록. 현재 구현 상태로 오해하지 말고 새 가이드를 우선 참고한다.
 - `README.md`: 실행·빌드 방법과 디자인 가이드 링크.
 
